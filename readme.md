@@ -6,7 +6,7 @@
 <h3 align="center">코드스테이츠 44기 메인프로젝트</h3>
 
 - **팀 명 :**  수리야
-- **프로젝트 명 :** 
+- **프로젝트 명 :** PlanFinity
 - **프로젝트 기간 :** 2023.06.28 - 2023.07.27
 - **한줄 소개 :** -
 - **팀원 :** 조성건(팀장), 안지수(부팀장), 김유진, 김진아, 유승연, 조승아, 장윤희
@@ -55,7 +55,7 @@
 ### Tools
 | Git | Github | Discord |
 | :---: | :---: | :---: |
-| <img alt="git logo" src="https://git-scm.com/images/logos/logomark-orange@2x.png" width="65" height="65" > | <img alt="github logo" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="65" height="65"> | <img alt="Discord logo" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/62595384e89d1d54d704ece7_3437c10597c1526c3dbd98c737c2bcae.svg" height="65" width="65"> |
+| <img alt="git logo" src="https://git-scm.com/images/logos/downloads/Git-Icon-1788C.svg" width="65" height="65" > | <img alt="github logo" src="https://techstack-generator.vercel.app/github-icon.svg" width="65" height="65"> | <img alt="Discord logo" src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/62595384e89d1d54d704ece7_3437c10597c1526c3dbd98c737c2bcae.svg" height="65" width="65"> |
 ### Front-end
 | Html | JavaScript | React | Styled-<br>Components | esLint | Prettier |
 | :---: | :---: | :---: | :---: | :---: | :---: |
