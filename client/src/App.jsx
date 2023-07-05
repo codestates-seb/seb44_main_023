@@ -1,11 +1,5 @@
-import './App.css'
-
 function App() {
-
-  return (
-    <>
-    </>
-  )
+  return <>asdfasdf</>;
 }
 
-export default App
+export default App;
