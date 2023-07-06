@@ -3,21 +3,31 @@ import styled from "styled-components";
 import { FaPlus, FaCog } from "react-icons/fa";
 
 export default function FloatingButton(props) {
-  const { plus, setting, onPlusClick, onSettingClick} = props;
+  const { icon, onClick } = props;
+
+  let selectedIcon = null;
+
+  switch (icon) {
+    case "plus":
+      selectedIcon = <FaPlus />;
+      break;
+    case "setting":
+      selectedIcon = <FaCog />;
+      break;
+
+    default:
+      selectedIcon = null;
+  }
+
   return (
-    <StyledFloatingButton>
-      {plus && (
-        <FaPlus/>
-      )}
-      {setting && (
-        <FaCog/>
-      )}
+    <StyledFloatingButton onClick={onClick}>
+      {selectedIcon}
     </StyledFloatingButton>
   );
 }
 
 const StyledFloatingButton = styled.button`
-  position: fixed;
+  /* position: fixed; */
   bottom: 1.25rem;
   right: 1.25rem;
   width: 3.125rem;
