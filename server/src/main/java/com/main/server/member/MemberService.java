@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,9 +51,10 @@ public class MemberService {
         Member foundMember = findMember(memberId);
 
         if (foundMember != null) {
-            foundMember.setEmail(member.getEmail());
+
             foundMember.setNickname(member.getNickname());
             foundMember.setPassword(member.getPassword());
+            foundMember.setProfileImage(member.getProfileImage());
         }
         Member updateMember = memberRepository.save(foundMember);
 
@@ -62,7 +64,7 @@ public class MemberService {
     public void terminateMember(long memberId) {
         Member foundMember = findMember(memberId);
 
-        foundMember.setTerminatedAt(LocalDateTime.now());
+        foundMember.setTerminatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         foundMember.setTerminated(true);
 
         memberRepository.save(foundMember);

@@ -1,5 +1,7 @@
 package com.main.server.member;
 
+import com.main.server.member.dto.MemberPatchDto;
+import com.main.server.member.dto.MemberPostDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +19,11 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members")
-    public Member postMember(@RequestBody MemberDto memberDto) {
-        Member member = new Member(memberDto);
-        Member registerdMember = memberService.registerMember(member);
+    public Member postMember(@RequestBody MemberPostDto memberPostDto) {
+        Member member = new Member(memberPostDto);
+        Member registeredMember = memberService.registerMember(member);
 
-        return registerdMember;
+        return registeredMember;
     }
 
     @GetMapping("/members")
@@ -40,8 +42,8 @@ public class MemberController {
 
     @PatchMapping("/members/{member-Id}")
     public Member patchMember(@PathVariable("member-Id") long memberId,
-                              @RequestBody MemberDto memberDto) {
-        Member member = new Member(memberDto);
+                              @RequestBody MemberPatchDto memberPatchDto) {
+        Member member = new Member(memberPatchDto);
         Member updateMember = memberService.updateMember(memberId, member);
 
         return updateMember;

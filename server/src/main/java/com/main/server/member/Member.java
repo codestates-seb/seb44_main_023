@@ -1,14 +1,14 @@
 package com.main.server.member;
 
+import com.main.server.member.dto.MemberPatchDto;
+import com.main.server.member.dto.MemberPostDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @NoArgsConstructor
 @Data
@@ -23,7 +23,7 @@ public class Member {
 
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     // profile 이미지 필드 한 줄로 주면 되는지?
@@ -37,8 +37,14 @@ public class Member {
     @Column(nullable = false)
     private boolean terminated;
 
-    public Member(MemberDto memberDto) {
-        this.email = memberDto.getEmail();
-        this.nickname = memberDto.getNickname();
+    public Member(MemberPostDto memberPostDto) {
+        this.email = memberPostDto.getEmail();
+        this.nickname = memberPostDto.getNickname();
+    }
+
+    public Member(MemberPatchDto memberPatchDto) {
+        this.nickname = memberPatchDto.getNickname();
+        this.password = memberPatchDto.getPassword();
+        this.profileImage = memberPatchDto.getProfileImage();
     }
 }
