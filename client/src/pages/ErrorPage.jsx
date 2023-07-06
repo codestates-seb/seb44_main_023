@@ -48,7 +48,7 @@ const Button = styled.button`
 `;
 
 const ErrorPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
 
   const handleButtonClick = () => {
     navigate("/main"); 
