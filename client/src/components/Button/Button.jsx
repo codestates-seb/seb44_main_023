@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 
 export default function Button(props) {
-  const { label, onClick, size, borderColor, fontColor, fontWeight} = props;
+  const { label, onClick, size, bordercolor, fontcolor, fontweight} = props;
   
   return (
-    <StyledButton size={size} onClick={onClick} fontColor={fontColor} borderColor={borderColor} fontWeight={fontWeight}>
+    <StyledButton size={size} onClick={onClick} fontcolor={fontcolor} bordercolor={bordercolor} fontweight={fontweight}>
       {label}
     </StyledButton>
   );
@@ -24,8 +24,8 @@ const StyledButton = styled.button`
       font-size: 12px;
       filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       background-color: var(--color-gray-01);
-      color: ${props => props.fontColor};
-      border-color: ${props => props.borderColor};
+      color: ${props => props.fontcolor};
+      border-color: ${props => props.bordercolor};
       border-style: solid;
 
       &:hover {
@@ -39,7 +39,7 @@ const StyledButton = styled.button`
       width: 8.625rem;
       height: 2.25rem;
       font-size: 1.25rem;
-      font-weight: ${props => props.fontWeight};
+      font-weight: ${props => props.fontweight};
       color: white;
       border-color: transparent;
       border-style: solid;
