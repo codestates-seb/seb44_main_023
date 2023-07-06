@@ -5,22 +5,22 @@ import kakaoIcon from "../../assets/icons/kakao_icon.svg";
 import naverIcon from "../../assets/icons/naver_icon.svg";
 
 export default function ButtonOauth(props) {
-  const { google, kakao, naver, onClick} = props;
+  const { google, kakao, naver, onGoogleClick, onKakaoClick, onNaverClick} = props;
 
   return (
-    <ButtonContainer onClick={onClick}>
+    <ButtonContainer>
       {google && (
-        <GoogleButton>
+        <GoogleButton onClick={onGoogleClick}>
           <GoogleIcon />
         </GoogleButton>
       )}
       {kakao && (
-        <KakaoButton>
+        <KakaoButton onClick={onKakaoClick}>
           <KakaoIcon />
         </KakaoButton>
       )}
       {naver && (
-        <NaverButton>
+        <NaverButton onClick={onNaverClick}>
           <NaverIcon/>
         </NaverButton>
       )}
