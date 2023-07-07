@@ -41,6 +41,7 @@ const ProfilePage = () => {
 
   return (
     <P>
+      {/* 후에 레이아웃 적용하게 되면 P는 삭제할 에정 */}
       <StyledWrapper>
         <ProfileBox>
           {isLoading ? (

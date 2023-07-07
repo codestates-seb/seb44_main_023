@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Input from "../../components/PageInput/PageInput";
+import Input from "../../components/Input/PageInput";
 import Toggle from "../../components/Toggle/Toggle";
 import kakaoIcon from "../../assets/icons/kakao_icon.svg";
 import Dropdown from "../../components/Dropdown/Dropdown";

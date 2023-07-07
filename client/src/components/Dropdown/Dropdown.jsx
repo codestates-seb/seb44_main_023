@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { useRef, useState } from "react";
 import { AiOutlinePlus, AiOutlineDown } from "react-icons/ai";
-import Input from "../PageInput/PageInput";
+import Input from "../../components/Input/PageInput";
 
 const Dropdown = ({ id, menu, add = false, onAddItem = (item) => {} }) => {
   const [isActive, setIsActive] = useState(false);
@@ -131,7 +131,7 @@ const OptionList = styled.ul`
   z-index: 100 !important;
   list-style-type: none;
   border: 1px solid var(--color-gray-03);
-  max-height: 300px;
+  max-height: 30rem;
   overflow-y: scroll;
   background-color: var(--color-gray-01);
   border-radius: 5px;

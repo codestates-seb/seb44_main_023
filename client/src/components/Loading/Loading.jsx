@@ -18,6 +18,6 @@ const StyledWrapper = styled.div`
 
   .content {
     color: var(--color-gray-09);
-    font-size: 24px;
+    font-size: 2.4rem;
   }
 `;
