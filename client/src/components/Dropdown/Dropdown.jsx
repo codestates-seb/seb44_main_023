@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 import { useRef, useState } from "react";
 import { AiOutlinePlus, AiOutlineDown } from "react-icons/ai";
-import Input from "../PageInput/PageInput";
+import Input from "../../components/Input/PageInput";
 
 const Dropdown = ({ id, menu, add = false, onAddItem = (item) => {} }) => {
   const [isActive, setIsActive] = useState(false);
@@ -80,8 +80,8 @@ export default Dropdown;
 
 const StyledDropdown = styled.div`
   color: var(--color-gray-06);
-  border: 1px solid var(--color-gray-03);
-  border-radius: 5px;
+  border: 0.1rem solid var(--color-gray-03);
+  border-radius: 0.5rem;
   height: 3.6rem;
   align-items: center;
   min-width: 16rem;
@@ -90,6 +90,7 @@ const StyledDropdown = styled.div`
   max-width: 20rem;
   font-size: 1.6rem;
   position: relative;
+  background-color: var(--color-gray-01);
 
   .overlay {
     width: 100vw;
@@ -127,20 +128,22 @@ const StyledDropdown = styled.div`
 
 const OptionList = styled.ul`
   width: 100%;
-  z-index: 100;
+  z-index: 100 !important;
   list-style-type: none;
-  border: 1px solid var(--color-gray-03);
-  max-height: 300px;
+  border: 0.1rem solid var(--color-gray-03);
+  max-height: 30rem;
   overflow-y: scroll;
   background-color: var(--color-gray-01);
-  border-radius: 5px;
+  border-radius: 0.5rem;
   margin-top: 0.1rem;
   display: ${({ isactive }) => (isactive === "true" ? "block" : "none")};
+  position: relative;
 
   .option {
     font-size: 1.6rem;
     padding: 0.8rem 0.8rem;
     transition: 100ms;
+    background-color: var(--color-gray-01);
 
     &: hover {
       background: var(--color-blue-01);
