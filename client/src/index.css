@@ -133,6 +133,7 @@ html {
 }
 
 body {
+  min-width: 768px;
   -webkit-text-size-adjust: none;
 }
 
