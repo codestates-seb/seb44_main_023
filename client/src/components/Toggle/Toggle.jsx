@@ -2,9 +2,9 @@ import { styled } from "styled-components";
 
 const Toggle = ({ checked, onClick }) => {
   return (
-    <StyledWrapper checked={checked} onClick={onClick} className="switch">
-      <input type="checkbox" />
-      <span className="slider round" />
+    <StyledWrapper className="switch">
+      <input type="checkbox" checked={checked} readOnly />
+      <span className="slider round" onClick={onClick} />
     </StyledWrapper>
   );
 };

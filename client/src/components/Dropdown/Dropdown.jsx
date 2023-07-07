@@ -90,6 +90,7 @@ const StyledDropdown = styled.div`
   max-width: 20rem;
   font-size: 1.6rem;
   position: relative;
+  background-color: var(--color-gray-01);
 
   .overlay {
     width: 100vw;
@@ -127,7 +128,7 @@ const StyledDropdown = styled.div`
 
 const OptionList = styled.ul`
   width: 100%;
-  z-index: 100;
+  z-index: 100 !important;
   list-style-type: none;
   border: 1px solid var(--color-gray-03);
   max-height: 300px;
@@ -136,11 +137,13 @@ const OptionList = styled.ul`
   border-radius: 5px;
   margin-top: 0.1rem;
   display: ${({ isactive }) => (isactive === "true" ? "block" : "none")};
+  position: relative;
 
   .option {
     font-size: 1.6rem;
     padding: 0.8rem 0.8rem;
     transition: 100ms;
+    background-color: var(--color-gray-01);
 
     &: hover {
       background: var(--color-blue-01);
