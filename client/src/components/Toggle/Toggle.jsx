@@ -39,10 +39,10 @@ const StyledWrapper = styled.label`
     position: absolute;
     content: "";
     height: 2.4rem;
-    width: 2.5rem
+    width: 2.4rem;
     left: 0.2rem;
     bottom: 0.2rem;
-    background-color: white;
+    background-color: var(--color-white);
     -webkit-transition: 0.4s;
     transition: 0.4s;
   }
