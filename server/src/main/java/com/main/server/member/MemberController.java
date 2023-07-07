@@ -1,12 +1,16 @@
 package com.main.server.member;
 
-import com.main.server.member.dto.MemberPatchDto;
-import com.main.server.member.dto.MemberPostDto;
+import com.main.server.member.dto.PatchDto;
+import com.main.server.member.dto.ResponseDto;
+import com.main.server.member.dto.SignUpDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MemberController {
@@ -19,34 +23,49 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members")
-    public Member postMember(@RequestBody MemberPostDto memberPostDto) {
-        Member member = new Member(memberPostDto);
+    public ResponseDto postMember(@Valid @RequestBody SignUpDto signUpDto) {
+        Member member = new Member(signUpDto);
         Member registeredMember = memberService.registerMember(member);
 
-        return registeredMember;
+        return new ResponseDto(registeredMember);
     }
 
     @GetMapping("/members")
-    public List<Member> getMembers() {
+    public List<ResponseDto> getMembers() {
         List<Member> allMembers = memberService.findAllMembers();
 
-        return allMembers;
+        return allMembers.stream()
+                .map(member -> new ResponseDto(member))
+                .collect(Collectors.toList());
+
     }
 
     @GetMapping("/members/{member-Id}")
-    public Member getMember(@PathVariable("member-Id") long memberId) {
+    public ResponseDto getMember(@PathVariable("member-Id") long memberId) {
         Member foundMember = memberService.findMember(memberId);
 
-        return foundMember;
+        return new ResponseDto(foundMember);
     }
 
     @PatchMapping("/members/{member-Id}")
-    public Member patchMember(@PathVariable("member-Id") long memberId,
-                              @RequestBody MemberPatchDto memberPatchDto) {
-        Member member = new Member(memberPatchDto);
+    public ResponseDto patchMember(@PathVariable("member-Id") long memberId,
+                              @RequestBody PatchDto patchDto) {
+        Member member = new Member(patchDto);
         Member updateMember = memberService.updateMember(memberId, member);
 
-        return updateMember;
+        return new ResponseDto(updateMember);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PatchMapping("/members/{member-Id}/profile-image")
+    public Member uploadProfileImage(@PathVariable("member-Id") long memberId,
+                                     @RequestParam(value = "file") MultipartFile file,
+                                     @RequestParam("uploadPath") String uploadPath) {
+
+        Member uploadImage = memberService.uploadProfileImage(memberId, file, uploadPath);
+
+        return uploadImage;
+
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
