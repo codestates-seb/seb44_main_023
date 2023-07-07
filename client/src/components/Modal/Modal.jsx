@@ -73,24 +73,24 @@ const ModalWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 20px;
+  margin: 0 2rem;
 `;
 
 const ModalBody = styled.div`
   position: relative;
   overflow-y: auto;
   outline: none;
-  border-radius: 10px;
+  border-radius: 1rem;
   z-index: 1000;
-  min-width: 240px;
-  padding: 20px;
+  min-width: 24rem;
+  padding: 2rem;
   background-color: var(--color-white);
 
   .modal-close-button {
     position: absolute;
     cursor: pointer;
-    top: 20px;
-    right: 20px;
+    top: 2rem;
+    right: 2rem;
     z-index: 2;
   }
 `;
