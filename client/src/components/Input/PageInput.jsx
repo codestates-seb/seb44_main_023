@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
+// 인풋 백그라운드 none
 const InputContainer = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 16px; // 마진 삭제
 `;
 
 const InputField = styled.input`
@@ -25,7 +26,7 @@ const InputField = styled.input`
 const InputInfo = styled.div`
   margin-top: 8px;
   font-size: 12px;
-  color: var(--color-red);
+  color: var(--color-red); // 레드 수정
 `;
 
 const Input = ({
@@ -40,7 +41,7 @@ const Input = ({
   return (
     <InputContainer>
       <InputField
-        type="text"
+        type="text" // 이것도 프룹 전달
         placeholder={placeholder}
         size={size}
         height={height} 
