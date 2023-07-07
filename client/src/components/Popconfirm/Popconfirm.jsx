@@ -34,7 +34,10 @@ const Popconfirm = ({
       </div>
       {isPopupVisible && <PopupOverlay onClick={handlePopupVisible} />}
       {isPopupVisible && (
-        <PopupWrapper className="popup" left={-(160 - confirmButtonWidth / 2)}>
+        <PopupWrapper
+          className="popup"
+          left={-((160 - confirmButtonWidth / 2) / 10)}
+        >
           <PopupContent className="popup-content">
             <div className="popup-title">{title}</div>
             <div className="popup-description">{description}</div>
@@ -61,7 +64,7 @@ const StyledPopconfirm = styled.div`
 
 const PopupWrapper = styled.div`
   position: absolute;
-  left: ${({ left }) => left}px;
+  left: ${({ left }) => left}rem;
   right: 50%;
   z-index: 100;
   width: 32rem;
@@ -118,7 +121,7 @@ const PopupContent = styled.div`
     }
 
     .confirm-button {
-      border: 1px solid var(--color-red);
+      border: 0.1rem solid var(--color-red);
       color: var(--color-red);
 
       &:hover {
@@ -128,7 +131,7 @@ const PopupContent = styled.div`
     }
 
     .cancel-button {
-      border: 1px solid var(--color-blue-03);
+      border: 0.1rem solid var(--color-blue-03);
       color: var(--color-blue-03);
 
       &:hover {

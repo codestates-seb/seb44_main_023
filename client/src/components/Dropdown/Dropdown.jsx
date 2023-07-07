@@ -80,8 +80,8 @@ export default Dropdown;
 
 const StyledDropdown = styled.div`
   color: var(--color-gray-06);
-  border: 1px solid var(--color-gray-03);
-  border-radius: 5px;
+  border: 0.1rem solid var(--color-gray-03);
+  border-radius: 0.5rem;
   height: 3.6rem;
   align-items: center;
   min-width: 16rem;
@@ -130,11 +130,11 @@ const OptionList = styled.ul`
   width: 100%;
   z-index: 100 !important;
   list-style-type: none;
-  border: 1px solid var(--color-gray-03);
+  border: 0.1rem solid var(--color-gray-03);
   max-height: 30rem;
   overflow-y: scroll;
   background-color: var(--color-gray-01);
-  border-radius: 5px;
+  border-radius: 0.5rem;
   margin-top: 0.1rem;
   display: ${({ isactive }) => (isactive === "true" ? "block" : "none")};
   position: relative;
