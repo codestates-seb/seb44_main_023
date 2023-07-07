@@ -34,7 +34,10 @@ const Popconfirm = ({
       </div>
       {isPopupVisible && <PopupOverlay onClick={handlePopupVisible} />}
       {isPopupVisible && (
-        <PopupWrapper className="popup" left={-(160 - confirmButtonWidth / 2)}>
+        <PopupWrapper
+          className="popup"
+          left={-((160 - confirmButtonWidth / 2) / 10)}
+        >
           <PopupContent className="popup-content">
             <div className="popup-title">{title}</div>
             <div className="popup-description">{description}</div>
@@ -61,21 +64,21 @@ const StyledPopconfirm = styled.div`
 
 const PopupWrapper = styled.div`
   position: absolute;
-  left: ${({ left }) => left}px;
+  left: ${({ left }) => left}rem;
   right: 50%;
   z-index: 100;
-  width: 320px;
-  bottom: 40px;
+  width: 32rem;
+  bottom: 4rem;
   background-color: var(--color-white);
   text-align: center;
-  border-radius: 10px;
-  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 1rem;
+  box-shadow: 0.5rem 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.25);
 
   &::after {
     content: " "; /* 정사각형 영역 사용 */
     position: absolute; /* 절대 위치 사용 */
-    margin-left: -8px;
-    border: 8px solid transparent;
+    margin-left: -0.8rem;
+    border: 0.8rem solid transparent;
     border-top-color: var(--color-white);
   }
 `;
@@ -89,36 +92,36 @@ const PopupOverlay = styled.div`
 `;
 
 const PopupContent = styled.div`
-  padding: 40px 40px 32px;
+  padding: 4rem 4rem 3.2rem;
 
   .popup-title {
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 2rem;
+    margin-bottom: 1.6rem;
     color: var(--color-gray-08);
   }
 
   .popup-description {
-    font-size: 16px;
-    margin-bottom: 16px;
+    font-size: 1.6rem;
+    margin-bottom: 1.6rem;
     color: var(--color-red);
   }
 
   .button-wrapper {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 2rem;
 
     button {
-      padding: 4px 16px;
-      font-size: 16px;
+      padding: 0.4rem 1.6rem;
+      font-size: 1.6rem;
       background-color: var(--color-white);
-      border-radius: 30px;
+      border-radius: 3rem;
       transition: 200ms;
       cursor: pointer;
     }
 
     .confirm-button {
-      border: 1px solid var(--color-red);
+      border: 0.1rem solid var(--color-red);
       color: var(--color-red);
 
       &:hover {
@@ -128,7 +131,7 @@ const PopupContent = styled.div`
     }
 
     .cancel-button {
-      border: 1px solid var(--color-blue-03);
+      border: 0.1rem solid var(--color-blue-03);
       color: var(--color-blue-03);
 
       &:hover {
