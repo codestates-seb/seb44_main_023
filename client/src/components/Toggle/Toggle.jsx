@@ -2,9 +2,9 @@ import { styled } from "styled-components";
 
 const Toggle = ({ checked, onClick }) => {
   return (
-    <StyledWrapper checked={checked} onClick={onClick} className="switch">
-      <input type="checkbox" />
-      <span className="slider round" />
+    <StyledWrapper className="switch">
+      <input type="checkbox" checked={checked} readOnly />
+      <span className="slider round" onClick={onClick} />
     </StyledWrapper>
   );
 };
@@ -14,8 +14,8 @@ export default Toggle;
 const StyledWrapper = styled.label`
   position: relative;
   display: inline-block;
-  width: 56px;
-  height: 28px;
+  width: 5.6rem;
+  height: 2.8rem;
 
   input {
     opacity: 0;
@@ -38,11 +38,11 @@ const StyledWrapper = styled.label`
   .slider:before {
     position: absolute;
     content: "";
-    height: 24px;
-    width: 24px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
+    height: 2.4rem;
+    width: 2.4rem;
+    left: 0.2rem;
+    bottom: 0.2rem;
+    background-color: var(--color-white);
     -webkit-transition: 0.4s;
     transition: 0.4s;
   }
@@ -56,13 +56,13 @@ const StyledWrapper = styled.label`
   }
 
   input:checked + .slider:before {
-    -webkit-transform: translateX(28px);
-    -ms-transform: translateX(28px);
-    transform: translateX(28px);
+    -webkit-transform: translateX(2.8rem);
+    -ms-transform: translateX(2.8rem);
+    transform: translateX(2.8rem);
   }
 
   .slider.round {
-    border-radius: 34px;
+    border-radius: 3.4rem;
   }
 
   .slider.round:before {
