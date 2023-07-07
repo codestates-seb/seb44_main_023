@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import { FaPlus, FaCog } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
+import { AiOutlineSetting } from "react-icons/ai"
+import { HiPlus } from "react-icons/hi";
 
 export default function FloatingButton(props) {
   const { icon, onClick } = props;
@@ -9,12 +11,14 @@ export default function FloatingButton(props) {
 
   switch (icon) {
     case "plus":
-      selectedIcon = <FaPlus />;
+      selectedIcon = <HiPlus size={30} style={{ color: "var(--color-gray-07)" }}/>;
       break;
     case "setting":
-      selectedIcon = <FaCog />;
+      selectedIcon = <AiOutlineSetting size={30} style={{ color: "var(--color-gray-07)" }}/>;
       break;
-
+    case "hide":
+      selectedIcon = <FaEyeSlash size={25} style={{ color: "var(--color-gray-07)" }}/>;
+      break;
     default:
       selectedIcon = null;
   }
@@ -27,11 +31,8 @@ export default function FloatingButton(props) {
 }
 
 const StyledFloatingButton = styled.button`
-  /* position: fixed; */
-  bottom: 1.25rem;
-  right: 1.25rem;
-  width: 3.125rem;
-  height: 3.125rem;
+  width: 4.8rem;
+  height: 4.8rem;
   background-color: white;
   border: none;
   border-radius: 50%;
@@ -40,4 +41,8 @@ const StyledFloatingButton = styled.button`
   justify-content: center;
   cursor: pointer;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+  &:hover {
+    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  }
 `;
