@@ -12,6 +12,7 @@ const ModalInput = ({
   onKeyPress,
   suffix,
   focused,
+  ...props,
 }) => {
   return (
     <InputContainer width={width}>
