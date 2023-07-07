@@ -1,10 +1,25 @@
 import styled, { css } from "styled-components";
 
 export default function Button(props) {
-  const { label, onClick, size, bordercolor, fontcolor, fontweight} = props;
-  
+  const {
+    label,
+    onClick,
+    size,
+    bordercolor,
+    fontcolor,
+    fontWeight,
+    ...restProps
+  } = props;
+
   return (
-    <StyledButton size={size} onClick={onClick} fontcolor={fontcolor} bordercolor={bordercolor} fontweight={fontweight}>
+    <StyledButton
+      size={size}
+      onClick={onClick}
+      fontcolor={fontcolor}
+      bordercolor={bordercolor}
+      fontWeight={fontWeight}
+      {...restProps}
+    >
       {label}
     </StyledButton>
   );
@@ -19,45 +34,45 @@ const StyledButton = styled.button`
   ${(props) =>
     props.size === "small" &&
     css`
-      width: 6.25rem;
-      height: 2.083125rem;
+      width: 10rem;
+      height: 3.3rem;
       font-size: 12px;
+      font-weight: ${(props) => props.fontWeight};
       filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       background-color: var(--color-gray-01);
-      color: ${props => props.fontcolor};
-      border-color: ${props => props.bordercolor};
-      border-style: solid;
+      color: ${(props) => props.fontcolor};
+      border: 0.15rem solid ${(props) => props.bordercolor};
 
       &:hover {
-        background-color: var(--color-gray-03);
+        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       }
     `}
 
   ${(props) =>
     props.size === "medium" &&
     css`
-      width: 8.625rem;
-      height: 2.25rem;
-      font-size: 1.25rem;
-      font-weight: ${props => props.fontweight};
+      width: 13.8rem;
+      height: 3.6rem;
+      font-size: 2rem;
+      font-weight: ${(props) => props.fontWeight};
       color: white;
       border-color: transparent;
       border-style: solid;
       background-color: var(--color-red-01);
       filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-      
+
       &:hover {
-        background-color: var(--color-red-02);
+        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       }
     `}
 
   ${(props) =>
     props.size === "large" &&
     css`
-      width: 10.6875rem;
-      height: 2.625rem;
-      font-size: 1.375rem;
-      font-weight: ${props => props.fontWeight};
+      width: 17.1rem;
+      height: 4.2rem;
+      font-size: 2.2rem;
+      font-weight: ${(props) => props.fontWeight};
       color: var(--color-white);
       border-color: transparent;
       border-style: solid;
@@ -65,7 +80,7 @@ const StyledButton = styled.button`
       filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 
       &:hover {
-        background-color: var(--color-blue-04);
+        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
       }
     `}
 `;
