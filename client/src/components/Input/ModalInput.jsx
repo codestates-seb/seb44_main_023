@@ -1,13 +1,15 @@
 import styled from "styled-components";
 
-const Input = ({
+const ModalInput = ({
   type,
   width,
   height,
   placeholder,
   size,
   value,
+  fontSize,
   onChange,
+  onKeyPress,
   suffix,
   focused,
 }) => {
@@ -19,7 +21,9 @@ const Input = ({
           placeholder={placeholder}
           size={size}
           value={value}
+          fontSize={fontSize}
           onChange={onChange}
+          onKeyPress={onKeyPress}
           height={height}
           focused={focused}
         />
@@ -47,6 +51,7 @@ const InputField = styled.input`
   transition: border-bottom-color 0.3s ease;
   background-color: transparent;
   text-align: left;
+  font-size: ${(props) => props.fontSize || "1.4rem"};
 
   &:focus {
     border: ${(props) =>
@@ -64,4 +69,4 @@ const Suffix = styled.div`
   }
 `;
 
-export default Input;
+export default ModalInput;
