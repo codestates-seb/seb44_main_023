@@ -1,12 +1,16 @@
 import React, { useState } from "react";
-import Input from "../components/ModalInput/ModalInput";
+import Input from "../components/Input/ModalInput";
 import { FiSend } from "react-icons/fi";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 const TestContainer = styled.div`
-  background-color: orange;
+  background-color: #ffe7ba;
   height: 500px;
-`
+`;
+
+const FiSendIcon = styled(FiSend)`
+  font-size: 16px; /* 크기 조정 */
+`;
 
 const TestComponent = () => {
   const [title, setTitle] = useState("");
@@ -39,24 +43,27 @@ const TestComponent = () => {
       <Input
         label="제목"
         placeholder="제목을 입력하세요"
-        size="12.5rem"
         value={title}
+        width="20rem"
         onChange={handleTitleChange}
+        focused={true}
       />
       <Input
         label="내용"
         placeholder="내용을 입력하세요"
-        size="200px"
         value={content}
+        width="20rem"
         onChange={handleContentChange}
+        focused={false}
       />
       <Input
-        label="댓글"
+        type="text"
         placeholder="댓글을 입력하세요"
-        size="200px"
         value={comment}
+        size="20rem"
         onChange={handleCommentChange}
-        suffix={<FiSend onClick={handleCommentSubmit} />}
+        suffix={<FiSendIcon onClick={handleCommentSubmit} />}
+        focused={true}
       />
     </TestContainer>
   );
