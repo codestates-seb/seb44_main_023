@@ -1,7 +1,7 @@
 package com.main.server.member;
 
-import com.main.server.member.dto.PatchDto;
-import com.main.server.member.dto.ResponseDto;
+import com.main.server.member.dto.NicknameDto;
+import com.main.server.member.dto.PasswordDto;
 import com.main.server.member.dto.SignUpDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +22,8 @@ public class Member {
 
     private String password;
 
+    private String newPassword;
+
     @Column(nullable = false, unique = true)
     private String nickname;
 
@@ -41,9 +43,13 @@ public class Member {
         this.password = signUpDto.getPassword();
     }
 
-    public Member(PatchDto patchDto) {
-        this.nickname = patchDto.getNickname();
-        this.password = patchDto.getPassword();
+    public Member(NicknameDto nicknameDto) {
+        this.nickname = nicknameDto.getNickname();
+    }
+
+    public Member(PasswordDto passwordDto) {
+        this.password = passwordDto.getPassword();
+        this.newPassword = passwordDto.getNewPassword();
     }
 
 

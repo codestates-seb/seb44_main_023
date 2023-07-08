@@ -1,10 +1,12 @@
 package com.main.server.member;
 
-import com.main.server.member.dto.PatchDto;
+import com.main.server.member.dto.PasswordDto;
+import com.main.server.member.dto.NicknameDto;
 import com.main.server.member.dto.ResponseDto;
 import com.main.server.member.dto.SignUpDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,13 +49,30 @@ public class MemberController {
         return new ResponseDto(foundMember);
     }
 
-    @PatchMapping("/members/{member-Id}")
+    // 닉네임 변경
+    @PatchMapping("/members/{member-Id}/nickname")
     public ResponseDto patchMember(@PathVariable("member-Id") long memberId,
-                              @RequestBody PatchDto patchDto) {
-        Member member = new Member(patchDto);
+                                   @RequestBody NicknameDto nicknameDto) {
+        Member member = new Member(nicknameDto);
         Member updateMember = memberService.updateMember(memberId, member);
 
         return new ResponseDto(updateMember);
+    }
+
+    // 비밀번호 변경
+    @PostMapping("/members/{member-Id}/password")
+    public ResponseEntity<String> changePassword(@PathVariable("member-Id") long memberId,
+                                                 @RequestBody PasswordDto passwordDto) {
+        boolean passwordChanged = memberService.updatePassword(memberId,
+                                                               passwordDto.getPassword(),
+                                                               passwordDto.getNewPassword());
+        if (passwordChanged) {
+            return ResponseEntity.ok("Password changed successfully!");
+        }
+        else {
+            return ResponseEntity.badRequest().body("Failed to change password.");
+        }
+
     }
 
     @ResponseStatus(HttpStatus.OK)
