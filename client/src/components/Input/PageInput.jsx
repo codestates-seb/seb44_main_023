@@ -2,28 +2,22 @@ import React from "react";
 import styled from "styled-components";
 
 const PageInput = ({
-  type,
   width,
-  placeholder,
   info,
   size,
   height,
   fontSize,
-  value,
   onChange,
-  onKeyPress,
+  ...props
 }) => {
   return (
     <InputContainer width={width}>
       <InputField
-        type={type}
-        placeholder={placeholder}
         size={size}
         height={height}
         fontSize={fontSize}
-        value={value}
         onChange={onChange}
-        onKeyPress={onKeyPress}
+        {...props}
       />
       {info && <InputInfo>{info}</InputInfo>}
     </InputContainer>
@@ -53,7 +47,7 @@ const InputField = styled.input`
 const InputInfo = styled.div`
   margin-top: 0.8rem;
   font-size: 1.2rem;
-  color: var(--color-red-01); 
+  color: var(--color-red-01);
 `;
 
 export default PageInput;

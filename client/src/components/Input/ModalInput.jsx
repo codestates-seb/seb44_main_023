@@ -1,32 +1,25 @@
 import styled from "styled-components";
 
 const ModalInput = ({
-  type,
   width,
   height,
-  placeholder,
   size,
-  value,
   fontSize,
   onChange,
-  onKeyPress,
   suffix,
   focused,
-  ...props,
+  ...props
 }) => {
   return (
     <InputContainer width={width}>
       <InputWrapper>
         <InputField
-          type={type}
-          placeholder={placeholder}
           size={size}
-          value={value}
           fontSize={fontSize}
           onChange={onChange}
-          onKeyPress={onKeyPress}
           height={height}
           focused={focused}
+          {...props}
         />
         {suffix && <Suffix>{suffix}</Suffix>}
       </InputWrapper>
