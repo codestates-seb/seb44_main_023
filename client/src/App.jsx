@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ProfilePage from "./pages/ProfilePage";
 import ErrorPage from "./pages/ErrorPage";
-import TodoPage from "./pages/Todo";
+import TodoPage from "./pages/TodoPage";
 
 function App() {
   return (
