@@ -13,11 +13,15 @@ const Login = () => {
     try {
       // 유효성검사 로직 추가
 
-      // const { accessToken, refreshToken } =
-      const users = await loginAPI(email, password);
-      const user = users.find(
+      const response = await loginAPI(email, password);
+
+      const user = response.find(
         (user) => user.email === email && user.password === password
       );
+
+      // 응답 헤더에서 받아오기
+      // 현재는 테스트 불가능
+      const { accessToken, refreshToken } = response.header.authorization;
 
       if (user) {
         // 로그인 성공
@@ -29,9 +33,9 @@ const Login = () => {
 
         /* 로그인 성공 시 accessToken과 refreshToken을 localStorage에 저장 
         테스트 불가능 해서 일단 둠*/
-        // localStorage.setItem("accessToken", accessToken);
-        // localStorage.setItem("refreshToken", refreshToken);
-        // setTokens(accessToken, refreshToken);
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        setTokens(accessToken, refreshToken);
       }
     } catch (error) {
       setValidation(error.message);
