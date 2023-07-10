@@ -1,23 +1,72 @@
+import React, { useState } from "react";
+import Input from "../components/Input/ModalInput";
+import { FiSend } from "react-icons/fi";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
-import background from "../assets/background.png";
-import ErrorCode from "../assets/404page.svg";
-import "../index.css";
-import WeatherWidget from "../components/WeatherWidget/WeatherWidget"
-import Location from "../feature/WeatherWidget/Location";
-import Weather from "../feature/WeatherWidget/Weather";
-const Test = () => {
-  const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
 
-  const handleButtonClick = () => {
-    navigate("/main"); 
+const TestContainer = styled.div`
+  background-color: #ffe7ba;
+  height: 500px;
+`;
+
+const FiSendIcon = styled(FiSend)`
+  font-size: 16px; /* 크기 조정 */
+`;
+
+const TestComponent = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [comment, setComment] = useState("");
+  const [amount, setAmount] = useState("");
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value);
+  };
+
+  const handleContentChange = (event) => {
+    setContent(event.target.value);
+  };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+  const handleAmountChange = (event) => {
+    setAmount(event.target.value);
+  };
+
+  const handleCommentSubmit = () => {
+    console.log("댓글 내용:", comment);
   };
 
   return (
-    <>
-        <WeatherWidget></WeatherWidget>
-    </>
+    <TestContainer>
+      <Input
+        label="제목"
+        placeholder="제목을 입력하세요"
+        value={title}
+        width="20rem"
+        onChange={handleTitleChange}
+        focused={true}
+      />
+      <Input
+        label="내용"
+        placeholder="내용을 입력하세요"
+        value={content}
+        width="20rem"
+        onChange={handleContentChange}
+        focused={false}
+      />
+      <Input
+        type="text"
+        placeholder="댓글을 입력하세요"
+        value={comment}
+        size="20rem"
+        onChange={handleCommentChange}
+        suffix={<FiSendIcon onClick={handleCommentSubmit} />}
+        focused={true}
+      />
+    </TestContainer>
   );
 };
 
-export default Test;
+export default TestComponent;
