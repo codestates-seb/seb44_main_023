@@ -27,7 +27,7 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    private String profileImagePath;
+    private String profileImage;
 
     private String registeredAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
@@ -51,7 +51,4 @@ public class Member {
         this.password = passwordDto.getPassword();
         this.newPassword = passwordDto.getNewPassword();
     }
-
-
-
 }

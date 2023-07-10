@@ -1,14 +1,10 @@
 package com.main.server.member;
 
-import com.main.server.member.dto.PasswordDto;
-import com.main.server.member.dto.NicknameDto;
-import com.main.server.member.dto.ResponseDto;
-import com.main.server.member.dto.SignUpDto;
+import com.main.server.member.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -72,19 +68,6 @@ public class MemberController {
         else {
             return ResponseEntity.badRequest().body("Failed to change password.");
         }
-
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/members/{member-Id}/profile-image")
-    public Member uploadProfileImage(@PathVariable("member-Id") long memberId,
-                                     @RequestParam(value = "file") MultipartFile file,
-                                     @RequestParam("uploadPath") String uploadPath) {
-
-        Member uploadImage = memberService.uploadProfileImage(memberId, file, uploadPath);
-
-        return uploadImage;
-
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -92,4 +75,6 @@ public class MemberController {
     public void deleteMember(@PathVariable("member-Id") long memberId) {
         memberService.terminateMember(memberId);
     }
+
+
 }
