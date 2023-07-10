@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ProfilePage from "./pages/ProfilePage";
-import ErrorPage from "./pages/ErrorPage"
+import ErrorPage from "./pages/ErrorPage";
+import TodoPage from "./pages/Todo";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="*" element={<ErrorPage />} />
+        <Route path="/todo/:groupId" element={<TodoPage />} />
       </Routes>
     </>
   );
