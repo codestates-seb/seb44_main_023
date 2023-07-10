@@ -5,11 +5,7 @@ import Weather from "../../feature/WeatherWidget/Weather";
 
 //저장된 날씨정보를 불러와서 위젯표시 하는 부분
 const WeatherWidget = () => {
-     
-    const location = useGetLocation();
-    console.log("in WeatherWidget ",location);
-  
-    //업데이트된정보 불러오기 , 실패시 디폴트 서울날씨
+     //업데이트된정보 불러오기 , 실패시 디폴트 서울날씨
     const weather = useGetWeatherInfo();
     console.log("in WeatherWidget ",weather)
 
@@ -17,10 +13,9 @@ const WeatherWidget = () => {
   return (
  <>
     {/*날씨정보 업데이트를 도와주는 컴포넌트 */}
-    
     <Weather/>
     <WeatherWrapper>
-          {weather ? (
+      {weather ? (
         <div>
           <WeatherDivRow>
           <WeatherDivCol>
@@ -28,6 +23,7 @@ const WeatherWidget = () => {
               <img
                 src={weather.weatherIconURL}
                 alt="weatherIcon"
+                
                 width="54"
                 height="54"
                 className="weatherIcon"

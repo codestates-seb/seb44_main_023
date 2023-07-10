@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import ProfilePage from "./pages/ProfilePage";
 import ErrorPage from "./pages/ErrorPage"
+import TestWidget from "./pages/TestWidget"
 
 import Test from "./pages/Test"
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="*" element={<ErrorPage />} />
+        <Route path="/weatherWidget" element={<TestWidget />} />
       </Routes>
     </>
   );
