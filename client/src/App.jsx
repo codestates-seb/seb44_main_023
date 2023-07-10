@@ -3,7 +3,6 @@ import ProfilePage from "./pages/ProfilePage";
 import ErrorPage from "./pages/ErrorPage"
 import TestWidget from "./pages/TestWidget"
 
-import Test from "./pages/Test"
 function App() {
   return (
     <>
