@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
+import Button from "../Button/Button";
 
 const Popconfirm = ({
   children,
@@ -9,6 +10,7 @@ const Popconfirm = ({
   confirmText,
   onCancel = () => {},
   onConfirm,
+  down = false,
 }) => {
   const [isPopupVisible, setPopupVisible] = useState(false);
 
@@ -37,17 +39,26 @@ const Popconfirm = ({
         <PopupWrapper
           className="popup"
           left={-((160 - confirmButtonWidth / 2) / 10)}
+          down={down}
         >
           <PopupContent className="popup-content">
             <div className="popup-title">{title}</div>
             <div className="popup-description">{description}</div>
             <div className="button-wrapper">
-              <button onClick={handleCancel} className="cancel-button">
-                {cancelText}
-              </button>
-              <button onClick={handleConfirm} className="confirm-button">
-                {confirmText}
-              </button>
+              <Button
+                label={cancelText}
+                onClick={handleCancel}
+                bordercolor="var(--color-blue-03)"
+                fontcolor="var(--color-blue-03)"
+                size="small"
+              />
+              <Button
+                label={confirmText}
+                onClick={handleConfirm}
+                bordercolor="var(--color-red-01)"
+                fontcolor="var(--color-red-01)"
+                size="small"
+              />
             </div>
           </PopupContent>
         </PopupWrapper>
@@ -68,8 +79,8 @@ const PopupWrapper = styled.div`
   right: 50%;
   z-index: 100;
   width: 32rem;
-  bottom: 4rem;
-  background-color: var(--color-white);
+  ${({ down }) => (down ? "top: 3rem;" : "bottom: 4rem;")}
+  background-color: var(--color-gray-01);
   text-align: center;
   border-radius: 1rem;
   box-shadow: 0.5rem 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.25);
@@ -79,7 +90,10 @@ const PopupWrapper = styled.div`
     position: absolute; /* 절대 위치 사용 */
     margin-left: -0.8rem;
     border: 0.8rem solid transparent;
-    border-top-color: var(--color-white);
+    ${({ down }) =>
+      down
+        ? "top: -1.5rem; border-bottom-color: var(--color-gray-01);"
+        : "border-top-color: var(--color-gray-01);"}
   }
 `;
 
@@ -103,7 +117,7 @@ const PopupContent = styled.div`
   .popup-description {
     font-size: 1.6rem;
     margin-bottom: 1.6rem;
-    color: var(--color-red);
+    color: var(--color-red-01);
   }
 
   .button-wrapper {
@@ -121,11 +135,11 @@ const PopupContent = styled.div`
     }
 
     .confirm-button {
-      border: 0.1rem solid var(--color-red);
-      color: var(--color-red);
+      border: 0.1rem solid var(--color-red-01);
+      color: var(--color-red-01);
 
       &:hover {
-        background-color: var(--color-red);
+        background-color: var(--color-red-01);
         color: var(--color-white);
       }
     }

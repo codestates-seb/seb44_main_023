@@ -5,6 +5,7 @@ import Toggle from "../../components/Toggle/Toggle";
 import kakaoIcon from "../../assets/icons/kakao_icon.svg";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { useStoreHide } from "../../store/store.hide";
+import Button from "../../components/Button/Button";
 
 const ProfileBottom = () => {
   const { isHidden, changeVisibility } = useStoreHide();
@@ -19,17 +20,17 @@ const ProfileBottom = () => {
         {isEditMode ? <Input type="password" /> : <div />}
         {isEditMode ? (
           <div className="password-button-wrap">
-            <Button onClick={handleEditMode} color="var(--color-red-01)">
+            <TextButton onClick={handleEditMode} color="var(--color-red-01)">
               취소
-            </Button>
-            <Button onClick={handleEditMode} color="var(--color-blue-03)">
+            </TextButton>
+            <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
               저장
-            </Button>
+            </TextButton>
           </div>
         ) : (
-          <Button onClick={handleEditMode} color="var(--color-gray-04)">
+          <TextButton onClick={handleEditMode} color="var(--color-gray-04)">
             비밀번호 변경
-          </Button>
+          </TextButton>
         )}
       </PasswordWrap>
       <Title>소셜 정보</Title>
@@ -78,7 +79,7 @@ const ProfileBottom = () => {
       <Toggle checked={isHidden} onClick={changeVisibility} />
       <Title>회원 탈퇴</Title>
       <Content>
-        <button>회원 탈퇴</button>
+        <Button label="회원 탈퇴" size="medium" />
       </Content>
     </StyledWrapper>
   );
@@ -146,7 +147,7 @@ const PasswordWrap = styled.div`
   }
 `;
 
-const Button = styled.button`
+const TextButton = styled.button`
   width: max-content;
   font-size: 2rem;
   color: ${({ color }) => color};
