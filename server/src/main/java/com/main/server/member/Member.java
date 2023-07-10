@@ -29,7 +29,7 @@ public class Member {
 
     private String profileImage;
 
-    private String registeredAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private String registeredAt;
 
     private LocalDateTime terminatedAt;
 
@@ -51,4 +51,17 @@ public class Member {
         this.password = passwordDto.getPassword();
         this.newPassword = passwordDto.getNewPassword();
     }
+
+
+//    @OneToMany(mappedBy = "member")
+//    private List<TodoGroupMember> todoGroupMembers = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Todo> todos = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    @OneToOne(mappedBy = "member")
+//    private TodoGroup todoGroup;
 }

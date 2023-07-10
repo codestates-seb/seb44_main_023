@@ -72,8 +72,9 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/members/{member-Id}")
-    public void deleteMember(@PathVariable("member-Id") long memberId) {
-        memberService.terminateMember(memberId);
+    public void deleteMember(@PathVariable("member-Id") long memberId,
+                             @RequestParam("password") String password) {
+        memberService.terminateMember(memberId, password);
     }
 
 

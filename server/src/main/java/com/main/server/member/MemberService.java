@@ -2,20 +2,25 @@ package com.main.server.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MemberService {
     private MemberRepository memberRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(MemberRepository memberRepository) {
+    public MemberService(MemberRepository memberRepository,
+                         PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Member registerMember(Member member) {
@@ -24,6 +29,10 @@ public class MemberService {
 
         if (optionalMember.isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT);
+
+        String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.setPassword(encodedPassword);
+        member.setRegisteredAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         Member registerdMember = memberRepository.save(member);
 
@@ -57,12 +66,28 @@ public class MemberService {
         return updateMember;
     }
 
-    // 비밀번호 변경
-    public boolean updatePassword(long memberId, String password, String newPassword) {
+
+//    public boolean updatePassword(long memberId, String password, String newPassword) {
+////        Member foundMember = findMember(memberId);
+////
+////        if (foundMember != null && foundMember.getPassword().equals(password)) {
+////            foundMember.setPassword(newPassword);
+////
+////            Member updatePassword = memberRepository.save(foundMember);
+////            return true;
+////        }
+////        return false;
+////    }
+
+        // 비밀번호 변경
+        public boolean updatePassword(long memberId, String password, String newPassword) {
         Member foundMember = findMember(memberId);
 
-        if (foundMember != null && foundMember.getPassword().equals(password)) {
-            foundMember.setPassword(newPassword);
+
+        if (foundMember != null && passwordEncoder.matches(password, foundMember.getPassword())) {
+            String encodedNewPassword = passwordEncoder.encode(newPassword);
+
+            foundMember.setPassword(encodedNewPassword);
 
             Member updatePassword = memberRepository.save(foundMember);
             return true;
@@ -70,12 +95,18 @@ public class MemberService {
         return false;
     }
 
-    public void terminateMember(long memberId) {
+    public void terminateMember(long memberId, String password) {
         Member foundMember = findMember(memberId);
+        if (passwordEncoder.matches(password, foundMember.getPassword())) {
+            foundMember.setTerminatedAt(LocalDateTime.now());
+            foundMember.setTerminated(true);
+            memberRepository.save(foundMember);
+        }
+        else {
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
+        }
 
-        foundMember.setTerminatedAt(LocalDateTime.now());
-        foundMember.setTerminated(true);
-        memberRepository.save(foundMember);
+
     }
 
 }
