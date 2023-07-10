@@ -2,13 +2,10 @@ package com.main.server.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-// import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,26 +44,37 @@ public class MemberService {
         return foundMember;
     }
 
+    // 닉네임 변경
     public Member updateMember(long memberId, Member member) {
         Member foundMember = findMember(memberId);
 
         if (foundMember != null) {
 
             foundMember.setNickname(member.getNickname());
-            foundMember.setPassword(member.getPassword());
-            foundMember.setProfileImage(member.getProfileImage());
         }
         Member updateMember = memberRepository.save(foundMember);
 
         return updateMember;
     }
 
+    // 비밀번호 변경
+    public boolean updatePassword(long memberId, String password, String newPassword) {
+        Member foundMember = findMember(memberId);
+
+        if (foundMember != null && foundMember.getPassword().equals(password)) {
+            foundMember.setPassword(newPassword);
+
+            Member updatePassword = memberRepository.save(foundMember);
+            return true;
+        }
+        return false;
+    }
+
     public void terminateMember(long memberId) {
         Member foundMember = findMember(memberId);
 
-        foundMember.setTerminatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        foundMember.setTerminatedAt(LocalDateTime.now());
         foundMember.setTerminated(true);
-
         memberRepository.save(foundMember);
     }
 
