@@ -5,6 +5,7 @@ import { devtools } from "zustand/middleware";
 // const { location, setLocation } = useLocationStore();
 
 const store = (set) => ({
+  //default location seoul.
   location: { latitude: "37.5665", longitude: "126.9780" },
   setLocation: (latitude, longitude) =>
     set({ location: { latitude, longitude } }),
