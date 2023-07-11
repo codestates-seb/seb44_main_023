@@ -16,12 +16,9 @@ const Login = () => {
 
       const response = await loginAPI(email, password);
 
-      const user = response.find(
-        (user) => user.email === email && user.password === password
-      );
+      const user = response.email === email && response.password === password;
 
       // 응답 헤더에서 받아오기
-      // 현재는 테스트 불가능
       const { accessToken, refreshToken } = response.header.authorization;
 
       if (user) {
@@ -34,14 +31,12 @@ const Login = () => {
 
         /* 로그인 성공 시 accessToken과 refreshToken을 localStorage에 저장 
         테스트 불가능 해서 일단 둠*/
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-        setTokens(accessToken, refreshToken);
+        localStorage.setItem("accessToken", accessToken , "refreshToken" , refreshToken);
 
         useNavigate("/");
       }
     } catch (error) {
-      setValidation(error.message);
+      setValidation("로그인 실패");
       console.log(error);
     }
   };
