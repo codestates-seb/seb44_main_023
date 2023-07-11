@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+const useLoginStore = create((set) => ({
   login: false,
   validation: "",
   accessToken: null,
@@ -11,4 +11,4 @@ const useStore = create((set) => ({
     set(() => ({ accessToken: accessToken, refreshToken: refreshToken })),
 }));
 
-export default useStore;
+export default useLoginStore;
