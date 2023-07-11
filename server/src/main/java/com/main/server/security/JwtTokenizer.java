@@ -50,7 +50,6 @@ public class JwtTokenizer {
 
     public String generateAccessToken(String subject) {
         return generateToken(subject, accessTokenExpirationTime);
-
     }
 
     public String generateRefreshToken(String subject) {

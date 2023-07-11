@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -95,6 +95,32 @@ public class MemberController {
                              @RequestParam("password") String password) {
         memberService.terminateMember(memberId, password);
     }
+
+    // 이미지 업로드
+    @PostMapping("/members/{member-Id}/profile-image")
+    public ResponseEntity<String> uploadProfileImage(@PathVariable("member-Id") long memberId,
+                                                     @RequestParam("file") MultipartFile file) {
+        try {
+            memberService.createProfileImage(memberId, file);
+            return ResponseEntity.ok("Profile image uploaded successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
+        }
+    }
+
+    // 이미지 수정
+    @PatchMapping("/members/{member-Id}/profile-image")
+    public ResponseEntity<String> updateProfileImage(@PathVariable("member-Id") long memberId,
+                                                     @RequestParam("file") MultipartFile file) {
+        try {
+            memberService.updateProfileImage(memberId, file);
+            return ResponseEntity.ok("Profile image updated successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update profile image.");
+        }
+    }
+
 
 
 }
