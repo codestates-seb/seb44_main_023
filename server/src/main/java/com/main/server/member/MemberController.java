@@ -4,6 +4,9 @@ import com.main.server.member.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,12 +24,28 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members")
-    public ResponseDto postMember(@Valid @RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<?> postMember(@Valid @RequestBody SignUpDto signUpDto
+            , BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검증에 실패한 경우 에러 메시지를 처리하고 응답을 구성한다.
+            StringBuilder errorMessage = new StringBuilder();
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errorMessage.append(error.getField())
+                        .append(": ")
+                        .append(error.getDefaultMessage())
+                        .append("; \n");
+            }
+            // 에러 메시지를 포스트맨으로 보내기 위해 ResponseEntity를 사용한다.
+            return ResponseEntity.badRequest().body(errorMessage.toString());
+        }
+
         Member member = new Member(signUpDto);
         Member registeredMember = memberService.registerMember(member);
 
-        return new ResponseDto(registeredMember);
+        ResponseDto responseDto = new ResponseDto(registeredMember);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
+
 
     @GetMapping("/members")
     public List<ResponseDto> getMembers() {

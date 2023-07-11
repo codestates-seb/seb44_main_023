@@ -61,18 +61,17 @@ public class AuthController {
             return ResponseEntity.badRequest().body(errorMessage.toString());
         }
 
-      String email = authDto.getEmail();
-      String password = authDto.getPassword();
-      
-       authService.authenticate(email, password);
-      
-      String accessToken = jwtTokenizer.generateAccessToken(email);
+        String email = authDto.getEmail();
+        String password = authDto.getPassword();
+
+        authService.authenticate(email, password);
+
+        String accessToken = jwtTokenizer.generateAccessToken(email);
         String refreshToken = jwtTokenizer.generateRefreshToken(email);
-      
-      AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
-      
-      return ResponseEntity.ok(authResponse);
-    }
+
+        AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
+
+        return ResponseEntity.ok(authResponse);
 
     @DeleteMapping("/logouts")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
@@ -103,7 +102,6 @@ public class AuthController {
 
     private String extractAccessToken(String authorizationHeader) {
         return authorizationHeader.replace("Bearer ", "");
-
     }
 }
 

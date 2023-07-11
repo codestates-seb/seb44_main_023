@@ -64,7 +64,7 @@ public class MemberService {
 
         return updateMember;
     }
-
+  
         // 비밀번호 변경
         public boolean updatePassword(long memberId, String password, String newPassword) {
         Member foundMember = findMember(memberId);
@@ -81,9 +81,7 @@ public class MemberService {
         return false;
     }
 
-
     public void terminateMember(long memberId, String password) {
-
         Member foundMember = findMember(memberId);
         if (passwordEncoder.matches(password, foundMember.getPassword())) {
             foundMember.setTerminatedAt(LocalDateTime.now());
@@ -93,5 +91,7 @@ public class MemberService {
         else {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
+    }
+   
 
 }

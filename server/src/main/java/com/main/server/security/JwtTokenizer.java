@@ -34,7 +34,7 @@ public class JwtTokenizer {
         algorithm = Algorithm.HMAC256(secretKey);
         jwtVerifier = JWT.require(algorithm).build();
     }
-  
+
     public String generateToken(String subject, long accessTokenExpirationTime) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + accessTokenExpirationTime);
