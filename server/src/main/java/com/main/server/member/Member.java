@@ -52,6 +52,11 @@ public class Member {
         this.newPassword = passwordDto.getNewPassword();
     }
 
+    public Member(PasswordDto passwordDto) {
+        this.password = passwordDto.getPassword();
+        this.newPassword = passwordDto.getNewPassword();
+    }
+
 
 //    @OneToMany(mappedBy = "member")
 //    private List<TodoGroupMember> todoGroupMembers = new ArrayList<>();
