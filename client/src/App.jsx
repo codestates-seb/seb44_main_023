@@ -1,22 +1,28 @@
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage";
-import ErrorPage from "./pages/ErrorPage"
-import Test from "./pages/Test"
 import Home from "./pages/Home"
+import ErrorPage from "./pages/ErrorPage";
+import ProfilePage from "./pages/ProfilePage";
+
+import Header from "./components/Header/Header";
+
+
+import TestWidget from "./pages/TestWidget"
 
 
 function App() {
   return (
     <>
+      {/* <Header /> */}
       <Routes>
-        <Route path="/" element={<Home />} />   
-        <Route path="*" element={<Test />} />
-        <Route path="*" element={<ErrorPage />} />   
+        {/* <Route path="/" element={<Main />} />    */}
+        <Route path="/home" element={<Home />} />   
         <Route path="/profile/:id" element={<ProfilePage />} />
-        <Route path="*" element={<ErrorPage />} />
+        <Route path="/weatherWidget" element={<TestWidget />} />
+        <Route path="*" element={<ErrorPage />} />   
+
       </Routes>
     </>
   );
 }
-
 export default App;
