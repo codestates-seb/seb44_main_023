@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +64,7 @@ public class MemberService {
 
         return updateMember;
     }
+  
         // 비밀번호 변경
         public boolean updatePassword(long memberId, String password, String newPassword) {
         Member foundMember = findMember(memberId);
@@ -92,5 +92,6 @@ public class MemberService {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
     }
+   
 
 }
