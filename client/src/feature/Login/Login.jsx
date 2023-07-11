@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { loginAPI } from "../../api/members";
-import useStore from "../../store/store.login";
+import useLoginStore from "../../store/store.login";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setLogin = useStore((state) => state.setLogin);
-  const setValidation = useStore((state) => state.setValidation);
-  // const setTokens = useStore((state) => state.setTokens);
+  const setLogin = useLoginStore((state) => state.setLogin);
+  const setValidation = useLoginStore((state) => state.setValidation);
+  // const setTokens = useLoginStore((state) => state.setTokens);
 
   const handleLogin = async () => {
     try {
@@ -36,6 +37,8 @@ const Login = () => {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         setTokens(accessToken, refreshToken);
+
+        useNavigate("/");
       }
     } catch (error) {
       setValidation(error.message);
