@@ -3,7 +3,6 @@ package com.main.server.auth.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

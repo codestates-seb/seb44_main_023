@@ -72,7 +72,6 @@ public class AuthController {
         AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
 
         return ResponseEntity.ok(authResponse);
-    }
 
     @DeleteMapping("/logouts")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
