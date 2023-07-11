@@ -98,21 +98,21 @@ const HeaderContainer = styled.header`
   z-index: 9999;
   display: flex;
   width: 100%;
-  height: 60px;
+  height: 6rem;
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: transparent;
-  padding: 10px 20px;
+  padding: 1rem 2rem;
   cursor: pointer;
 `;
 
 const LogoWrapper = styled.div`
-  margin-right: 20px;
+  margin-right: 2rem;
 `;
 
 const LogoImage = styled.img`
-  width: 150px;
+  width: 15rem;
 `;
 
 const RightSectionWrapper = styled.div`
@@ -122,27 +122,27 @@ const RightSectionWrapper = styled.div`
 const Button = styled.button`
   border: none;
   background: transparent;
-  margin-left: 10px;
+  margin-left: 1rem;
 `;
 
 const MoonIcon = styled(HiMiniMoon)`
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
 `;
 
 const UserAvatarImage = styled.img`
-  width: 28px;
-  height: 28px;
+  width: 2.8rem;
+  height: 2.8rem;
 `;
 
 const LogoutIcon = styled(MdOutlineLogout)`
-  width: 26px;
-  height: 26px;
+  width: 2.6rem;
+  height: 2.6rem;
 `;
 
 const WeatherIcon = styled(TiWeatherPartlySunny)`
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
 `;
 
 const PopupWrapper = styled.div`
@@ -153,14 +153,13 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: -85px;
+  right: -8.5rem;
   transform: translateX(-50%);
-
   &::before {
     content: "";
     position: absolute;
     top: -2.3rem;
-    left: 120px;
+    left: 12rem;
     transform: translateX(-50%);
     border-width: 1.5rem;
     border-style: solid;
@@ -194,8 +193,7 @@ const CancelButton = styled.button`
   color: var(--color-blue-03);
   cursor: pointer;
   border: 1px solid;
-  font-size: 12px;
-
+  font-size: 1.2rem;
   &:hover {
     filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
@@ -209,9 +207,7 @@ const ConfirmButton = styled.button`
   color: var(--color-red-01);
   cursor: pointer;
   border: 1px solid;
-
-  font-size: 12px;
-
+  font-size: 1.2rem;
   &:hover {
     filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   }
