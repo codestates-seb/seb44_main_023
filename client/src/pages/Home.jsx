@@ -1,22 +1,61 @@
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
 import background from "../assets/home/screens/맑음.png";
 import smallLogo from "../assets/home/smallLogo.svg";
-import moveTo from "../assets/home/moveTo.svg";
-
 import bigLogo from "../assets/home/BigLogo.svg";
-
+import moveTo from "../assets/home/moveTo.svg";
+import Button from "../components/Button/Button"
 import "../index.css";
-import { BsChevronCompactDown } from "react-icons/bs";
 import WeatherWidget from "../components/WeatherWidget/WeatherWidget";
 
-
 const Home = () => {
+  const [showDetails, setShowDetails] = useState(false);
+  const handleClick = () => {
+    setShowDetails(true);
+  };
+
+  const handleBack = () => {
+    setShowDetails(false);
+  };
+
+ useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      // 페이지 전환 조건을 정의합니다. 예를 들어, 스크롤이 500px 이상 이동했을 때 페이지 전환을 수행합니다.
+      if (scrollPosition >= 500) {
+        setShowDetails(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  
+
+  return (
+    <div>
+      {showDetails ? (
+        <DetailedPageComponent onBack={handleBack} />
+      ) : (
+        <MainComponent onClick={handleClick} />
+      )}
+    </div>
+  );
+};
+export default Home;
+
+
+const MainComponent = ({ onClick }) => {
   const shouldBlur=true;
   const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
-
-  const handleButtonClick = () => {
-    navigate("/main"); 
+  const handleLoginButtonClick = () => {
+    navigate("/login"); 
+  };
+  const handleSignUpButtonClick = () => {
+    navigate("/signup"); 
   };
 
   return (
@@ -35,12 +74,20 @@ const Home = () => {
             </SloganText>
           </HomeDivCol>
           <HomeDivRow>
-            <Button  onClick={handleButtonClick}>Login</Button>
-            <Button style={{bottom: '28.4rem'}} onClick={handleButtonClick}>Sign up</Button>
+            <Button
+              label="Login" // 버튼 Text 지정
+              size="large" // 버튼 사이즈
+              onClick={handleLoginButtonClick} // onClick
+            />
+            <Button
+              label="Sign up" // 버튼 Text 지정
+              size="large" // 버튼 사이즈
+              onClick={handleSignUpButtonClick} // onClick
+            />
           </HomeDivRow>
           {/* justifyContent: 'center' */}
           <div style={{ display: 'flex',marginTop:'5rem' , justifyContent: 'center', alignItem: 'center'}}>
-            <MoveTo src={moveTo}></MoveTo>       
+            <MoveTo src={moveTo} onClick={onClick}></MoveTo>       
           </div>
           </HomeContainer> 
         </HomeMain>
@@ -75,9 +122,18 @@ const Home = () => {
   //     </div>
      
   // </HomeWrapper>
+
   );
 };
-export default Home;
+const DetailedPageComponent = ({ onBack }) => {
+  return (
+    <div>
+      <SloganText>상세 설명 페이지</SloganText>
+      <SloganText>서비스에 대한 상세 설명입니다.</SloganText>
+      <Button onClick={onBack}>뒤로 가기</Button>
+    </div>
+  );
+};
 
 
 const MoveTo = styled.img`
@@ -159,17 +215,17 @@ const HomeWrapper = styled.div`
   `
 
 
-const Button = styled.button`
-  font-size: 20px;
-  border-radius: 30px;
-  border: none;
-  padding: 10px 15px 10px 15px;
-  font-weight: 500;
-  background-color: #569fbc;
-  color: #ffffff;
-  cursor: pointer;
+// const Button = styled.button`
+//   font-size: 20px;
+//   border-radius: 30px;
+//   border: none;
+//   padding: 10px 15px 10px 15px;
+//   font-weight: 500;
+//   background-color: #569fbc;
+//   color: #ffffff;
+//   cursor: pointer;
 
-  &:hover {
-    background-color: #42768b;
-  }
-`;
+//   &:hover {
+//     background-color: #42768b;
+//   }
+// `;
