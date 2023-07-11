@@ -130,7 +130,11 @@ const DetailedPageComponent = ({ onBack }) => {
     <div>
       <SloganText>상세 설명 페이지</SloganText>
       <SloganText>서비스에 대한 상세 설명입니다.</SloganText>
-      <Button onClick={onBack}>뒤로 가기</Button>
+      <Button
+              label="뒤로 가기" // 버튼 Text 지정
+              size="large" // 버튼 사이즈
+              onClick={onBack} // onClick
+      />
     </div>
   );
 };
