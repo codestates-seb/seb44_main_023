@@ -4,11 +4,7 @@ import com.main.server.member.Member;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collector;
 
 @Data
 @NoArgsConstructor

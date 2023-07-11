@@ -65,20 +65,6 @@ public class MemberService {
 
         return updateMember;
     }
-
-
-//    public boolean updatePassword(long memberId, String password, String newPassword) {
-////        Member foundMember = findMember(memberId);
-////
-////        if (foundMember != null && foundMember.getPassword().equals(password)) {
-////            foundMember.setPassword(newPassword);
-////
-////            Member updatePassword = memberRepository.save(foundMember);
-////            return true;
-////        }
-////        return false;
-////    }
-
         // 비밀번호 변경
         public boolean updatePassword(long memberId, String password, String newPassword) {
         Member foundMember = findMember(memberId);
@@ -105,8 +91,6 @@ public class MemberService {
         else {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
-
-
     }
 
 }
