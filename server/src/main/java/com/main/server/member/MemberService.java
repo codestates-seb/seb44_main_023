@@ -4,8 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -105,8 +111,53 @@ public class MemberService {
         else {
             throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
         }
+    }
 
+    // 이미지 업로드
+    public void createProfileImage(long memberId, MultipartFile file) throws Exception {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
+        // 파일 업로드 처리 로직
+        String fileName = file.getOriginalFilename();
+        Path filePath = Path.of("/Users/seonggeon2/Downloads/mainproject/server/uploads", fileName);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        member.setProfileImage(fileName);
+        memberRepository.save(member);
+    }
+
+    // 이미지 수정
+    public void updateProfileImage(long memberId, MultipartFile file) throws Exception {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+
+        // 기존 이미지 파일 삭제
+        deleteExistingProfileImage(member);
+
+        // 새로운 이미지 파일 업로드
+        String fileName = file.getOriginalFilename();
+        Path filePath = Path.of("/Users/seonggeon2/Downloads/mainproject/server/uploads/", fileName);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        member.setProfileImage(fileName);
+        memberRepository.save(member);
+    }
+
+    // 기존 이미지 파일 삭제
+    private void deleteExistingProfileImage(Member member) {
+        if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
+            String existingImagePath = "/Users/seonggeon2/Downloads/mainproject/server/uploads/"
+                    + member.getProfileImage();
+            Path existingImageFile = Paths.get(existingImagePath);
+            if (Files.exists(existingImageFile)) {
+                try {
+                    Files.delete(existingImageFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }
