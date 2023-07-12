@@ -7,38 +7,60 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setLogin = useLoginStore((state) => state.setLogin);
-  const setValidation = useLoginStore((state) => state.setValidation);
-  // const setTokens = useLoginStore((state) => state.setTokens);
+  const { validation, setValidation } = useLoginStore();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
+    const res = await loginAPI(email, password);
     try {
-      // 유효성검사 로직 추가
+      // 로그인 성공
+      console.log("사용자 정보:", res);
 
-      const response = await loginAPI(email, password);
+      setLogin(true);
+      setValidation("");
 
-      const user = response.email === email && response.password === password;
-
-      // 응답 헤더에서 받아오기
-      const { accessToken, refreshToken } = response.header.authorization;
-
-      if (user) {
-        // 로그인 성공
-        console.log("로그인 성공");
-        console.log("사용자 정보:", user);
-
-        setLogin(true);
-        setValidation("");
-
-        /* 로그인 성공 시 accessToken과 refreshToken을 localStorage에 저장 
-        테스트 불가능 해서 일단 둠*/
-        localStorage.setItem("accessToken", accessToken , "refreshToken" , refreshToken);
-
-        useNavigate("/");
-      }
+      navigate("/");
     } catch (error) {
       setValidation("로그인 실패");
       console.log(error);
     }
+  };
+
+  const handleEmailValidation = (e) => {
+    const email = e.target.value;
+    let emailValidationMSG = "";
+
+    // 이메일 유효성 검사
+    if (!email) {
+      emailValidationMSG = "이메일을 입력해주세요.";
+    } else if (!isValidEmail(email)) {
+      emailValidationMSG = "유효한 이메일 형식이 아닙니다.";
+    }
+
+    // 유효성 검사 메세지 저장
+    setValidation({ ...validation, email: emailValidationMSG });
+    setEmail(email);
+  };
+
+  const isValidEmail = (email) => {
+    // 이메일 유효성 검사 로직 작성
+    // 유효한 이메일 형식인 경우 true 반환, 그렇지 않은 경우 false 반환
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+  
+
+  const handlePasswordValidation = (e) => {
+    const password = e.target.value;
+    let passwordValidation = "";
+
+    // 비밀번호 유효성 검사
+    if (!password) {
+      passwordValidation = "비밀번호를 입력해주세요.";
+    }
+
+    // 유효성 검사 메세지 저장
+    setValidation({ ...validation, password: passwordValidation });
+    setPassword(password);
   };
 
   return (
@@ -47,14 +69,17 @@ const Login = () => {
         type="email"
         placeholder="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={handleEmailValidation}
       />
+      {validation.email && <p>{validation.email}</p>}
+      <br/>
       <input
         type="password"
         placeholder="Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handlePasswordValidation}
       />
+      {validation.password && <p>{validation.password}</p>}
       <button onClick={handleLogin}>로그인</button>
     </div>
   );
