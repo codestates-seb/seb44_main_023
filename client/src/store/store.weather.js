@@ -12,6 +12,7 @@ const store = (set) => ({
     temp_min,
     temp_max,
     weather,
+    type,
     weatherIconURL
   ) =>
     set({
@@ -21,6 +22,7 @@ const store = (set) => ({
         temp_min,
         temp_max,
         weather,
+        type,
         weatherIconURL,
       },
     }),

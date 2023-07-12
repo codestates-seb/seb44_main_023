@@ -4,8 +4,9 @@ import { useWeatherInfoStore } from "../../store/store.weather";
 import Location from "./Location"
 import axios from "axios";
 import {roundDecimal} from "../../utils/util"
+import { getWeatherType } from "./getWeatherType";
 //날씨정보를 불러와서 저장
-//({ weatherInfo: { country, temp, temp_max, temp_min, weather } })
+//({ weatherInfo: { country, temp, temp_max, temp_min, type, weather } })
 const Weather = () => {
   //업데이트된정보 불러오기 , 실패시 디폴트 서울
   const location = useGetLocation();
@@ -21,17 +22,21 @@ const Weather = () => {
         
       const apiResponse = response.data;
       const { name, main, weather} = apiResponse;
-      const { temp, temp_min, temp_max } = main;
+      const { currTemp } = main;
+      const { temp_min,temp_max } = temp;
+
       const  country  = name;
       const weatherKR=weather[0].description;
       const icon = weather[0].icon;
+      const type = getWeatherType(icon);
       const iconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`;
         setWeatherInfo(
           country,
-          roundDecimal(temp),
+          roundDecimal(currTemp),
           roundDecimal(temp_min),
           roundDecimal( temp_max),
           weatherKR,
+          type,
           iconURL
           );
       } catch (error) {
