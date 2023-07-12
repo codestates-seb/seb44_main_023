@@ -1,26 +1,22 @@
-package com.main.server.todo.entity;
+package com.main.server.todo.domain;
 
-import com.main.server.comment.entity.Comment;
 import com.main.server.member.Member;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @NoArgsConstructor
 @Getter
@@ -42,8 +38,17 @@ public class Todo {
     @Column(name = "todo_schedule_date", nullable = true)
     private String todoScheduleDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "todo_status")
-    private String todoStatus;
+    private TodoStatus todoStatus = TodoStatus.INCOMPLETE;
+
+    @ManyToOne
+    @JoinColumn(name = "todo_group_id")
+    private TodoGroup todoGroup;
+
+    public void addTodoGroup(TodoGroup todoGroup) {
+        this.todoGroup = todoGroup;
+    }
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -52,22 +57,12 @@ public class Todo {
     public void addMember(Member member) {
         this.member = member;
     }
+
     @OneToMany(mappedBy = "todo")
     private List<Comment> comments = new ArrayList<>();
 
-    public Todo(Member member, String todoTitle, String todoContent, String todoScheduleDate) {
-        this.member = member;
-        this.todoTitle = todoTitle;
-        this.todoContent = todoContent;
-        this.todoScheduleDate = todoScheduleDate;
-    }
-
-    public Todo(Member member, Long todoId, String todoTitle, String todoContent, String todoScheduleDate) {
-        this.member = member;
-        this.todoId = todoId;
-        this.todoTitle = todoTitle;
-        this.todoContent = todoContent;
-        this.todoScheduleDate = todoScheduleDate;
+    public void updateStatus(TodoStatus todoStatus) {
+        this.todoStatus = todoStatus;
     }
 
 }
