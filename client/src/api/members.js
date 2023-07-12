@@ -1,6 +1,6 @@
 import axios from "axios";
 // 임시 URL
-const BASE_URL = "https://5000-180-230-249-174.ngrok-free.app";
+const BASE_URL = "https://53d4-180-230-249-174.ngrok-free.app";
 
 export const loginAPI = async (email, password) => {
   try {
