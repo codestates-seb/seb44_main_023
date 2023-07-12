@@ -13,7 +13,7 @@ export const loginAPI = async (email, password) => {
 
 export const signupAPI = async (email, password, nickname) => {
   try {
-    const response = await axios.post(`${BASE_URL}/signup`, {
+    const response = await axios.post(`/api/signup`, {
       email,
       password,
       nickname,
