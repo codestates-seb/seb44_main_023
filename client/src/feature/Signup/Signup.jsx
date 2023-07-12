@@ -8,18 +8,23 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const { validation, setValidation } = useSignupStore();
+  const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const response = await signupAPI(email, password, nickname);
-
+    // api 테스트 가능할때 다시 테스트 해봐야함
+    if (validation.email || validation.password || validation.nickname) {
+      return; // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+    }
+    
     try {
+      const response = await signupAPI(email, password, nickname);
       console.log("회원가입 성공:", response);
       // 자동으로 로그인 되어 메인으로 넘어가게끔 서버쪽 응답 헤더에 accessToken, refreshToken 보내달라고 요청하기
-      useNavigate("/");
+      navigate("/");
     } catch (error) {
       console.log("오류로 인한 회원가입 실패", error);
-      useNavigate("*");
+      navigate("*");
     }
   };
 
