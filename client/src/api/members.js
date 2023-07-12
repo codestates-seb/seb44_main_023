@@ -1,13 +1,17 @@
 import axios from "axios";
-// 임시 URL
-const BASE_URL = "https://53d4-180-230-249-174.ngrok-free.app";
 
 export const loginAPI = async (email, password) => {
   try {
-    const response = await axios.post(`${BASE_URL}/auths`, { email, password });
+    const response = await axios.post(`/api/auths`, { email, password });
     console.log(response.data);
+    // accessToken
     const accessToken = response.headers.authorization;
     localStorage.setItem("accessToken", accessToken);
+
+    // refreshToken
+    const refreshToken = response.headers['x-refresh-token'];
+    localStorage.setItem("refreshToken", refreshToken);
+
     return response.data;
   } catch (error) {
     throw new Error(error.response.error);
