@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Toggle from "../../components/Toggle/Toggle";
@@ -8,6 +8,8 @@ import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
 import { deleteMember, updatePassword } from "../../api/members.api";
 import Popconfirm from "../../components/Popconfirm/Popconfirm";
+import { useNavigate } from "react-router-dom";
+import ProfileGroupSetting from "./ProfileGroupSetting";
 
 const ProfileBottom = ({ profileInfo }) => {
   const { memberId, email, social } = profileInfo;
@@ -17,6 +19,8 @@ const ProfileBottom = ({ profileInfo }) => {
   const [passwordInput, setPasswordInput] = useState();
   const [newPasswordInput, setNewPasswordInput] = useState();
   const [passwordConfirmInput, setPasswordConfirmInput] = useState();
+
+  const navigate = useNavigate();
 
   const handleEditMode = () => setIsEditMode(!isEditMode);
 
@@ -32,10 +36,12 @@ const ProfileBottom = ({ profileInfo }) => {
   const handleDeleteMember = async () => {
     try {
       await deleteMember(memberId, passwordConfirmInput);
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
   };
+
   return (
     <StyledWrapper>
       <Title>비밀번호</Title>
@@ -95,40 +101,8 @@ const ProfileBottom = ({ profileInfo }) => {
       <Title>이메일 주소</Title>
       <Content>{email}</Content>
       <Title>메인 페이지 설정</Title>
-      <PageSetting>
-        <div className="setting-box">
-          <div className="setting-box-title">TODO</div>
-          <Dropdown
-            id="todo-group"
-            menu={[
-              {
-                label: "GROUP 1",
-                key: "8498723981",
-              },
-              {
-                label: "GROUP2",
-                key: "3123782468",
-              },
-            ]}
-          />
-        </div>
-        <div className="setting-box">
-          <div className="setting-box-title">가계부</div>
-          <Dropdown
-            id="account-group"
-            menu={[
-              {
-                label: "GROUP 1",
-                key: "8498723981",
-              },
-              {
-                label: "GROUP2",
-                key: "3123782468",
-              },
-            ]}
-          />
-        </div>
-      </PageSetting>
+      <ProfileGroupSetting />
+
       <Title>숨기기 설정</Title>
       <Toggle checked={isHidden} onClick={changeVisibility} />
       <Title>회원 탈퇴</Title>
@@ -179,22 +153,6 @@ const Content = styled.div`
   min-height: 3.6rem;
   display: flex;
   align-items: center;
-`;
-
-const PageSetting = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  .setting-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .setting-box-title {
-      margin-right: 4rem;
-    }
-  }
 `;
 
 const SocialIcon = styled.img`

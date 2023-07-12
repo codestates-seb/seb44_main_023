@@ -3,20 +3,23 @@ import { useRef, useState } from "react";
 import { AiOutlinePlus, AiOutlineDown } from "react-icons/ai";
 import Input from "../../components/Input/PageInput";
 
-const Dropdown = ({ id, menu, add = false, onAddItem = (item) => {} }) => {
+const Dropdown = ({
+  id,
+  menu,
+  add = false,
+  onAddItem = (item) => {},
+  defaultKey = { key: "", label: "" },
+}) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [selected, setSelected] = useState({
-    key: "",
-    label: "",
-  });
+  const [selected, setSelected] = useState(defaultKey);
   const [newItem, setNewItem] = useState("");
 
   const inputRef = useRef(selected.label);
 
   const handleChangeOption = (item) => () => {
     setSelected(item);
-    inputRef.current.setAttribute("value", item.label);
+    inputRef.current.setAttribute("value", JSON.stringify(item));
     inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
     handleClickOption();
   };
