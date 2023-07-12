@@ -7,12 +7,13 @@ import Dropdown from "../../components/Dropdown/Dropdown";
 import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
 
-const ProfileBottom = () => {
+const ProfileBottom = ({ profileInfo }) => {
   const { isHidden, changeVisibility } = useStoreHide();
   const [isEditMode, setIsEditMode] = useState(false);
 
   const handleEditMode = () => setIsEditMode(!isEditMode);
 
+  const { email, social } = profileInfo;
   return (
     <StyledWrapper>
       <Title>비밀번호</Title>
@@ -33,13 +34,17 @@ const ProfileBottom = () => {
           </TextButton>
         )}
       </PasswordWrap>
-      <Title>소셜 정보</Title>
-      <Content>
-        <SocialIcon src={kakaoIcon} />
-        카카오톡
-      </Content>
+      {social && (
+        <>
+          <Title>소셜 정보</Title>
+          <Content>
+            <SocialIcon src={kakaoIcon} />
+            카카오톡
+          </Content>
+        </>
+      )}
       <Title>이메일 주소</Title>
-      <Content>test@naver.com</Content>
+      <Content>{email}</Content>
       <Title>메인 페이지 설정</Title>
       <PageSetting>
         <div className="setting-box">

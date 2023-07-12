@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import Portal from "../Portal/Portal";
@@ -13,9 +13,9 @@ const Modal = ({ id, open, closable = true, onClose, children }) => {
     setClose(true);
   };
 
-  const handleAnimationEnd = () => {
+  const handleAnimationEnd = useCallback( () => {
     close && onClose?.();
-  };
+  }. []);
 
   useEffect(() => {
     ref.current?.focus();
