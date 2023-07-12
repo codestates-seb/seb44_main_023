@@ -1,11 +1,16 @@
 package com.main.server.todo.controller;
 
+import com.main.server.member.MemberService;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.dto.TodoDto;
 import com.main.server.todo.dto.TodoDto.Response;
 import com.main.server.todo.service.TodoService;
+import com.main.server.todogroup.domain.TodoGroup;
+import com.main.server.todogroup.dto.TodoGroupDto;
+import com.main.server.todogroup.service.TodoGroupService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +35,27 @@ public class TodoController {
         this.todoService = todoService;
     }
 
+
+    @PostMapping
+    public ResponseEntity createTodo(@Valid @RequestBody TodoDto.Post postDto){
+        Todo todo = todoService.createTodo(postDto);
+
+            return new ResponseEntity(new Response(todo),
+                HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{todo-id}")
+    public ResponseEntity patchTodo(@PathVariable("todo-id") @Positive Long todoId,
+                                    @Valid @RequestBody TodoDto.Patch patchDto) {
+
+        Todo todo = todoService.updateTodo(todoId, patchDto);
+
+        return new ResponseEntity(new Response(todo), HttpStatus.OK);
+    }
+
     @PatchMapping("/{todo-id}/status")
     public ResponseEntity updateStatusTodo(@PathVariable("todo-id") @Positive Long todoId,
-        @RequestBody TodoDto.updateStatus updateStatusDto) {
+                                        @RequestBody TodoDto.updateStatus updateStatusDto) {
         Todo todo = todoService.updateStatusTodo(todoId, updateStatusDto);
 
         return new ResponseEntity(new Response(todo), HttpStatus.OK);
@@ -59,4 +83,6 @@ public class TodoController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }

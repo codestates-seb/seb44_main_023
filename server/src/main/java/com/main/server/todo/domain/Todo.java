@@ -1,7 +1,9 @@
 package com.main.server.todo.domain;
 
 import com.main.server.member.Member;
-import java.time.LocalDateTime;
+import com.main.server.comment.domain.Comment;
+import com.main.server.todogroup.domain.TodoGroup;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -35,11 +37,11 @@ public class Todo {
     @Column(name = "todo_content", nullable = false)
     private String todoContent;
 
-    @Column(name = "todo_schedule_date", nullable = true)
-    private String todoScheduleDate;
+    @Column(name = "todo_schedule_date")
+    private LocalDate todoScheduleDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "todo_status")
+    @Column(name = "todo_status", nullable = false)
     private TodoStatus todoStatus = TodoStatus.INCOMPLETE;
 
     @ManyToOne
@@ -60,6 +62,32 @@ public class Todo {
 
     @OneToMany(mappedBy = "todo")
     private List<Comment> comments = new ArrayList<>();
+
+    public Todo(Member member, String todoTitle, String todoContent, LocalDate todoScheduleDate) {
+        this.member = member;
+        this.todoTitle = todoTitle;
+        this.todoContent = todoContent;
+        this.todoScheduleDate = todoScheduleDate;
+    }
+
+
+    public void changeTitle(final String title) {
+        if(title != null) {
+            this.todoTitle = title;
+        }
+    }
+
+    public void changeContent(final String content) {
+        if(content != null) {
+            this.todoContent = content;
+        }
+    }
+
+    public void changeScheduleDate(final LocalDate scheduledate) {
+        if(scheduledate != null) {
+            this.todoScheduleDate = scheduledate;
+        }
+    }
 
     public void updateStatus(TodoStatus todoStatus) {
         this.todoStatus = todoStatus;
