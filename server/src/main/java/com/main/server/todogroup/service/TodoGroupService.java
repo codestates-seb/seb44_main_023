@@ -1,2 +1,4 @@
-package com.main.server.todogroup.service;public class TodoGroupService {
+package com.main.server.todogroup.service;
+
+public class TodoGroupService {
 }

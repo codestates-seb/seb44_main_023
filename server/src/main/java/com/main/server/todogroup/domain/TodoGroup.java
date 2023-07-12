@@ -1,4 +1,4 @@
-package com.main.server.todo.todogroup.domain;
+package com.main.server.todogroup.domain;
 
 import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;

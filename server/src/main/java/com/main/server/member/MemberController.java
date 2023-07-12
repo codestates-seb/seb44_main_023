@@ -4,6 +4,7 @@ import com.main.server.member.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 public class MemberController {
     private MemberService memberService;
@@ -66,12 +68,40 @@ public class MemberController {
 
     // 닉네임 변경
     @PatchMapping("/members/{member-Id}/nickname")
-    public ResponseDto patchMember(@PathVariable("member-Id") long memberId,
+    public ResponseEntity<String> patchMember(@PathVariable("member-Id") long memberId,
                                    @RequestBody NicknameDto nicknameDto) {
-        Member member = new Member(nicknameDto);
-        Member updateMember = memberService.updateMember(memberId, member);
 
-        return new ResponseDto(updateMember);
+        // 닉네임 유효성 검증
+        if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$")) {
+            return ResponseEntity.badRequest().body("닉네임은 특수문자를 제외한 2~10자리여야 합니다.");
+        }
+
+        Member existingMember = memberService.findMember(memberId);
+        if (existingMember == null) {
+            return ResponseEntity.badRequest().body("Failed update Nickname");
+        }
+
+        String newNickname = nicknameDto.getNickname();
+        String currentNickname = existingMember.getNickname();
+
+        if (newNickname.equals(currentNickname)) {
+            return ResponseEntity.badRequest().body("Failed update Nickname");
+        }
+
+        Member memberWithNewNickname = memberService.findMemberByNickname(newNickname);
+        if (memberWithNewNickname != null) {
+            return ResponseEntity.badRequest().body("Failed update Nickname");
+        }
+
+        existingMember.setNickname(newNickname);
+        Member updatedMember = memberService.updateMember(memberId, existingMember);
+
+        if (updatedMember != null) {
+            return ResponseEntity.ok("Succeed Update Nickname");
+        }
+        else {
+            return ResponseEntity.badRequest().body("Failed Update Nickname");
+        }
     }
 
     // 비밀번호 변경

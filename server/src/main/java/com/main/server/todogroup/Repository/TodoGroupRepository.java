@@ -1,2 +1,4 @@
-package com.main.server.todogroup.Repository;public interface TodoGroupRepository {
+package com.main.server.todogroup.Repository;
+
+public interface TodoGroupRepository {
 }

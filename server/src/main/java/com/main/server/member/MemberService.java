@@ -59,6 +59,10 @@ public class MemberService {
         return foundMember;
     }
 
+    public Member findMemberByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname);
+    }
+
     // 닉네임 변경
     public Member updateMember(long memberId, Member member) {
         Member foundMember = findMember(memberId);
