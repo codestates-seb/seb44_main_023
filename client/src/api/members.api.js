@@ -35,3 +35,26 @@ export const updateProfileImage = async (memberId, formData) => {
     throw err;
   }
 };
+
+export const updatePassword = async (memberId, password, newPassword) => {
+  try {
+    await API.post(`/members/${memberId}/password`, {
+      member_id: memberId,
+      password,
+      new_password: newPassword,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteMember = async (memberId, password) => {
+  try {
+    await API.delete(`/members/${memberId}?password=${password}`, {
+      member_id: memberId,
+      password,
+    });
+  } catch (err) {
+    throw err;
+  }
+};

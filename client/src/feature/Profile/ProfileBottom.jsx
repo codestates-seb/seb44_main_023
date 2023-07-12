@@ -6,25 +6,74 @@ import kakaoIcon from "../../assets/icons/kakao_icon.svg";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
+import { deleteMember, updatePassword } from "../../api/members.api";
+import Popconfirm from "../../components/Popconfirm/Popconfirm";
 
 const ProfileBottom = ({ profileInfo }) => {
+  const { memberId, email, social } = profileInfo;
+
   const { isHidden, changeVisibility } = useStoreHide();
   const [isEditMode, setIsEditMode] = useState(false);
+  const [passwordInput, setPasswordInput] = useState();
+  const [newPasswordInput, setNewPasswordInput] = useState();
+  const [passwordConfirmInput, setPasswordConfirmInput] = useState();
 
   const handleEditMode = () => setIsEditMode(!isEditMode);
 
-  const { email, social } = profileInfo;
+  const handleChangePassword = async () => {
+    try {
+      await updatePassword(memberId, passwordInput, newPasswordInput);
+      handleEditMode();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteMember = async () => {
+    try {
+      await deleteMember(memberId, passwordConfirmInput);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <StyledWrapper>
       <Title>비밀번호</Title>
       <PasswordWrap>
-        {isEditMode ? <Input type="password" /> : <div />}
+        {isEditMode ? (
+          <div className="password-input-wrap">
+            <Input
+              type="password"
+              placeholder="기존 비밀번호"
+              value={passwordInput}
+              onChange={(event) => setPasswordInput(event.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="새 비밀번호"
+              value={newPasswordInput}
+              onChange={(event) => setNewPasswordInput(event.target.value)}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
         {isEditMode ? (
           <div className="password-button-wrap">
-            <TextButton onClick={handleEditMode} color="var(--color-red-01)">
+            <TextButton
+              onClick={() => {
+                handleEditMode();
+                setPasswordInput();
+                setNewPasswordInput();
+              }}
+              color="var(--color-red-01)"
+            >
               취소
             </TextButton>
-            <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
+            <TextButton
+              onClick={handleChangePassword}
+              color="var(--color-blue-03)"
+            >
               저장
             </TextButton>
           </div>
@@ -84,7 +133,22 @@ const ProfileBottom = ({ profileInfo }) => {
       <Toggle checked={isHidden} onClick={changeVisibility} />
       <Title>회원 탈퇴</Title>
       <Content>
-        <Button label="회원 탈퇴" size="medium" />
+        <Popconfirm
+          title="정말 탈퇴하시겠습니까?"
+          description={
+            <Input
+              placeholder="현재 비밀번호"
+              type="password"
+              value={passwordConfirmInput}
+              onChange={(event) => setPasswordConfirmInput(event.target.value)}
+            />
+          }
+          cancelText="취소"
+          confirmText="탈퇴하기"
+          onConfirm={handleDeleteMember}
+        >
+          <Button label="회원 탈퇴" size="medium" />
+        </Popconfirm>
       </Content>
     </StyledWrapper>
   );
@@ -145,6 +209,11 @@ const PasswordWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+
+  .password-input-wrap {
+    display: flex;
+    flex-direction: column;
+  }
 
   .password-button-wrap {
     display: flex;
