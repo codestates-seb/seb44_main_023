@@ -104,7 +104,6 @@ const HeaderContainer = styled.header`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: transparent;
   padding: 1rem 2rem;
-  cursor: pointer;
 `;
 
 const LogoWrapper = styled.div`
