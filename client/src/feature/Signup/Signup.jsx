@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { signupAPI } from "../../api/members";
 import useSignupStore from "../../store/store.signup";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -14,10 +15,11 @@ const Signup = () => {
 
     try {
       console.log("회원가입 성공:", response);
-      // 회원가입 성공 후에 필요한 추가 로직 구현
+      // 자동으로 로그인 되어 메인으로 넘어가게끔 서버쪽 응답 헤더에 accessToken, refreshToken 보내달라고 요청하기
+      useNavigate("/");
     } catch (error) {
       console.log("오류로 인한 회원가입 실패", error);
-      // 에러 처리 등 추가 로직 구현
+      useNavigate("*");
     }
   };
 
@@ -34,6 +36,7 @@ const Signup = () => {
 
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, email: emailValidationMSG });
+    // 유효성 검사에 통과하면 value를 저장
     setEmail(email);
   };
 
@@ -46,7 +49,7 @@ const Signup = () => {
       passwordValidation = "비밀번호를 입력해주세요.";
     } else if (!isValidPassword(password)) {
       passwordValidation =
-        "비밀번호는 영문 대소문자와 숫자의 조합으로 8자 이상이어야 합니다.";
+        "비밀번호는 영문 대문자, 영문 소문자, 숫자, 특수문자를 포함하여 8자 이상 16자 이하여야 합니다.";
     }
 
     // 유효성 검사 메세지 저장
@@ -62,20 +65,27 @@ const Signup = () => {
     // 닉네임 유효성 검사
     if (!nickname) {
       nickNameValidation = "닉네임을 입력해주세요.";
+    } else if (!isValidNickname(nickname)) {
+      nickNameValidation = "닉네임은 특수문자를 제외한 2~10자리여야 합니다.";
     }
 
-    // 유효성 검사에 통과하면 value를 저장
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, nickname: nickNameValidation });
+    // 유효성 검사에 통과하면 value를 저장
     setNickname(nickname);
   };
 
+  // 유효성 검사 정규식 서버랑 일치 시키기 위해 서버쪽 코드에서 따옴
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const isValidPassword = (password) => {
-    return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z\d]{8,}$/.test(password);
+    return /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\W)(?=\S+$).{8,16}$/.test(password);
+  };
+
+  const isValidNickname = (nickname) => {
+    return /^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$/.test(nickname);
   };
 
   return (
@@ -117,4 +127,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
