@@ -118,7 +118,7 @@ public class MemberController {
             return ResponseEntity.ok("Profile image updated successfully!");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("");
+                    .body("Failed to update profile image.");
         }
     }
 
