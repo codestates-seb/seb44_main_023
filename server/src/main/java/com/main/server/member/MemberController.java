@@ -13,6 +13,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// CORS Handle
+@CrossOrigin
 @RestController
 public class MemberController {
     private MemberService memberService;
@@ -45,7 +47,6 @@ public class MemberController {
         ResponseDto responseDto = new ResponseDto(registeredMember);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
-
 
     @GetMapping("/members")
     public List<ResponseDto> getMembers() {
@@ -120,7 +121,6 @@ public class MemberController {
                     .body("Failed to update profile image.");
         }
     }
-
 
 
 }
