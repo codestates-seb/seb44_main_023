@@ -1,10 +1,13 @@
 package com.main.server.todo.controller;
 
-import com.main.server.member.Member;
+import com.main.server.member.MemberService;
+import com.main.server.todo.domain.Todo;
 import com.main.server.todo.dto.TodoDto;
 import com.main.server.todo.dto.TodoDto.Response;
-import com.main.server.todo.entity.Todo;
 import com.main.server.todo.service.TodoService;
+import com.main.server.todogroup.domain.TodoGroup;
+import com.main.server.todogroup.dto.TodoGroupDto;
+import com.main.server.todogroup.service.TodoGroupService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/todos")
 @Validated
 public class TodoController {
 
@@ -31,31 +35,39 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-    @PostMapping("/todos")
-    public ResponseEntity postTodo(@Valid @RequestBody TodoDto.Post postDto) {
+
+    @PostMapping
+    public ResponseEntity createTodo(@Valid @RequestBody TodoDto.Post postDto){
         Todo todo = todoService.createTodo(postDto);
-        return new ResponseEntity<>(new Response(todo), HttpStatus.CREATED);
+
+            return new ResponseEntity(new Response(todo),
+                HttpStatus.CREATED);
     }
 
-    @PatchMapping("/todos/{todo-id}")
+    @PatchMapping("/{todo-id}")
     public ResponseEntity patchTodo(@PathVariable("todo-id") @Positive Long todoId,
-        @Valid @RequestBody TodoDto.Patch patchDto) {
-        patchDto.setTodoId(todoId);
+                                    @Valid @RequestBody TodoDto.Patch patchDto) {
 
-        Todo todo =
-            todoService.updateTodo(patchDto.toPatchEntity(new Member()));
+        Todo todo = todoService.updateTodo(todoId, patchDto);
 
         return new ResponseEntity(new Response(todo), HttpStatus.OK);
     }
 
-    @GetMapping("/todos/{todo-id}")
-    public ResponseEntity getTodo(
-        @PathVariable("todo-id") @Positive Long todoId) {
-        Todo todo = todoService.getTodo(todoId);
+    @PatchMapping("/{todo-id}/status")
+    public ResponseEntity updateStatusTodo(@PathVariable("todo-id") @Positive Long todoId,
+                                        @RequestBody TodoDto.updateStatus updateStatusDto) {
+        Todo todo = todoService.updateStatusTodo(todoId, updateStatusDto);
+
         return new ResponseEntity(new Response(todo), HttpStatus.OK);
     }
 
-    @GetMapping("/todos")
+    @GetMapping("/{todo-id}")
+    public ResponseEntity getTodo(@PathVariable("todo-id") @Positive Long todoId) {
+     Todo todo = todoService.getTodo(todoId);
+     return new ResponseEntity(new Response(todo), HttpStatus.OK);
+    }
+
+    @GetMapping
     public ResponseEntity<List<Response>> getTodos() {
         List<Todo> todos = this.todoService.getTodos();
         List<TodoDto.Response> responses = todos.stream()
@@ -65,11 +77,12 @@ public class TodoController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @DeleteMapping("/todos/{todo-id}")
+    @DeleteMapping("/{todo-id}")
     public ResponseEntity deleteTodo(@PathVariable("todo-id") @Positive Long todoId) {
         todoService.deleteTodo(todoId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
 }

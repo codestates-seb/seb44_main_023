@@ -3,11 +3,16 @@ package com.main.server.member;
 import com.main.server.member.dto.NicknameDto;
 import com.main.server.member.dto.PasswordDto;
 import com.main.server.member.dto.SignUpDto;
+import com.main.server.comment.domain.Comment;
+import com.main.server.todo.domain.Todo;
+import com.main.server.todogroup.domain.TodoGroup;
+import com.main.server.todogroup.domain.TodoGroupMember;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 @Data
@@ -53,15 +58,15 @@ public class Member {
     }
 
 
-//    @OneToMany(mappedBy = "member")
-//    private List<TodoGroupMember> todoGroupMembers = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member")
-//    private List<Todo> todos = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "member")
-//    private List<Comment> comments = new ArrayList<>();
-//
-//    @OneToOne(mappedBy = "member")
-//    private TodoGroup todoGroup;
+    @OneToMany(mappedBy = "member")
+    private List<TodoGroupMember> todoGroupMembers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Todo> todos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<TodoGroup> todoGroups = new ArrayList<>();
 }
