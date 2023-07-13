@@ -10,7 +10,15 @@ public enum ExceptionCode {
     NOT_IMPLEMENTATION(501, "Not Implementation"),
     INVALID_MEMBER_STATUS(400, "Invalid member status"),
     INVALID_FILE_SIZE(400, "Invalid file size. Please upload an image between 5KB and 1MB."),
-    INVALID_PASSWORD(400, "Invalid new password"),;
+    INVALID_PASSWORD(400, "Invalid new password"),
+    EMAIL_ALREADY_USED(409, "이미 사용 중인 이메일입니다."),
+    PASSWORD_DOES_NOT_MATCH(401, "비밀번호가 틀렸습니다."),
+    EMAIL_NOT_REGISTERED(404, "등록되지 않은 이메일입니다."),
+    NICKNAME_ALREADY_USED(409, "이미 사용 중인 닉네임입니다."),
+    SAME_NICKNAME(400, "현재 사용 중인 닉네임과 동일합니다."),
+    INVALID_NICKNAME_FORMAT(401, "닉네임은 특수문자를 제외한 2~10자리여야 합니다."),
+    SAME_CURRENT_PASSWORD(409, "현재 비밀번호와 일치합니다."),
+    INVALID_PASSWORD_FORMAT(400, "비밀번호 형식이 올바르지 않습니다.");
 
     @Getter
     private int status;
