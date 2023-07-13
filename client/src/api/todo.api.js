@@ -1,20 +1,4 @@
-export const readTodoGroup = async (groupId) => {
-  try {
-    const res = {
-      status: 200,
-      data: {
-        member_id: 1,
-        todo_group_id: 1,
-        todo_group_title: "철수의 할 일",
-      },
-    };
-
-    return res.data;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
-};
+import { API } from "./api";
 
 export const readTodoGroupMember = async (groupId) => {
   try {
@@ -51,51 +35,21 @@ export const readTodoGroupMember = async (groupId) => {
   }
 };
 
-export const readTodoList = (groupId) => {
+export const readTodoList = async (groupId) => {
   try {
-    const res = {
-      status: 200,
-      data: [
-        {
-          todo_id: 1,
-          todo_title: "집 청소",
-          todo_content: "설거지하기시른디",
-        },
-        {
-          todo_id: 2,
-          todo_title: "집 청소",
-          todo_content: "설거지하기시른디",
-          todo_schedule_date: "2023-07-10",
-        },
-        {
-          todo_id: 3,
-          todo_title: "집 청소",
-          todo_content: "설거지하기시른디",
-          todo_schedule_date: "2023-07-10",
-        },
-        {
-          todo_id: 4,
-          todo_title: "빨래방 다녀오기",
-          todo_content: "빨래하기",
-          todo_schedule_date: "2023-07-12",
-        },
-        {
-          todo_id: 5,
-          todo_title: "빨래방 다녀오기",
-          todo_content: "빨래하기",
-          todo_schedule_date: "2023-07-13",
-        },
-        {
-          todo_id: 6,
-          todo_title: "빨래방 다녀오기",
-          todo_content: "빨래하기",
-          todo_schedule_date: "2023-07-13",
-        },
-      ],
-    };
+    const res = await API.get("/api/todos");
     return res.data;
   } catch (err) {
-    console.log(err);
-    return [];
+    throw err;
+  }
+};
+
+export const updateTodoStatus = async (groupId, todoId, status) => {
+  try {
+    await API.patch(`/api/todogroups/${groupId}/todos/${todoId}/status`, {
+      status,
+    });
+  } catch (err) {
+    throw err;
   }
 };

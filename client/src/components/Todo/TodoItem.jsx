@@ -1,21 +1,50 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
+import { useParams } from "react-router-dom";
+import { updateTodoStatus } from "../../api/todo.api";
 
-const TodoItem = ({ todoInfo, isDone }) => {
-  const [checked, setChecked] = useState(isDone);
+const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
+  const { groupId } = useParams();
 
-  const handleCheck = () => setChecked(!checked);
+  const { todo_id, todo_title, todo_status } = todoInfo;
+
+  const [checked, setChecked] = useState(todo_status === "COMPLETE");
+
+  const handleCheckTodo = async () => {
+    try {
+      let isCheck = checked;
+
+      setChecked((check) => !check);
+
+      await updateTodoStatus(
+        groupId,
+        todo_id,
+        isCheck ? "INCOMPLETE" : "COMPLETE"
+      );
+
+      const updatedTodoList = todoList.map((todo) => {
+        if (todo.todo_id === todo_id) {
+          return { ...todo, todo_status: isCheck ? "INCOMPLETE" : "COMPLETE" };
+        }
+        return todo;
+      });
+
+      setTodoList(updatedTodoList);
+    } catch (err) {
+      setChecked((check) => !check);
+    }
+  };
 
   return (
-    <StyledWrapper>
+    <StyledWrapper className={`todo-item ${checked ? "checked" : ""}`}>
       <div
         className={`todo-checkbox ${checked ? "checked" : ""}`}
-        onClick={handleCheck}
+        onClick={handleCheckTodo}
       >
         <AiOutlineCheck className="check-icon" />
       </div>
-      <div className="todo-title">{todoInfo.todo_title}</div>
+      <div className="todo-title">{todo_title}</div>
     </StyledWrapper>
   );
 };
@@ -31,6 +60,10 @@ const StyledWrapper = styled.div`
   font-size: 2.4rem;
   cursor: pointer;
   height: 100%;
+
+  &.checked {
+    background-color: var(--color-gray-03);
+  }
 
   .todo-checkbox {
     width: 2rem;
