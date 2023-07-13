@@ -21,26 +21,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class TodoService {
 
     private final TodoRepository todoRepository;
-
     private final MemberService memberService;
+    private final TodoGroupService todoGroupService;
 
-    public TodoService(TodoRepository todoRepository, MemberService memberService) {
+    public TodoService(TodoRepository todoRepository, MemberService memberService,
+        TodoGroupService todoGroupService) {
         this.todoRepository = todoRepository;
         this.memberService = memberService;
+        this.todoGroupService = todoGroupService;
     }
 
-    public Todo createTodo(TodoDto.Post postDto) {
-        //Member에 대한 검증
-
+    public Todo createTodo(Long todoGroupId, TodoDto.Post postDto) {
         Member member = memberService.findMember(postDto.getMemberId());
+        todoGroupService.findById(todoGroupId);
         Todo savedTodo = todoRepository.save(postDto.toEntity(member));
 
         return savedTodo;
     }
 
-    public Todo updateTodo(Long todoId ,TodoDto.Patch patchDto) {
-        Todo findTodo = findVerifiedTodo(todoId);
+    public Todo updateTodo(Long todoGroupId, Long todoId ,TodoDto.Patch patchDto) {
+        todoGroupService.findById(todoGroupId);
 
+        Todo findTodo = findVerifiedTodo(todoId);
         findTodo.changeTitle(patchDto.getTodoTitle());
         findTodo.changeContent(patchDto.getTodoContent());
         findTodo.changeScheduleDate(LocalDate.parse(patchDto.getTodoScheduleDate()));
@@ -49,7 +51,9 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo updateStatusTodo(Long todoId, TodoDto.updateStatus updateStatusDto) {
+    public Todo updateStatusTodo(Long todoGroupId, Long todoId, TodoDto.updateStatus updateStatusDto) {
+        todoGroupService.findById(todoGroupId);
+
         Todo findTodo = findVerifiedTodo(todoId);
         TodoStatus todoStatus = TodoStatus.valueOf(updateStatusDto.getStatus().toUpperCase());
         findTodo.updateStatus(todoStatus);
@@ -58,17 +62,23 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo getTodo(Long todoId) {
+    public Todo getTodo(Long todoGroupId, Long todoId) {
+        todoGroupService.findById(todoGroupId);
+
         return findVerifiedTodo(todoId);
     }
 
     @Transactional
-    public List<Todo> getTodos() {
+    public List<Todo> getTodos(Long todoGroupId) {
+        todoGroupService.findById(todoGroupId);
+
         List<Todo> todos = this.todoRepository.findAll();
         return todos;
     }
 
-    public void deleteTodo(Long todoId) {
+    public void deleteTodo(Long todoGroupId, Long todoId) {
+        todoGroupService.findById(todoGroupId);
+
         Todo findTodo = findVerifiedTodo(todoId);
         todoRepository.delete(findTodo);
     }
@@ -80,7 +90,7 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    private Todo findVerifiedTodo(Long todoId) {
+    public Todo findVerifiedTodo(Long todoId) {
         Todo findTodo = todoRepository.findById(todoId).orElseThrow(() ->
             new BusinessLogicException(ExceptionCode.TODO_NOT_FOUND));
         return findTodo;
