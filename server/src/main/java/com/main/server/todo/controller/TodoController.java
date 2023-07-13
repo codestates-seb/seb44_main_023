@@ -15,6 +15,7 @@ import javax.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,9 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/todos")
 @Validated
 public class TodoController {
 
@@ -36,40 +38,43 @@ public class TodoController {
     }
 
 
-    @PostMapping
-    public ResponseEntity createTodo(@Valid @RequestBody TodoDto.Post postDto){
-        Todo todo = todoService.createTodo(postDto);
+    @PostMapping("/todogroups/{todo-group-id}/todos")
+    public ResponseEntity createTodo(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                    @Valid @RequestBody TodoDto.Post postDto){
+        Todo todo = todoService.createTodo(todoGroupId, postDto);
 
-            return new ResponseEntity(new Response(todo),
-                HttpStatus.CREATED);
+            return new ResponseEntity(new Response(todo), HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{todo-id}")
-    public ResponseEntity patchTodo(@PathVariable("todo-id") @Positive Long todoId,
+    @PatchMapping("/todogroups/{todo-group-id}/todos/{todo-id}")
+    public ResponseEntity patchTodo(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                    @PathVariable("todo-id") @Positive Long todoId,
                                     @Valid @RequestBody TodoDto.Patch patchDto) {
 
-        Todo todo = todoService.updateTodo(todoId, patchDto);
+        Todo todo = todoService.updateTodo(todoGroupId, todoId, patchDto);
 
         return new ResponseEntity(new Response(todo), HttpStatus.OK);
     }
 
-    @PatchMapping("/{todo-id}/status")
-    public ResponseEntity updateStatusTodo(@PathVariable("todo-id") @Positive Long todoId,
+    @PatchMapping("/todogroups/{todo-group-id}/todos/{todo-id}/status")
+    public ResponseEntity updateStatusTodo(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                        @PathVariable("todo-id") @Positive Long todoId,
                                         @RequestBody TodoDto.updateStatus updateStatusDto) {
-        Todo todo = todoService.updateStatusTodo(todoId, updateStatusDto);
+        Todo todo = todoService.updateStatusTodo(todoGroupId, todoId, updateStatusDto);
 
         return new ResponseEntity(new Response(todo), HttpStatus.OK);
     }
 
-    @GetMapping("/{todo-id}")
-    public ResponseEntity getTodo(@PathVariable("todo-id") @Positive Long todoId) {
-     Todo todo = todoService.getTodo(todoId);
+    @GetMapping("/todogroups/{todo-group-id}/todos/{todo-id}")
+    public ResponseEntity getTodo(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                @PathVariable("todo-id") @Positive Long todoId) {
+     Todo todo = todoService.getTodo(todoGroupId, todoId);
      return new ResponseEntity(new Response(todo), HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Response>> getTodos() {
-        List<Todo> todos = this.todoService.getTodos();
+    @GetMapping("/todogroups/{todo-group-id}/todos")
+    public ResponseEntity<List<Response>> getTodos(@PathVariable("todo-group-id") @Positive Long todoGroupId) {
+        List<Todo> todos = this.todoService.getTodos(todoGroupId);
         List<TodoDto.Response> responses = todos.stream()
             .map((todo -> new TodoDto.Response(todo)))
             .collect(Collectors.toList());
@@ -77,9 +82,10 @@ public class TodoController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{todo-id}")
-    public ResponseEntity deleteTodo(@PathVariable("todo-id") @Positive Long todoId) {
-        todoService.deleteTodo(todoId);
+    @DeleteMapping("/todogroups/{todo-group-id}/todos/{todo-id}")
+    public ResponseEntity deleteTodo(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                    @PathVariable("todo-id") @Positive Long todoId) {
+        todoService.deleteTodo(todoGroupId, todoId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

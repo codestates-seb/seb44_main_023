@@ -1,9 +1,10 @@
-package com.main.server.todo.todogroup.domain;
+package com.main.server.todogroup.domain;
 
 import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,6 +44,17 @@ public class TodoGroup {
 
     public void addMember(Member member) {
         this.member = member;
+    }
+
+    public TodoGroup(Member member, String todoGroupTitle) {
+        this.member = member;
+        this.todoGroupTitle = todoGroupTitle;
+    }
+
+    public void changeTitle(final String title) {
+        if(title != null) {
+            this.todoGroupTitle = title;
+        }
     }
 
 }
