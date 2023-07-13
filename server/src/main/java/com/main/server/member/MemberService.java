@@ -107,7 +107,7 @@ public class MemberService {
 
         // 파일 업로드 처리 로직
         String fileName = file.getOriginalFilename();
-        Path filePath = Path.of("/Users/seonggeon2/Downloads/mainproject/server/uploads", fileName);
+        Path filePath = Path.of("FILE_UPLOAD_PATH", fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         member.setProfileImage(fileName);
@@ -124,7 +124,7 @@ public class MemberService {
 
         // 새로운 이미지 파일 업로드
         String fileName = file.getOriginalFilename();
-        Path filePath = Path.of("/Users/seonggeon2/Downloads/mainproject/server/uploads/", fileName);
+        Path filePath = Path.of("FILE_UPLOAD_PATH", fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         member.setProfileImage(fileName);
@@ -134,7 +134,7 @@ public class MemberService {
     // 기존 이미지 파일 삭제
     private void deleteExistingProfileImage(Member member) {
         if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
-            String existingImagePath = "/Users/seonggeon2/Downloads/mainproject/server/uploads/"
+            String existingImagePath = "FILE_UPLOAD_PATH"
                     + member.getProfileImage();
             Path existingImageFile = Paths.get(existingImagePath);
             if (Files.exists(existingImageFile)) {
