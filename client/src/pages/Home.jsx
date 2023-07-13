@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect,useRef } from 'react';
+import styled, { keyframes } from 'styled-components';
 import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
 import smallLogo from "../assets/home/smallLogo.svg";
 import bigLogo from "../assets/home/BigLogo.svg";
@@ -14,18 +14,17 @@ const Home = () => {
   const [showDetails, setShowDetails] = useState(false);
   const weather = useGetWeatherInfo();
   const weatherType =weather.type;
-  
+  const detailedPageRef = useRef(null);
+
   const handleClick = () => {
     setShowDetails(true);
+    detailedPageRef.current.scrollIntoView({ behavior: 'smooth' });
+
   };
 
   const handleBack = () => {
     setShowDetails(false);
   };
-
-  // const imgName = getWeatherImage(weatherType);
-  // const imgSrc = `../assets/home/screens/${imgName}`;
-  // console.log("Home:",imgSrc)
 
  useEffect(() => {
     const handleScroll = () => {
@@ -42,23 +41,38 @@ const Home = () => {
     };
   }, []);
   
-
-  
+  // return (
+  //   <div>
+  //     {showDetails ? (
+  //       <DetailedPageComponent onBack={handleBack} weatherType={3} />
+  //     ) : (
+  //       <MainComponent onClick={handleClick} weatherType={weatherType} />
+  //     )}
+  //   </div>
+  // );
   return (
-    <div>
-      {showDetails ? (
-        <DetailedPageComponent onBack={handleBack} weatherType={3} />
-      ) : (
-        <MainComponent onClick={handleClick} weatherType={weatherType} />
-      )}
-    </div>
+    
+       
+ <HomeWrapper>
+ <MainWrapper>
+   <MainComponent onClick={handleClick} weatherType={weatherType} />
+ </MainWrapper>
+ <div ref={detailedPageRef}>
+   {showDetails && (
+     <DetailedPageComponentWrapper>
+       <DetailedPageComponent onBack={handleBack} />
+     </DetailedPageComponentWrapper>
+   )}
+ </div>
+</HomeWrapper>
+
+
   );
 };
 export default Home;
 
 
 const MainComponent = ({ onClick , weatherType}) => {
-  const shouldBlur=true;
   const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
   const handleLoginButtonClick = () => {
     navigate("/login"); 
@@ -68,83 +82,48 @@ const MainComponent = ({ onClick , weatherType}) => {
   };
 
   return (
-    // <WeatherImage>
-    //   {/* <WeatherImage weatherType={weatherType}/> */}
-    //   <HomeHeader >
-    //       <SmallLogo src={smallLogo}></SmallLogo>
-    //       <WeatherWidget scale={0.95}/>
-    //     </HomeHeader>
-    //     <HomeMain>
-    //       <HomeContainer>
-    //       <HomeDivCol>
-    //         <BigLogo src={bigLogo}></BigLogo>
-    //         <SloganText>
-    //           일정과 가계부를 한번에 관리할 수 있습니다.
-    //         </SloganText>
-    //       </HomeDivCol>
-    //       <HomeDivRow>
-    //         <Button
-    //           label="Login" // 버튼 Text 지정
-    //           size="large" // 버튼 사이즈
-    //           onClick={handleLoginButtonClick} // onClick
-    //         />
-    //         <Button
-    //           label="Sign up" // 버튼 Text 지정
-    //           size="large" // 버튼 사이즈
-    //           onClick={handleSignUpButtonClick} // onClick
-    //         />
-    //       </HomeDivRow>
-    //       {/* justifyContent: 'center' */}
-    //       <div style={{ display: 'flex',marginTop:'5rem' , justifyContent: 'center', alignItem: 'center'}}>
-    //         <MoveTo src={moveTo} onClick={onClick}></MoveTo>       
-    //       </div>
-    //       </HomeContainer> 
-    //     </HomeMain>
-    // </WeatherImage>
-
-   <>
-   <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
-<HomeWrapper >
-<HomeHeader>
-      <SmallLogo src={smallLogo}></SmallLogo>
-      <WeatherWidget scale={0.95} />
-    </HomeHeader>
-    <HomeMain>
-      <HomeContainer>
-        <HomeDivCol>
-          <BigLogo src={bigLogo}></BigLogo>
-          <SloganText>
-            일정과 가계부를 한번에 관리할 수 있습니다.
-          </SloganText>
-        </HomeDivCol>
-        <HomeDivRow>
-          <Button
-            label="Login" // 버튼 Text 지정
-            size="large" // 버튼 사이즈
-            onClick={handleLoginButtonClick} // onClick
-          />
-          <Button
-            label="Sign up" // 버튼 Text 지정
-            size="large" // 버튼 사이즈
-            onClick={handleSignUpButtonClick} // onClick
-          />
-        </HomeDivRow>
-        {/* justifyContent: 'center' */}
-        <div
-          style={{ display: "flex", marginTop: "5rem", justifyContent: "center", alignItem: "center" }}
-        >
-          <MoveTo src={moveTo} onClick={onClick}></MoveTo>
-        </div>
-      </HomeContainer>
-    </HomeMain>
-</HomeWrapper>
-   
-  </>
+    <MainWrapper>
+    <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
+        <HomeWrapper >
+        <HomeHeader>
+          <SmallLogo src={smallLogo}></SmallLogo>
+          <WeatherWidget scale={0.95} />
+        </HomeHeader>
+        <HomeMain>
+          <HomeContainer>
+            <HomeDivCol>
+              <BigLogo src={bigLogo}></BigLogo>
+              <SloganText>
+                일정과 가계부를 한번에 관리할 수 있습니다.
+              </SloganText>
+            </HomeDivCol>
+            <HomeDivRow>
+              <Button
+                label="Login" // 버튼 Text 지정
+                size="large" // 버튼 사이즈
+                onClick={handleLoginButtonClick} // onClick
+              />
+              <Button
+                label="Sign up" // 버튼 Text 지정
+                size="large" // 버튼 사이즈
+                onClick={handleSignUpButtonClick} // onClick
+              />
+            </HomeDivRow>
+            <div
+              style={{ display: "flex", marginTop: "5rem", justifyContent: "center", alignItem: "center" }}
+            >
+              <MoveTo src={moveTo} onClick={onClick}></MoveTo>
+            </div>
+          </HomeContainer>
+        </HomeMain>
+      </HomeWrapper>
+    </MainWrapper>
+  
   );
 };
 const DetailedPageComponent = ({ onBack , weatherType}) => {
   return (
-    <div>
+    <DetailWrapper>
       <Button
               label="뒤로 가기" // 버튼 Text 지정
               size="large" // 버튼 사이즈
@@ -153,10 +132,38 @@ const DetailedPageComponent = ({ onBack , weatherType}) => {
     
       <SloganText>상세 설명 페이지</SloganText>
       <SloganText>서비스에 대한 상세 설명입니다.</SloganText>
-    </div>  
+    </DetailWrapper>  
   );
 };
 
+
+
+
+const slideDownAnimation = keyframes`
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+const DetailedPageComponentWrapper = styled.div`
+  animation: ${slideDownAnimation} 0.5s ease-in-out;
+  position: absolute;
+  top: 100%;
+  left: 0;
+`;
+
+const DetailWrapper = styled.div`
+  width:100%;
+  height:100vh;
+  
+  background-position: center;
+  border : green solid 5px;
+ `
+
+//////
 
 const MoveTo = styled.img`
   width: 6.4rem;
@@ -214,20 +221,18 @@ const HomeHeader = styled.div`
 `;
 
 const HomeWrapper = styled.div`
+  position:absolute;
+  top:0rem;
+  width:100%;
+  height:100vh;
+  background-position: center;
+  border : red solid 5px;
+ `
+const MainWrapper = styled.div`
 position:absolute;
 top:0rem;
 width:100%;
 height:100vh;
-  background-position: center;
- `
-
-
-
-// const HomeWrapper = styled.div`
-//   background-size: cover;
-//   background-position: center;
-//   height: 100vh;
-//   background-image: url(${background});
-//   `
-//   // /* background-image: url(${background}); */
-
+background-position: center;
+border : yellow solid 5px;
+`

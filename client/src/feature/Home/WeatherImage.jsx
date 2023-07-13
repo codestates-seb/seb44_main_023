@@ -1,5 +1,5 @@
 import React from "react";
-import { styled } from "styled-components";
+import styled from 'styled-components';
 import {weatherTypeToName, getWeatherImage} from "../../utils/weatherTypeToImage"
 
 const WeatherImage = ({ weatherType }) => {
