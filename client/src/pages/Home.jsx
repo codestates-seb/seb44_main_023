@@ -153,7 +153,6 @@ const DetailedPageComponent = ({ onBack , weatherType}) => {
     
       <SloganText>상세 설명 페이지</SloganText>
       <SloganText>서비스에 대한 상세 설명입니다.</SloganText>
-      <WeatherImage weatherType={weatherType}/>
     </div>  
   );
 };
