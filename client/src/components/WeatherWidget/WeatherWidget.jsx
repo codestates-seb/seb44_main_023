@@ -18,7 +18,9 @@ const WeatherWidget = ({ scale = 1 }) => {
               />
             </WeatherIcon>
             <WeatherDivCol>
-              <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
+              <div style={{marginLeft:"1.5rem"}}>
+                <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
+              </div>
               <WeatherText scale={scale}>{weather.temp_min}/{weather.temp_max}</WeatherText>
             </WeatherDivCol>
             <WeatherText justifycenter="true" scale={scale}>{weather.weather}</WeatherText>
@@ -63,7 +65,7 @@ const WeatherLargeText = styled.span`
   color: var(--color-gray-07);
   font-size: ${(props) => 4 * props.scale}rem;
   justify-self: center;
-
+  
 `;
 
 const WeatherText = styled.span`
