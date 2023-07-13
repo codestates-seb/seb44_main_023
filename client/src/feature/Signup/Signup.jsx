@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { signupAPI } from "../../api/members";
+import { signupAPI } from "../../api/members.api";
 import useSignupStore from "../../store/store.signup";
 import { useNavigate } from "react-router-dom";
+
+import styled from "styled-components";
+import Input from "../../components/Input/PageInput";
+import Button from "../../components/Button/Button";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -12,11 +16,17 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // api 테스트 가능할때 다시 테스트 해봐야함
-    if (validation.email || validation.password || validation.nickname) {
-      return; // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+
+    if (
+      !isValidEmail(email) ||
+      !isValidPassword(password) ||
+      !isValidNickname(nickname)
+    ) {
+      // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+      alert("유효한 이메일, 비밀번호, 닉네임인지 확인해주세요.");
+      return;
     }
-    
+
     try {
       const response = await signupAPI(email, password, nickname);
       console.log("회원가입 성공:", response);
@@ -90,45 +100,92 @@ const Signup = () => {
   };
 
   const isValidNickname = (nickname) => {
-    return /^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$/.test(nickname);
+    return /^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$/.test(nickname);
+  };
+
+  const handleLoginLinkClick = () => {
+    navigate("/login");
   };
 
   return (
-    <div>
-      <h1>회원가입</h1>
-      <form onSubmit={handleSignup}>
-        <label>
-          이메일:
-          <input
-            type="email"
-            placeholder="Email"
-            onChange={handleEmailValidation}
-          />
-        </label>
-        {validation.email && <p>{validation.email}</p>}
-        <br />
-        비밀번호:
-        <input
+    <>
+      <InputBox>
+        Email:
+        <Input
+          size={"32.4rem"}
+          height={"4.8rem"}
+          fontSize={"1rem"}
+          type="email"
+          placeholder="Email"
+          onChange={handleEmailValidation}
+        />
+        {validation.email && <ValidMsg>{validation.email}</ValidMsg>}
+      </InputBox>
+      <InputBox>
+        Password:
+        <Input
+          size={"32.4rem"}
+          height={"4.8rem"}
+          fontSize={"2.4rem"}
           type="password"
           placeholder="Password"
           onChange={handlePasswordValidation}
         />
-        {validation.password && <p>{validation.password}</p>}
-        <br />
-        <label>
-          닉네임:
-          <input
-            type="text"
-            placeholder="Nick Name"
-            onChange={handleNickNamelValidation}
-          />
-        </label>
-        {validation.nickname && <p>{validation.nickname}</p>}
-        <br />
-        <button type="submit">회원가입</button>
-      </form>
-    </div>
+        {/* 비밀번호 보이기 버튼 */}
+        {validation.password && <ValidMsg>{validation.password}</ValidMsg>}
+      </InputBox>
+      <InputBox>
+        Nick Name:
+        <Input
+          size={"32.4rem"}
+          height={"4.8rem"}
+          fontSize={"1rem"}
+          type="text"
+          placeholder="Nick Name"
+          onChange={handleNickNamelValidation}
+        />
+        {validation.nickname && <ValidMsg>{validation.nickname}</ValidMsg>}
+      </InputBox>
+      <Button
+        type="submit"
+        label="Sign Up" // 버튼 Text 지정
+        size="large" // 버튼 사이즈
+        onClick={handleSignup} // onClick
+        fontWeight={"600"} // 폰트 사이즈 조절
+      />
+      <LoginLink onClick={handleLoginLinkClick}>
+        이미 계정이 있으신가요? Login
+      </LoginLink>
+    </>
   );
 };
 
 export default Signup;
+
+const InputBox = styled.div`
+  text-align: left;
+  font-size: 2.2rem;
+  padding-bottom: 4rem;
+`;
+
+const ValidMsg = styled.p`
+  width: 32.4rem;
+  height: 4.8rem;
+  text-align: left;
+  font-size: 1.4rem;
+  color: var(--color-red-01);
+  word-wrap: break-word;
+  padding-bottom: 3rem;
+`;
+
+const LoginLink = styled.a`
+  display: block;
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--color-blue-03);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-black);
+  }
+`;
