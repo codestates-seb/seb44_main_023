@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signupAPI } from "../../api/members";
+import { signupAPI } from "../../api/members.api";
 import useSignupStore from "../../store/store.signup";
 import { useNavigate } from "react-router-dom";
 
@@ -90,7 +90,7 @@ const Signup = () => {
   };
 
   const isValidNickname = (nickname) => {
-    return /^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$/.test(nickname);
+    return /^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$/.test(nickname);
   };
 
   return (
