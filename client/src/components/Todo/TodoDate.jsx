@@ -75,7 +75,7 @@ const StyledWrapper = styled.div`
   }
 
   .todo-list {
-    max-height: 100%;
+    max-height: calc(100% - 64px);
     overflow-y: auto;
     padding: 0 1.2rem;
     display: flex;
