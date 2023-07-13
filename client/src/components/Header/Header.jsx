@@ -202,7 +202,7 @@ const CancelButton = styled.button`
   border: none;
   padding: 0.5rem 1.3rem;
   border-radius: 2rem;
-  color: var(--color-blue-03);
+  color: var(--color-red-01);
   cursor: pointer;
   border: 1px solid;
   font-size: 1.2rem;
@@ -216,7 +216,7 @@ const ConfirmButton = styled.button`
   border: none;
   padding: 0.5rem 1.3rem;
   border-radius: 2rem;
-  color: var(--color-red-01);
+  color: var(--color-blue-03);
   cursor: pointer;
   border: 1px solid;
   font-size: 1.2rem;
