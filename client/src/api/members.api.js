@@ -20,7 +20,7 @@ export const loginAPI = async (email, password) => {
 
 export const signupAPI = async (email, password, nickname) => {
   try {
-    const response = await axios.post(`/api/signup`, {
+    const response = await axios.post(`/api/members`, {
       email,
       password,
       nickname,
