@@ -5,7 +5,7 @@ import ErrorPage from "./pages/ErrorPage";
 import ProfilePage from "./pages/ProfilePage";
 
 import TestWidget from "./pages/TestWidget"
-
+import Sidebar from "./components/Sidebar/Sidebar";
 
 function App() {
   return (
