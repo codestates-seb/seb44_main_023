@@ -6,6 +6,7 @@ import UserAvatar from "../../assets/userAvarta.png";
 import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
 import { TiWeatherPartlySunny } from "react-icons/ti";
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -47,10 +48,21 @@ const Header = () => {
     setPopupVisible(false);
   };
 
-  const handleConfirm = () => {
-    localStorage.removeItem("accessToken");
-    navigate("/home");
-    setPopupVisible(false);
+  // api 폴더 생성되면 멤버스에 넣어주기
+  const handleConfirm = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.delete("/api/logouts", {
+        headers: {
+          Authorization: accessToken,
+        },
+      });
+      localStorage.removeItem("accessToken");
+      navigate("/home");
+      setPopupVisible(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePopupClick = () => {
