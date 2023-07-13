@@ -258,7 +258,6 @@ public class MemberService {
         }
     }
 
-
     // 이미지 삭제
 //    public void deleteProfileImage(long memberId) throws IOException {
 //        Member member = memberRepository.findById(memberId)
