@@ -9,7 +9,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 function App() {
   return (
     <>
-      <Header />
+    <Header />
       <Sidebar />
       <Routes>
         <Route path="/profile/:id" element={<ProfilePage />} />
