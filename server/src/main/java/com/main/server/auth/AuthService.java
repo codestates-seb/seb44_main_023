@@ -1,5 +1,7 @@
 package com.main.server.auth;
 
+import com.main.server.exception.BusinessLogicException;
+import com.main.server.exception.ExceptionCode;
 import com.main.server.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +27,13 @@ public class AuthService {
 
     public boolean authenticate(String email, String password) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"로그인에 실패했습니다"));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.EMAIL_NOT_REGISTERED));
 
         String savedPassword = member.getPassword();
         boolean passwordMatches = passwordEncoder.matches(password, savedPassword);
 
         if (!passwordMatches)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다");
+            throw new BusinessLogicException(ExceptionCode.PASSWORD_DOES_NOT_MATCH);
 
         return true;
     }

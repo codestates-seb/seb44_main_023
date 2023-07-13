@@ -2,6 +2,7 @@ package com.main.server.auth;
 
 import com.main.server.auth.dto.AuthDto;
 import com.main.server.auth.dto.AuthResponse;
+import com.main.server.exception.BusinessLogicException;
 import com.main.server.security.JwtTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -69,8 +70,9 @@ public class AuthController {
 
         try {
             authService.authenticate(email, password);
-        } catch (ResponseStatusException ex) {
-            return ResponseEntity.status(ex.getStatus()).body(ex.getReason());
+        } catch (BusinessLogicException e) {
+            return ResponseEntity.status(e.getExceptionCode().getStatus())
+                    .body(e.getExceptionCode().getMessage());
         }
 
         String accessToken = jwtTokenizer.generateAccessToken(email);

@@ -32,27 +32,36 @@ public class MemberController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members")
-    public ResponseEntity<?> postMember(@Valid @RequestBody SignUpDto signUpDto
-            , BindingResult bindingResult) {
+    public ResponseEntity<?> postMember(@Valid @RequestBody SignUpDto signUpDto,
+                                        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 유효성 검증에 실패한 경우 에러 메시지를 처리하고 응답을 구성한다.
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMessage.append(error.getField())
-                        .append(": ")
-                        .append(error.getDefaultMessage())
-                        .append("; \n");
+                errorMessage.append(error.getDefaultMessage())
+                        .append(" \n");
             }
             // 에러 메시지를 포스트맨으로 보내기 위해 ResponseEntity를 사용한다.
             return ResponseEntity.badRequest().body(errorMessage.toString());
         }
 
-        Member member = new Member(signUpDto);
-        Member registeredMember = memberService.registerMember(member);
+        try {
+            Member member = new Member(signUpDto);
+            Member registeredMember = memberService.registerMember(member);
 
-        ResponseDto responseDto = new ResponseDto(registeredMember);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+            ResponseDto responseDto = new ResponseDto(registeredMember);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        } catch (BusinessLogicException e) {
+            return handleBusinessLogicException(e);
+        }
     }
+
+    @ExceptionHandler(BusinessLogicException.class)
+    public ResponseEntity<String> handleBusinessLogicException(BusinessLogicException e) {
+        return ResponseEntity.status(e.getExceptionCode().getStatus())
+                .body(e.getExceptionCode().getMessage());
+    }
+
 
     @GetMapping("/members")
     public List<ResponseDto> getMembers() {
@@ -74,39 +83,21 @@ public class MemberController {
     // 닉네임 변경
     @PatchMapping("/members/{member-Id}/nickname")
     public ResponseEntity<String> patchMember(@PathVariable("member-Id") long memberId,
-                                   @RequestBody NicknameDto nicknameDto) {
+                                              @RequestBody NicknameDto nicknameDto) {
 
         // 닉네임 유효성 검증
-        if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+        try {
+            // 닉네임 유효성 검증
+            if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+                throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME_FORMAT);
+            }
 
-            return ResponseEntity.badRequest().body("닉네임은 특수문자를 제외한 2~10자리여야 합니다.");
-        }
-
-        Member existingMember = memberService.findMember(memberId);
-        if (existingMember == null) {
-            return ResponseEntity.badRequest().body("Failed update Nickname");
-        }
-
-        String newNickname = nicknameDto.getNickname();
-        String currentNickname = existingMember.getNickname();
-
-        if (newNickname.equals(currentNickname)) {
-            return ResponseEntity.badRequest().body("현재 닉네임과 동일합니다.");
-        }
-
-        Member memberWithNewNickname = memberService.findMemberByNickname(newNickname);
-        if (memberWithNewNickname != null) {
-            return ResponseEntity.badRequest().body("이미 사용 중인 닉네임입니다.");
-        }
-
-        existingMember.setNickname(newNickname);
-        Member updatedMember = memberService.updateMember(memberId, existingMember);
-
-        if (updatedMember != null) {
-            return ResponseEntity.ok("Succeed Update Nickname");
-        }
-        else {
-            return ResponseEntity.badRequest().body("Failed Update Nickname");
+            Member member = new Member(nicknameDto);
+            Member updatedMember = memberService.updateMember(memberId, member);
+            return ResponseEntity.ok().body("Succeed Update Nickname");
+        } catch (BusinessLogicException e) {
+            return ResponseEntity.status(e.getExceptionCode().getStatus())
+                    .body(e.getExceptionCode().getMessage());
         }
     }
 
@@ -120,18 +111,22 @@ public class MemberController {
             String errorMessage = bindingResult.getFieldError().getDefaultMessage();
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        if (passwordDto.getNewPassword().equals(passwordDto.getPassword())) {
-            return ResponseEntity.badRequest().body(ExceptionCode.INVALID_PASSWORD.getMessage());
-        }
 
-        boolean passwordChanged = memberService.updatePassword(memberId,
-                                                               passwordDto.getPassword(),
-                                                               passwordDto.getNewPassword());
-        if (passwordChanged) {
-            return ResponseEntity.ok("Password changed successfully!");
-        }
-        else {
-            return ResponseEntity.badRequest().body("Failed to change password.");
+        try {
+            boolean passwordChanged = memberService.updatePassword(memberId,
+                    passwordDto.getPassword(),
+                    passwordDto.getNewPassword());
+            if (passwordChanged) {
+                return ResponseEntity.ok("Password changed successfully!");
+            } else {
+                return ResponseEntity.badRequest().body("Failed to change password.");
+            }
+        } catch (BusinessLogicException e) {
+            if (e.getExceptionCode() == ExceptionCode.SAME_CURRENT_PASSWORD) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("현재 비밀번호와 일치합니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getExceptionCode().getMessage());
+            }
         }
     }
 
@@ -193,6 +188,20 @@ public class MemberController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to retrieve profile image.".getBytes());
+        }
+    }
+
+    // 이미지 삭제
+    @DeleteMapping("/members/{member-Id}/profile-image")
+    public ResponseEntity<String> deleteProfileImage(@PathVariable("member-Id") long memberId) {
+        try {
+            memberService.deleteProfileImage(memberId);
+            return ResponseEntity.ok("Profile image deleted successfully!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete profile image.");
         }
     }
 

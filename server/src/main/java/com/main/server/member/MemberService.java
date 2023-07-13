@@ -39,7 +39,13 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(memberEmail);
 
         if (optionalMember.isPresent())
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
+            throw new BusinessLogicException(ExceptionCode.EMAIL_ALREADY_USED);
+
+        String memberNickname = member.getNickname();
+        Optional<Member> optionalNickname = memberRepository.findByNickname(memberNickname);
+
+        if (optionalNickname.isPresent())
+            throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_USED);
 
         String encodedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encodedPassword);
@@ -65,39 +71,52 @@ public class MemberService {
     }
 
     public Member findMemberByNickname(String nickname) {
-        return memberRepository.findByNickname(nickname);
+        return memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
-    // 닉네임 변경
     public Member updateMember(long memberId, Member member) {
         Member foundMember = findMember(memberId);
 
         if (foundMember != null) {
+            String newNickname = member.getNickname();
 
-            foundMember.setNickname(member.getNickname());
+            if (foundMember.isSameNickname(newNickname)) {
+                throw new BusinessLogicException(ExceptionCode.SAME_NICKNAME);
+            }
+
+            if (memberRepository.existsByNickname(newNickname)) {
+                throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_USED);
+            }
+
+            foundMember.setNickname(newNickname);
         }
-        Member updateMember = memberRepository.save(foundMember);
+        Member updatedMember = memberRepository.save(foundMember);
 
-        return updateMember;
+        return updatedMember;
     }
 
         // 비밀번호 변경
         public boolean updatePassword(long memberId, String password, String newPassword) {
-        Member foundMember = findMember(memberId);
+            Member foundMember = findMember(memberId);
 
-        if (foundMember != null && passwordEncoder.matches(password, foundMember.getPassword())) {
-            if (!newPassword.equals(password)) {
-                String encodedNewPassword = passwordEncoder.encode(newPassword);
-                foundMember.setPassword(encodedNewPassword);
-
-                Member updatePassword = memberRepository.save(foundMember);
-                return true;
+            if (foundMember != null && passwordEncoder.matches(password, foundMember.getPassword())) {
+                if (!newPassword.equals(password)) {
+                    String encodedNewPassword = passwordEncoder.encode(newPassword);
+                    if (passwordEncoder.matches(newPassword, foundMember.getPassword())) {
+                        throw new BusinessLogicException(ExceptionCode.SAME_CURRENT_PASSWORD);
+                    }
+                    foundMember.setPassword(encodedNewPassword);
+                    memberRepository.save(foundMember);
+                    return true;
+                } else {
+                    throw new BusinessLogicException(ExceptionCode.SAME_CURRENT_PASSWORD);
+                }
             } else {
-                throw new IllegalArgumentException(ExceptionCode.INVALID_PASSWORD.getMessage());
+                throw new BusinessLogicException(ExceptionCode.INVALID_PASSWORD_FORMAT);
             }
+
         }
-        return false;
-    }
 
     public void terminateMember(long memberId, String password) {
         Member foundMember = findMember(memberId);
@@ -194,6 +213,21 @@ public class MemberService {
         } else {
             throw new IllegalStateException("Profile image file name is missing.");
         }
+    }
+
+    // 이미지 삭제
+    public void deleteProfileImage(long memberId) throws IOException {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+
+        if (member.getProfileImage() == null || member.getProfileImage().isEmpty()) {
+            throw new IllegalArgumentException("삭제할 수 있는 이미지가 없습니다.");
+        }
+
+        deleteExistingProfileImage(member);
+
+        member.setProfileImage(null);
+        memberRepository.save(member);
     }
 
 }
