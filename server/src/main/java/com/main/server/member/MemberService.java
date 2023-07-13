@@ -221,6 +221,7 @@ public class MemberService {
                 }
             }
         }
+
     // 이미지 조회 메서드 추가
 //    public byte[] getProfileImage(long memberId) throws IOException {
 //        Member member = memberRepository.findById(memberId)
