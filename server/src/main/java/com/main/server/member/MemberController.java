@@ -8,6 +8,9 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +54,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-
     @GetMapping("/members")
     public List<ResponseDto> getMembers() {
         List<Member> allMembers = memberService.findAllMembers();
@@ -76,6 +78,7 @@ public class MemberController {
 
         // 닉네임 유효성 검증
         if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+
             return ResponseEntity.badRequest().body("닉네임은 특수문자를 제외한 2~10자리여야 합니다.");
         }
 
@@ -169,7 +172,7 @@ public class MemberController {
                     .body("Failed to update profile image.");
         }
     }
-
+  
     // 이미지 조회
     @GetMapping("/members/{member-Id}/profile-image")
     public ResponseEntity<byte[]> getProfileImage(@PathVariable("member-Id") long memberId) {

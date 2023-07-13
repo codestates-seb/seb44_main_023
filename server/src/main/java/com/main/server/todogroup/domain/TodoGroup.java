@@ -4,6 +4,7 @@ import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;

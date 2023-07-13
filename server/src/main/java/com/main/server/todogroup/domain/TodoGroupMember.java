@@ -45,5 +45,4 @@ public class TodoGroupMember {
         this.member = member;
     }
 
-
 }
