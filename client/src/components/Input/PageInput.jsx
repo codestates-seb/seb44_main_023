@@ -31,7 +31,7 @@ const InputContainer = styled.div`
 const InputField = styled.input`
   width: ${(props) => props.size || "100%"};
   height: ${(props) => props.height || "auto"};
-  padding: 0.8rem;
+  padding: 0.2rem;
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none;
