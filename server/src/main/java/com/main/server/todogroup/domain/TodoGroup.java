@@ -45,4 +45,15 @@ public class TodoGroup {
         this.member = member;
     }
 
+    public TodoGroup(Member member, String todoGroupTitle) {
+        this.member = member;
+        this.todoGroupTitle = todoGroupTitle;
+    }
+
+    public void changeTitle(final String title) {
+        if(title != null) {
+            this.todoGroupTitle = title;
+        }
+    }
+
 }

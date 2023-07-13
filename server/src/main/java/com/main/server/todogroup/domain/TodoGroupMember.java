@@ -40,5 +40,10 @@ public class TodoGroupMember {
         this.member = member;
     }
 
+    public TodoGroupMember(TodoGroup todoGroup, Member member) {
+        this.todoGroup = todoGroup;
+        this.member = member;
+    }
+
 
 }
