@@ -8,6 +8,7 @@ import {roundDecimal} from "../../utils/util"
 //({ weatherInfo: { country, temp, temp_max, temp_min, weather } })
 const Weather = () => {
   //업데이트된정보 불러오기 , 실패시 디폴트 서울
+ 
   const location = useGetLocation();
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
   const{ weatherInfo,setWeatherInfo }= useWeatherInfoStore();
@@ -19,21 +20,24 @@ const Weather = () => {
           `https://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=${apiKey}&units=metric&lang=kr`
         );
         
-      const apiResponse = response.data;
-      const { name, main, weather} = apiResponse;
-      const { temp, temp_min, temp_max } = main;
-      const  country  = name;
-      const weatherKR=weather[0].description;
-      const icon = weather[0].icon;
-      const iconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`;
-        setWeatherInfo(
-          country,
-          roundDecimal(temp),
-          roundDecimal(temp_min),
-          roundDecimal( temp_max),
-          weatherKR,
-          iconURL
-          );
+    
+    const apiResponse = response.data;
+    const { name, main, weather} = apiResponse;
+    const country  = name;
+    const weatherKR=weather[0].description;
+    const icon = weather[0].icon;
+    const type = getWeatherType(icon);
+    const iconURL = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+    setWeatherInfo(
+      country,
+      weatherKR,
+      iconURL,
+      type,
+      roundDecimal(main.temp)
+      );
+
+      console.log("weatherInfo : ",weatherInfo)
+
       } catch (error) {
         console.error("날씨 정보를 가져오는 중 오류가 발생했습니다:", error);
       }
