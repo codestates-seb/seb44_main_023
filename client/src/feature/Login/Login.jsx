@@ -20,21 +20,14 @@ const Login = () => {
       alert("유효한 이메일인지 확인해주세요.");
       return;
     }
-
-    try {
       // 로그인 성공
-      const res = await loginAPI(email, password);
-      console.log("사용자 정보:", res);
+      const response = await loginAPI(email, password);
+      // console.log("사용자 정보:", response);
 
       setLogin(true);
       setValidation("");
 
       navigate("/");
-    } catch (error) {
-      setValidation("로그인 실패");
-      console.log(error);
-      navigate("*");
-    }
   };
 
   const handleEmailValidation = (e) => {
