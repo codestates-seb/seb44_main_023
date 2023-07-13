@@ -1,6 +1,7 @@
 package com.main.server.todogroup.controller;
 
-
+import com.main.server.todogroup.domain.TodoGroup;
+//import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.domain.TodoGroup;
 import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.dto.TodoGroupDto;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,7 +44,8 @@ public class TodoGroupController {
 
     @PatchMapping("/todogroups/{todo-group-id}")
     public ResponseEntity updateTodoGroup(@PathVariable("todo-group-id") @Positive Long todoGroupId,
-        @Valid @RequestBody TodoGroupDto.Patch patchDto) {
+                                          @Valid @RequestBody TodoGroupDto.Patch patchDto) {
+       
         TodoGroup todoGroup = todoGroupService.updateTodoGroup(todoGroupId, patchDto);
 
         return new ResponseEntity(new Response(todoGroup), HttpStatus.OK);
@@ -58,8 +61,8 @@ public class TodoGroupController {
     public ResponseEntity<List<Response>> getTodoGroups() {
         List<TodoGroup> todoGroups = this.todoGroupService.getTodoGroups();
         List<TodoGroupDto.Response> responses = todoGroups.stream()
-            .map((todoGroup -> new Response(todoGroup)))
-            .collect(Collectors.toList());
+                .map((todoGroup -> new Response(todoGroup)))
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
 
@@ -71,5 +74,5 @@ public class TodoGroupController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 }
+

@@ -8,6 +8,7 @@ import com.main.server.member.MemberService;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todogroup.Repository.TodoGroupRepository;
 import com.main.server.todogroup.domain.TodoGroup;
+//import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
 import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import java.util.List;
@@ -61,13 +62,14 @@ public class TodoGroupService {
     @Transactional
     public TodoGroup findById(final Long todoGroupId) {
         return todoGroupRepository.findById(todoGroupId)
-            .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TODO_GROUP_NOT_FOUND));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TODO_GROUP_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public TodoGroup findVerifiedTodoGroup(Long todoGroupId) {
         TodoGroup findTodoGroup = todoGroupRepository.findById(todoGroupId).orElseThrow(() ->
-            new BusinessLogicException(ExceptionCode.TODO_GROUP_NOT_FOUND));
+                new BusinessLogicException(ExceptionCode.TODO_GROUP_NOT_FOUND));
         return findTodoGroup;
+
     }
 }

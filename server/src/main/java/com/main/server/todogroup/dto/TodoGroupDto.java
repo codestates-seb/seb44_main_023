@@ -19,7 +19,7 @@ public class TodoGroupDto {
         private String todoGroupTitle;
 
         public TodoGroup toEntity(Member member) {
-            return new TodoGroup(member,todoGroupTitle);
+            return new TodoGroup(member, todoGroupTitle);
         }
     }
 

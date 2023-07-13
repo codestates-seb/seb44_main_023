@@ -1,7 +1,13 @@
 package com.main.server.member;
 
+import com.main.server.exception.BusinessLogicException;
+import com.main.server.exception.ExceptionCode;
 import com.main.server.member.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.*;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -71,7 +77,8 @@ public class MemberController {
                                    @RequestBody NicknameDto nicknameDto) {
 
         // 닉네임 유효성 검증
-        if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-z0-9-_]{2,10}$")) {
+        if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+
             return ResponseEntity.badRequest().body("닉네임은 특수문자를 제외한 2~10자리여야 합니다.");
         }
 
@@ -84,12 +91,12 @@ public class MemberController {
         String currentNickname = existingMember.getNickname();
 
         if (newNickname.equals(currentNickname)) {
-            return ResponseEntity.badRequest().body("Failed update Nickname");
+            return ResponseEntity.badRequest().body("현재 닉네임과 동일합니다.");
         }
 
         Member memberWithNewNickname = memberService.findMemberByNickname(newNickname);
         if (memberWithNewNickname != null) {
-            return ResponseEntity.badRequest().body("Failed update Nickname");
+            return ResponseEntity.badRequest().body("이미 사용 중인 닉네임입니다.");
         }
 
         existingMember.setNickname(newNickname);
@@ -104,9 +111,19 @@ public class MemberController {
     }
 
     // 비밀번호 변경
-    @PostMapping("/members/{member-Id}/password")
+    @PatchMapping("/members/{member-Id}/password")
     public ResponseEntity<String> changePassword(@PathVariable("member-Id") long memberId,
-                                                 @RequestBody PasswordDto passwordDto) {
+                                                 @Valid @RequestBody PasswordDto passwordDto,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사 오류 처리
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        if (passwordDto.getNewPassword().equals(passwordDto.getPassword())) {
+            return ResponseEntity.badRequest().body(ExceptionCode.INVALID_PASSWORD.getMessage());
+        }
+
         boolean passwordChanged = memberService.updatePassword(memberId,
                                                                passwordDto.getPassword(),
                                                                passwordDto.getNewPassword());
@@ -118,6 +135,7 @@ public class MemberController {
         }
     }
 
+    // 로그아웃
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/members/{member-Id}")
     public void deleteMember(@PathVariable("member-Id") long memberId,
@@ -144,11 +162,39 @@ public class MemberController {
         try {
             memberService.updateProfileImage(memberId, file);
             return ResponseEntity.ok("Profile image updated successfully!");
+        } catch (BusinessLogicException e) {
+            return ResponseEntity.status(e.getExceptionCode().getStatus())
+                    .body(e.getExceptionCode().getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to update profile image.");
         }
     }
+  
+    // 이미지 조회
+    @GetMapping("/members/{member-Id}/profile-image")
+    public ResponseEntity<byte[]> getProfileImage(@PathVariable("member-Id") long memberId) {
+        try {
+            byte[] imageBytes = memberService.getProfileImage(memberId);
+            if (imageBytes != null) {
+                String fileName = "profile-image.jpg"; // 기본적으로 JPEG로 가정
+                // 파일 확장자에 따라 적절한 MediaType 설정
+                String mimeType = MediaTypeFactory.getMediaType(fileName)
+                        .orElse(MediaType.IMAGE_JPEG).toString();
 
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.parseMediaType(mimeType));
+                return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to retrieve profile image.".getBytes());
+        }
+    }
 
 }
+
