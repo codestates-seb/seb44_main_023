@@ -5,25 +5,39 @@ import { devtools } from "zustand/middleware";
 // const { weatherInfo, setweatherInfo } = useWeatherInfoStore();
 
 const store = (set) => ({
-  weatherInfo: null,
-  setWeatherInfo: (
-    country,
-    temp,
-    temp_min,
-    temp_max,
-    weather,
-    weatherIconURL
-  ) =>
-    set({
+  weatherInfo: {
+    country: null,
+    weather: null,
+    weatherIconURL: null,
+    type: null,
+    temp: null,
+    temp_min: null,
+    temp_max: null,
+  },
+  setWeatherInfo: (country, weather, weatherIconURL, type, temp) =>
+    set((state) => ({
       weatherInfo: {
         country,
-        temp,
-        temp_min,
-        temp_max,
         weather,
         weatherIconURL,
+        type,
+        temp,
+        temp_min: null,
+        temp_max: null,
       },
-    }),
+    })),
+  setWeatherMinMax: (temp_min, temp_max) =>
+    set((state) => ({
+      weatherInfo: {
+        ...state.weatherInfo,
+        temp_min,
+        temp_max,
+      },
+    })),
+
+  // set((state) => ({
+  //   weatherInfo: { ...state.weatherInfo, temp_min, temp_max },
+  // })
 });
 
 // 개발 환경일 경우 개발자 도구 노출

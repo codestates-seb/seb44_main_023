@@ -1,75 +1,83 @@
-import { useGetWeatherInfo} from "../../store/store.weather";
+import { useGetWeatherInfo } from "../../store/store.weather";
 import { styled } from "styled-components";
-import { useGetLocation } from "../../store/store.location";
-import Weather from "../../feature/WeatherWidget/Weather";
+import Weather from "../../api/WeatherWidget/Weather.api";
 
-//저장된 날씨정보를 불러와서 위젯표시 하는 부분
-const WeatherWidget = () => {
-     //업데이트된정보 불러오기 , 실패시 디폴트 서울날씨
-    const weather = useGetWeatherInfo();
-    console.log("in WeatherWidget ",weather)
-
-  //렌더링
+const WeatherWidget = ({ scale = 1 }) => {
+  const weather = useGetWeatherInfo();
   return (
- <>
-    {/*날씨정보 업데이트를 도와주는 컴포넌트 */}
-    <Weather/>
-    <WeatherWrapper>
-      {weather ? (
-        <div>
-          <WeatherDivRow>
-          <WeatherDivCol>
-           <WeatherIcon>
+    <>
+      <WeatherWrapper scale={scale}>
+        <Weather />
+        {weather ? (
+          <WeatherGrid scale={scale}>
+            <WeatherIcon justifycenter="true" scale={scale}>
               <img
                 src={weather.weatherIconURL}
                 alt="weatherIcon"
-                
-                width="54"
-                height="54"
                 className="weatherIcon"
               />
-              </WeatherIcon>
-             <WeatherText>{weather.weather}</WeatherText>
-           </WeatherDivCol>
-           <WeatherDivCol>
-            <WeatherText>{weather.temp}</WeatherText>
-             <WeatherText>{weather.temp_min}/{weather.temp_max}</WeatherText>
-             <WeatherText>{weather.country}</WeatherText>
+            </WeatherIcon>
+            <WeatherDivCol>
+              <div style={{marginLeft:"1.5rem"}}>
+                <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
+              </div>
+              <WeatherText scale={scale}>{weather.temp_min}/{weather.temp_max}</WeatherText>
             </WeatherDivCol>
-          </WeatherDivRow>
-           </div>
-          
-          ) : (
-            <p>현재 날씨 정보를 가져오는 중입니다...</p>
-          )}
-       </WeatherWrapper>
+            <WeatherText justifycenter="true" scale={scale}>{weather.weather}</WeatherText>
+            <WeatherText justifycenter="true" scale={scale}>{weather.country}</WeatherText>
+          </WeatherGrid>
+        ) : (
+          <p>현재 날씨 정보를 가져오는 중입니다...</p>
+        )}
+      </WeatherWrapper>
     </>
   );
-}
+};
+
 export default WeatherWidget;
 
-const WeatherIcon = styled.div`
+const WeatherGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.5fr 1fr;
+  gap: ${(props) =>0.1 * props.scale}rem;
+  align-items: center;
+  transform: scale(${(props) => props.scale});
 `;
-const WeatherDivRow = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-`;
+
 const WeatherDivCol = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-align-items: center; /* 수직 가운데 정렬 */
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+
+`;
+
+const WeatherIcon = styled.div`
+  width: ${(props) => 8 * props.scale}rem;
+  height: ${(props) =>8 * props.scale}rem;
+  justify-self: center;
+  transform: scale(${(props) => props.scale});
+`;
+
+const WeatherLargeText = styled.span`
+  position: relative;
+  color: var(--color-gray-07);
+  font-size: ${(props) => 4 * props.scale}rem;
+  justify-self: center;
+  
 `;
 
 const WeatherText = styled.span`
   position: relative;
-  color: var(--color-gray-08);
+  color: var(--color-gray-07);
+  font-size: ${(props) => 1.4 * props.scale}rem;
+  justify-self: center;
 `;
-const WeatherWrapper = styled.div`
-display: flex;
 
-  position: relative;
-  width : 100px;
-  height : 100px;
+const WeatherWrapper = styled.div`
+  display: flex;
+  width: ${(props) => 20 * props.scale}rem;
+  height: ${(props) => 10 * props.scale}rem;
+  transform: scale(${(props) => props.scale});
 `;
