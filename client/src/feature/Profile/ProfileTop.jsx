@@ -60,26 +60,38 @@ const ProfileTop = () => {
             )}
             {isEditMode ? (
               <div className="nickname-button-wrapper">
-                <Button onClick={handleCancelEdit} color="var(--color-red-01)">
+                <TextButton
+                  onClick={handleCancelEdit}
+                  color="var(--color-red-01)"
+                >
                   취소
-                </Button>
-                <Button
+                </TextButton>
+                <TextButton
                   onClick={handleSaveNickName}
                   color="var(--color-blue-03)"
                 >
                   저장
-                </Button>
+                </TextButton>
               </div>
             ) : (
-              <Button onClick={handleEditMode} color="var(--color-blue-03)">
+              <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
                 수정
-              </Button>
+              </TextButton>
             )}
           </div>
         </ProfileWrapper>
         <ButtonWrapper>
-          <label htmlFor="avatar">이미지 업로드</label>
-          <button onClick={handleDeleteImage}>이미지 제거</button>
+          <label htmlFor="avatar">
+            <MediumButton className="medium-button add">
+              이미지 추가
+            </MediumButton>
+          </label>
+          <MediumButton
+            className="mediumn-button delete"
+            onClick={handleDeleteImage}
+          >
+            이미지 제거
+          </MediumButton>
         </ButtonWrapper>
       </form>
     </StyledWrapper>
@@ -149,7 +161,7 @@ const ButtonWrapper = styled.div`
   margin-bottom: 2rem;
 `;
 
-const Button = styled.button`
+const TextButton = styled.button`
   width: min-content;
   font-size: 2rem;
   color: ${({ color }) => color};
@@ -158,4 +170,36 @@ const Button = styled.button`
 
 const InputNickname = styled(Input)`
   margin-bottom: 1.6rem;
+`;
+
+const MediumButton = styled.div`
+  width: 12.4rem;
+  height: 3.6rem;
+  font-size: 1.6rem;
+  border-radius: 30rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 200ms;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+  &.add {
+    background-color: var(--color-blue-03);
+    color: var(--color-white);
+
+    &:hover {
+      background-color: var(--color-blue-04);
+    }
+  }
+
+  &.delete {
+    background-color: var(--color-white);
+    color: var(--color-blue-03);
+    border: 0.15rem solid var(--color-blue-03);
+
+    &:hover {
+      filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    }
+  }
 `;
