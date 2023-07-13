@@ -12,9 +12,11 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // api 테스트 가능할때 다시 테스트 해봐야함
-    if (validation.email || validation.password || validation.nickname) {
-      return; // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+    
+    if (!isValidEmail(email) || !isValidPassword(password) || !isValidNickname(nickname)) {
+       // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+      alert("유효한 이메일, 비밀번호, 닉네임인지 화인해주세요.")
+      return;
     }
     
     try {
@@ -96,7 +98,7 @@ const Signup = () => {
   return (
     <div>
       <h1>회원가입</h1>
-      <form onSubmit={handleSignup}>
+      <form>
         <label>
           이메일:
           <input
@@ -125,7 +127,7 @@ const Signup = () => {
         </label>
         {validation.nickname && <p>{validation.nickname}</p>}
         <br />
-        <button type="submit">회원가입</button>
+        <button type="submit" onClick={handleSignup}>회원가입</button>
       </form>
     </div>
   );
