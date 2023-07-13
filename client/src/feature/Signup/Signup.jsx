@@ -27,15 +27,11 @@ const Signup = () => {
       return;
     }
 
-    try {
-      const response = await signupAPI(email, password, nickname);
-      console.log("회원가입 성공:", response);
-      // 자동으로 로그인 되어 메인으로 넘어가게끔 서버쪽 응답 헤더에 accessToken, refreshToken 보내달라고 요청하기
-      navigate("/");
-    } catch (error) {
-      console.log("오류로 인한 회원가입 실패", error);
-      navigate("*");
-    }
+    // API
+    const response = await signupAPI(email, password, nickname);
+    // console.log("회원가입 성공:", response);
+    // 자동으로 로그인 되어 메인으로 넘어가게끔 서버쪽 응답 헤더에 accessToken, refreshToken 보내달라고 요청하기
+    navigate("/");
   };
 
   const handleEmailValidation = (e) => {
@@ -149,8 +145,8 @@ const Signup = () => {
       <Button
         type="submit"
         label="Sign Up"
-        size="large" 
-        onClick={handleSignup} 
+        size="large"
+        onClick={handleSignup}
         fontWeight={"600"}
       />
       <LoginLink onClick={handleLoginLinkClick}>

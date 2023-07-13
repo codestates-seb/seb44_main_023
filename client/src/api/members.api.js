@@ -9,7 +9,7 @@ export const loginAPI = async (email, password) => {
     localStorage.setItem("accessToken", accessToken);
 
     // refreshToken
-    const refreshToken = response.headers['x-refresh-token'];
+    const refreshToken = response.headers["x-refresh-token"];
     localStorage.setItem("refreshToken", refreshToken);
 
     return response.data;
@@ -27,6 +27,8 @@ export const signupAPI = async (email, password, nickname) => {
     });
     return response.data;
   } catch (error) {
+    console.log("오류로 인한 회원가입 실패", error);
+    navigate("*");
     throw new Error(error.response.data.error);
   }
 };
