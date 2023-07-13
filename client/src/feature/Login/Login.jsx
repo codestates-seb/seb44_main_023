@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginAPI } from "../../api/members";
+import { loginAPI } from "../../api/members.api";
 import useLoginStore from "../../store/store.login";
 import { useNavigate } from "react-router-dom";
 
@@ -11,9 +11,13 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const res = await loginAPI(email, password);
+    if (validation.email || validation.password) {
+      return; // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+    }
+    
     try {
       // 로그인 성공
+      const res = await loginAPI(email, password);
       console.log("사용자 정보:", res);
 
       setLogin(true);
@@ -23,6 +27,7 @@ const Login = () => {
     } catch (error) {
       setValidation("로그인 실패");
       console.log(error);
+      navigate("*");
     }
   };
 
