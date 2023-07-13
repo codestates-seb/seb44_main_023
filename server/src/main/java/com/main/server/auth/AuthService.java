@@ -17,19 +17,22 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-
     public AuthService(MemberRepository memberRepository,
                        PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void authenticate(String email, String password) {
+    public boolean authenticate(String email, String password) {
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,"로그인에 실패했습니다"));
 
-        String savePassword = member.getPassword();
-        if (!passwordEncoder.matches(password, savePassword))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        String savedPassword = member.getPassword();
+        boolean passwordMatches = passwordEncoder.matches(password, savedPassword);
+
+        if (!passwordMatches)
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다");
+
+        return true;
     }
 }

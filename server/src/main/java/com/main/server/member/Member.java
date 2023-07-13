@@ -3,7 +3,7 @@ package com.main.server.member;
 import com.main.server.member.dto.NicknameDto;
 import com.main.server.member.dto.PasswordDto;
 import com.main.server.member.dto.SignUpDto;
-import com.main.server.comment.domain.Comment;
+//import com.main.server.comment.domain.Comment;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todogroup.domain.TodoGroup;
 import com.main.server.todogroup.domain.TodoGroupMember;
@@ -64,8 +64,8 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Todo> todos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<TodoGroup> todoGroups = new ArrayList<>();
