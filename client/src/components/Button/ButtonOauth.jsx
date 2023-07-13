@@ -24,7 +24,7 @@ export default function ButtonOauth(props) {
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: 4rem;
+  justify-content: space-between;
 `;
 
 const GoogleButton = styled.button`
