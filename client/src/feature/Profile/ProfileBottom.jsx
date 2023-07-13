@@ -28,6 +28,8 @@ const ProfileBottom = ({ profileInfo }) => {
     try {
       await updatePassword(memberId, passwordInput, newPasswordInput);
       handleEditMode();
+      setPasswordInput();
+      setNewPasswordInput();
     } catch (err) {
       console.log(err);
     }

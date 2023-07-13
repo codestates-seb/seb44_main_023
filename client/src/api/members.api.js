@@ -5,7 +5,7 @@ export const readMemberInfo = async (memberId) => {
     const response = await API.get(`/api/members/${memberId}`);
     return response.data;
   } catch (err) {
-    return [];
+    throw err;
   }
 };
 
@@ -38,10 +38,9 @@ export const updateProfileImage = async (memberId, formData) => {
 
 export const updatePassword = async (memberId, password, newPassword) => {
   try {
-    await API.post(`/members/${memberId}/password`, {
-      member_id: memberId,
+    await API.patch(`/api/members/${memberId}/password`, {
       password,
-      new_password: newPassword,
+      newPassword: newPassword,
     });
   } catch (err) {
     throw err;
@@ -50,7 +49,7 @@ export const updatePassword = async (memberId, password, newPassword) => {
 
 export const deleteMember = async (memberId, password) => {
   try {
-    await API.delete(`/members/${memberId}?password=${password}`, {
+    await API.delete(`/api/members/${memberId}?password=${password}`, {
       member_id: memberId,
       password,
     });
