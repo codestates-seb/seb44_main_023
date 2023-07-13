@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Toggle from "../../components/Toggle/Toggle";
 import kakaoIcon from "../../assets/icons/kakao_icon.svg";
-import Dropdown from "../../components/Dropdown/Dropdown";
 import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
 import { deleteMember, updatePassword } from "../../api/members.api";
@@ -104,7 +103,6 @@ const ProfileBottom = ({ profileInfo }) => {
       <Content>{email}</Content>
       <Title>메인 페이지 설정</Title>
       <ProfileGroupSetting />
-
       <Title>숨기기 설정</Title>
       <Toggle checked={isHidden} onClick={changeVisibility} />
       <Title>회원 탈퇴</Title>

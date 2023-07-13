@@ -25,7 +25,7 @@ export const readLedgerGroups = async () => {
       },
     ];
 
-    const response = API.get("/ledgergroups");
+    const response = API.get("/api/ledgergroups");
     return response.data;
   } catch (err) {
     throw err;

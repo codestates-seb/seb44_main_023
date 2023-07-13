@@ -25,7 +25,13 @@ const ProfileGroupSetting = () => {
     try {
       const todoGroup = await readTodoGroups();
       const ledgerGroup = await readLedgerGroups();
+
       setGroups({ todoGroup, ledgerGroup });
+      let defaultGroup = JSON.parse(localStorage.getItem("planfinity-group"));
+      if (defaultGroup) {
+        setMainGroup(defaultGroup);
+      }
+      setIsLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -33,11 +39,6 @@ const ProfileGroupSetting = () => {
 
   useEffect(() => {
     requestGroup();
-    let defaultGroup = JSON.parse(localStorage.getItem("planfinity-group"));
-    if (defaultGroup) {
-      setMainGroup(defaultGroup);
-    }
-    setIsLoading(false);
   }, []);
 
   if (isLoading) return null;

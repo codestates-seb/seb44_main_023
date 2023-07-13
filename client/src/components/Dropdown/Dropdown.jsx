@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus, AiOutlineDown } from "react-icons/ai";
 import Input from "../../components/Input/PageInput";
 
@@ -12,8 +12,17 @@ const Dropdown = ({
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [selected, setSelected] = useState(defaultKey);
+  const [selected, setSelected] = useState({ key: "", label: "" });
   const [newItem, setNewItem] = useState("");
+
+  useEffect(() => {
+    if (
+      menu.some(
+        (item) => item.key == defaultKey.key && item.label == defaultKey.label
+      )
+    )
+      setSelected(defaultKey);
+  }, []);
 
   const inputRef = useRef(selected.label);
 
