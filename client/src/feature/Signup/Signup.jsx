@@ -15,7 +15,7 @@ const Signup = () => {
     
     if (!isValidEmail(email) || !isValidPassword(password) || !isValidNickname(nickname)) {
        // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
-      alert("유효한 이메일, 비밀번호, 닉네임인지 화인해주세요.")
+      alert("유효한 이메일, 비밀번호, 닉네임인지 확인해주세요.")
       return;
     }
     
