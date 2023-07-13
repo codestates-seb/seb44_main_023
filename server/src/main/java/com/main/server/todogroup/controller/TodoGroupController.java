@@ -1,5 +1,6 @@
 package com.main.server.todogroup.controller;
 
+
 import com.main.server.todogroup.domain.TodoGroup;
 import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.dto.TodoGroupDto;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 @Validated
 public class TodoGroupController {
@@ -69,6 +71,5 @@ public class TodoGroupController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }

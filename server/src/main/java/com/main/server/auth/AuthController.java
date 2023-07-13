@@ -15,8 +15,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
-// CORS Handle
-@CrossOrigin
+@CrossOrigin//(exposedHeaders = {"Authorization", "X-Refresh-Token"})
 @RestController
 public class AuthController {
 
@@ -77,13 +76,12 @@ public class AuthController {
         String accessToken = jwtTokenizer.generateAccessToken(email);
         String refreshToken = jwtTokenizer.generateRefreshToken(email);
 
-
+        AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
 
         // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headers에 추가
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("X-Refresh-Token", refreshToken);
-
         return ResponseEntity.ok().headers(headers).body("로그인에 성공했습니다");
     }
 
