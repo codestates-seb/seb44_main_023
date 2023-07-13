@@ -1,18 +1,16 @@
 import { useGetWeatherInfo } from "../../store/store.weather";
 import { styled } from "styled-components";
-import Weather from "../../feature/WeatherWidget/Weather";
+import Weather from "../../api/WeatherWidget/Weather.api";
 
 const WeatherWidget = ({ scale = 1 }) => {
   const weather = useGetWeatherInfo();
-  console.log("in WeatherWidget ", weather);
-
   return (
     <>
       <WeatherWrapper scale={scale}>
         <Weather />
         {weather ? (
           <WeatherGrid scale={scale}>
-            <WeatherIcon justifyCenter="true" scale={scale}>
+            <WeatherIcon justifycenter="true" scale={scale}>
               <img
                 src={weather.weatherIconURL}
                 alt="weatherIcon"
@@ -20,11 +18,13 @@ const WeatherWidget = ({ scale = 1 }) => {
               />
             </WeatherIcon>
             <WeatherDivCol>
-              <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
+              <div style={{marginLeft:"1.5rem"}}>
+                <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
+              </div>
               <WeatherText scale={scale}>{weather.temp_min}/{weather.temp_max}</WeatherText>
             </WeatherDivCol>
-            <WeatherText justifyCenter="true" scale={scale}>{weather.weather}</WeatherText>
-            <WeatherText justifyCenter="true" scale={scale}>{weather.country}</WeatherText>
+            <WeatherText justifycenter="true" scale={scale}>{weather.weather}</WeatherText>
+            <WeatherText justifycenter="true" scale={scale}>{weather.country}</WeatherText>
           </WeatherGrid>
         ) : (
           <p>현재 날씨 정보를 가져오는 중입니다...</p>
@@ -65,7 +65,7 @@ const WeatherLargeText = styled.span`
   color: var(--color-gray-07);
   font-size: ${(props) => 4 * props.scale}rem;
   justify-self: center;
-
+  
 `;
 
 const WeatherText = styled.span`
