@@ -22,8 +22,12 @@ const Popconfirm = ({
   };
 
   const handleConfirm = () => {
-    onConfirm();
-    handlePopupVisible();
+    try {
+      onConfirm();
+      handlePopupVisible();
+    } catch (err) {
+      throw err;
+    }
   };
 
   const confirmButton = document.querySelector(".popconfirmButton");
