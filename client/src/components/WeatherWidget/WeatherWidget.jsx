@@ -4,8 +4,6 @@ import Weather from "../../feature/WeatherWidget/Weather";
 
 const WeatherWidget = ({ scale = 1 }) => {
   const weather = useGetWeatherInfo();
-  console.log("in WeatherWidget ", weather);
-
   return (
     <>
       <WeatherWrapper scale={scale}>
