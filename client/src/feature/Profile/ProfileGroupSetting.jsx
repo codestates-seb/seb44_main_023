@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Dropdown from "../../components/Dropdown/Dropdown";
-import { readTodoGroups } from "../../api/todogroups.api";
+import { readAllTodoGroups } from "../../api/todogroups.api";
 import { readLedgerGroups } from "../../api/ledgergroups.api";
 
 const ProfileGroupSetting = () => {
@@ -23,7 +23,7 @@ const ProfileGroupSetting = () => {
 
   const requestGroup = async () => {
     try {
-      const todoGroup = await readTodoGroups();
+      const todoGroup = await readAllTodoGroups();
       const ledgerGroup = await readLedgerGroups();
 
       setGroups({ todoGroup, ledgerGroup });
