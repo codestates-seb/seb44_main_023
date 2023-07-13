@@ -10,7 +10,7 @@ const WeatherWidget = ({ scale = 1 }) => {
         <Weather />
         {weather ? (
           <WeatherGrid scale={scale}>
-            <WeatherIcon justifyCenter="true" scale={scale}>
+            <WeatherIcon justifycenter="true" scale={scale}>
               <img
                 src={weather.weatherIconURL}
                 alt="weatherIcon"
@@ -21,8 +21,8 @@ const WeatherWidget = ({ scale = 1 }) => {
               <WeatherLargeText scale={scale}>{weather.temp}°</WeatherLargeText>
               <WeatherText scale={scale}>{weather.temp_min}/{weather.temp_max}</WeatherText>
             </WeatherDivCol>
-            <WeatherText justifyCenter="true" scale={scale}>{weather.weather}</WeatherText>
-            <WeatherText justifyCenter="true" scale={scale}>{weather.country}</WeatherText>
+            <WeatherText justifycenter="true" scale={scale}>{weather.weather}</WeatherText>
+            <WeatherText justifycenter="true" scale={scale}>{weather.country}</WeatherText>
           </WeatherGrid>
         ) : (
           <p>현재 날씨 정보를 가져오는 중입니다...</p>
