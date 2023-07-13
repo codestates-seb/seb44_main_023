@@ -1,15 +1,14 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ProfilePage from "./pages/ProfilePage";
-import ErrorPage from "./pages/ErrorPage";
-import TestWidget from "./pages/TestWidget"
-import Home from "./pages/Home"
 
+import Home from "./pages/Home"
+import ProfilePage from "./pages/ProfilePage";
+import TestWidget from "./pages/TestWidget";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   return (
     <>
-      {/* <Header /> */}
       <Routes>
         {/* <Route path="/" element={<Main />} />    */}
         <Route path="/home" element={<Home />} />   

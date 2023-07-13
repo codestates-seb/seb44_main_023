@@ -3,27 +3,84 @@ import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Toggle from "../../components/Toggle/Toggle";
 import kakaoIcon from "../../assets/icons/kakao_icon.svg";
-import Dropdown from "../../components/Dropdown/Dropdown";
 import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
+import { deleteMember, updatePassword } from "../../api/members.api";
+import Popconfirm from "../../components/Popconfirm/Popconfirm";
+import { useNavigate } from "react-router-dom";
+import ProfileGroupSetting from "./ProfileGroupSetting";
 
-const ProfileBottom = () => {
+const ProfileBottom = ({ profileInfo }) => {
+  const { memberId, email, social } = profileInfo;
+
   const { isHidden, changeVisibility } = useStoreHide();
   const [isEditMode, setIsEditMode] = useState(false);
+  const [passwordInput, setPasswordInput] = useState();
+  const [newPasswordInput, setNewPasswordInput] = useState();
+  const [passwordConfirmInput, setPasswordConfirmInput] = useState();
+
+  const navigate = useNavigate();
 
   const handleEditMode = () => setIsEditMode(!isEditMode);
+
+  const handleChangePassword = async () => {
+    try {
+      await updatePassword(memberId, passwordInput, newPasswordInput);
+      handleEditMode();
+      setPasswordInput();
+      setNewPasswordInput();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteMember = async () => {
+    try {
+      await deleteMember(memberId, passwordConfirmInput);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <StyledWrapper>
       <Title>비밀번호</Title>
       <PasswordWrap>
-        {isEditMode ? <Input type="password" /> : <div />}
+        {isEditMode ? (
+          <div className="password-input-wrap">
+            <Input
+              type="password"
+              placeholder="기존 비밀번호"
+              value={passwordInput}
+              onChange={(event) => setPasswordInput(event.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="새 비밀번호"
+              value={newPasswordInput}
+              onChange={(event) => setNewPasswordInput(event.target.value)}
+            />
+          </div>
+        ) : (
+          <div />
+        )}
         {isEditMode ? (
           <div className="password-button-wrap">
-            <TextButton onClick={handleEditMode} color="var(--color-red-01)">
+            <TextButton
+              onClick={() => {
+                handleEditMode();
+                setPasswordInput();
+                setNewPasswordInput();
+              }}
+              color="var(--color-red-01)"
+            >
               취소
             </TextButton>
-            <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
+            <TextButton
+              onClick={handleChangePassword}
+              color="var(--color-blue-03)"
+            >
               저장
             </TextButton>
           </div>
@@ -33,53 +90,39 @@ const ProfileBottom = () => {
           </TextButton>
         )}
       </PasswordWrap>
-      <Title>소셜 정보</Title>
-      <Content>
-        <SocialIcon src={kakaoIcon} />
-        카카오톡
-      </Content>
+      {social && (
+        <>
+          <Title>소셜 정보</Title>
+          <Content>
+            <SocialIcon src={kakaoIcon} />
+            카카오톡
+          </Content>
+        </>
+      )}
       <Title>이메일 주소</Title>
-      <Content>test@naver.com</Content>
+      <Content>{email}</Content>
       <Title>메인 페이지 설정</Title>
-      <PageSetting>
-        <div className="setting-box">
-          <div className="setting-box-title">TODO</div>
-          <Dropdown
-            id="todo-group"
-            menu={[
-              {
-                label: "GROUP 1",
-                key: "8498723981",
-              },
-              {
-                label: "GROUP2",
-                key: "3123782468",
-              },
-            ]}
-          />
-        </div>
-        <div className="setting-box">
-          <div className="setting-box-title">가계부</div>
-          <Dropdown
-            id="account-group"
-            menu={[
-              {
-                label: "GROUP 1",
-                key: "8498723981",
-              },
-              {
-                label: "GROUP2",
-                key: "3123782468",
-              },
-            ]}
-          />
-        </div>
-      </PageSetting>
+      <ProfileGroupSetting />
       <Title>숨기기 설정</Title>
       <Toggle checked={isHidden} onClick={changeVisibility} />
       <Title>회원 탈퇴</Title>
       <Content>
-        <Button label="회원 탈퇴" size="medium" />
+        <Popconfirm
+          title="정말 탈퇴하시겠습니까?"
+          description={
+            <Input
+              placeholder="현재 비밀번호"
+              type="password"
+              value={passwordConfirmInput}
+              onChange={(event) => setPasswordConfirmInput(event.target.value)}
+            />
+          }
+          cancelText="취소"
+          confirmText="탈퇴하기"
+          onConfirm={handleDeleteMember}
+        >
+          <Button label="회원 탈퇴" size="medium" />
+        </Popconfirm>
       </Content>
     </StyledWrapper>
   );
@@ -112,22 +155,6 @@ const Content = styled.div`
   align-items: center;
 `;
 
-const PageSetting = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  .setting-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .setting-box-title {
-      margin-right: 4rem;
-    }
-  }
-`;
-
 const SocialIcon = styled.img`
   width: 3.6rem;
   height: 3.6rem;
@@ -140,6 +167,11 @@ const PasswordWrap = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+
+  .password-input-wrap {
+    display: flex;
+    flex-direction: column;
+  }
 
   .password-button-wrap {
     display: flex;

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useGetLocation } from "../../store/store.location";
 import { useWeatherInfoStore } from "../../store/store.weather";
-import Location from "./Location"
-import WeatherMinMax from "./WeatherMinMax";
+import Location from "./Location.api"
+import WeatherMinMax from "./WeatherMinMax.api";
 import axios from "axios";
 import {roundDecimal} from "../../utils/util"
-import { getWeatherType } from "./getWeatherType";
+import { getWeatherType } from "../../utils/getWeatherType";
 
 //날씨정보를 불러와서 저장, 최대최소는 다른컴포넌트를 부름으로써 할당
 const Weather = () => {
