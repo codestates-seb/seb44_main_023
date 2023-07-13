@@ -1,6 +1,6 @@
 import { useGetWeatherInfo } from "../../store/store.weather";
 import { styled } from "styled-components";
-import Weather from "../../feature/WeatherWidget/Weather";
+import Weather from "../../api/WeatherWidget/Weather.api";
 
 const WeatherWidget = ({ scale = 1 }) => {
   const weather = useGetWeatherInfo();

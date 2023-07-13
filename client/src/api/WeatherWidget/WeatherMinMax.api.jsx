@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useGetLocation } from "../../store/store.location";
 import { useWeatherInfoStore } from "../../store/store.weather";
-import Location from "./Location"
+import Location from "./Location.api"
 import axios from "axios";
 import {roundDecimal} from "../../utils/util"
 
