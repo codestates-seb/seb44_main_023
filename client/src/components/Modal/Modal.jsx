@@ -15,7 +15,7 @@ const Modal = ({ id, open, closable = true, onClose, children }) => {
 
   const handleAnimationEnd = useCallback( () => {
     close && onClose?.();
-  }. []);
+  }, []);
 
   useEffect(() => {
     ref.current?.focus();
