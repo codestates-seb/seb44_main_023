@@ -48,7 +48,6 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-
     @GetMapping("/members")
     public List<ResponseDto> getMembers() {
         List<Member> allMembers = memberService.findAllMembers();
@@ -150,7 +149,6 @@ public class MemberController {
                     .body("Failed to update profile image.");
         }
     }
-
 
 
 }

@@ -49,8 +49,8 @@ public class AuthController {
 //    }
 
     @PostMapping("/auths")
-    public ResponseEntity<?> postAuth(@Valid @RequestBody AuthDto authDto
-            , BindingResult bindingResult) {
+    public ResponseEntity<?> postAuth(@Valid @RequestBody AuthDto authDto,
+                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             // 유효성 검증에 실패한 경우 에러 메시지를 처리하고 응답을 구성한다.
             StringBuilder errorMessage = new StringBuilder();
@@ -78,7 +78,7 @@ public class AuthController {
 
         AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
 
-        // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headens에 추가
+        // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headers에 추가
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("X-Refresh-Token", refreshToken);

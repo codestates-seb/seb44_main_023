@@ -1,7 +1,5 @@
 package com.main.server.todogroup.domain;
 
-import com.main.server.member.Member;
-import com.main.server.todogroup.domain.TodoGroup;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,5 +38,9 @@ public class TodoGroupMember {
         this.member = member;
     }
 
+    public TodoGroupMember(TodoGroup todoGroup, Member member) {
+        this.todoGroup = todoGroup;
+        this.member = member;
+    }
 
 }
