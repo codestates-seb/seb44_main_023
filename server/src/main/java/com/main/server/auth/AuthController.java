@@ -56,9 +56,7 @@ public class AuthController {
             // 유효성 검증에 실패한 경우 에러 메시지를 처리하고 응답을 구성한다.
             StringBuilder errorMessage = new StringBuilder();
             for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMessage.append(error.getField())
-                        .append(": ")
-                        .append(error.getDefaultMessage())
+                errorMessage.append(error.getDefaultMessage())
                         .append("; \n");
             }
             // 에러 메시지를 포스트맨으로 보내기 위해 ResponseEntity를 사용한다.
