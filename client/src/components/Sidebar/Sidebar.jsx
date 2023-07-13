@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Popup from "./SidbarPoup";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const [currentPopup, setCurrentPopup] = useState(null);
@@ -10,6 +11,7 @@ const Sidebar = () => {
   const accountButtonRef = useRef(null);
   const [todoButtons, setTodoButtons] = useState([]);
   const [accountButtons, setAccountButtons] = useState([]);
+  const navigate = useNavigate();
 
   const handleAddButtonClick = (title, buttonRef) => {
     setButtonPosition(buttonRef.current.getBoundingClientRect());
@@ -46,12 +48,25 @@ const Sidebar = () => {
     setCurrentPopup(null);
   };
 
+  const handleButtonClick = (groupId, groupType) => {
+    if (groupType === "Todo") {
+      navigate(`/todogroups/${groupId}`);
+    } else if (groupType === "가계부") {
+      navigate(`/ledgergroups/${groupId}`);
+    }
+  };
+
   return (
     <SidebarContainer>
       <SidebarSection>
         <SidebarTitle>Todo</SidebarTitle>
         {todoButtons.map((button) => (
-          <AddedButton key={button.id}>{button.text}</AddedButton>
+          <AddedButton
+            key={button.id}
+            onClick={() => handleButtonClick(button.id, "Todo")}
+          >
+            {button.text}
+          </AddedButton>
         ))}
         <AddButton
           onClick={() => handleAddButtonClick("Todo", todoButtonRef)}
@@ -72,7 +87,12 @@ const Sidebar = () => {
       <SidebarSection>
         <SidebarTitle>가계부</SidebarTitle>
         {accountButtons.map((button) => (
-          <AddedButton key={button.id}>{button.text}</AddedButton>
+          <AddedButton
+            key={button.id}
+            onClick={() => handleButtonClick(button.id, "가계부")}
+          >
+            {button.text}
+          </AddedButton>
         ))}
         <AddButton
           onClick={() => handleAddButtonClick("가계부", accountButtonRef)}
