@@ -148,10 +148,10 @@ const Signup = () => {
       </InputBox>
       <Button
         type="submit"
-        label="Sign Up" // 버튼 Text 지정
-        size="large" // 버튼 사이즈
-        onClick={handleSignup} // onClick
-        fontWeight={"600"} // 폰트 사이즈 조절
+        label="Sign Up"
+        size="large" 
+        onClick={handleSignup} 
+        fontWeight={"600"}
       />
       <LoginLink onClick={handleLoginLinkClick}>
         이미 계정이 있으신가요? Login

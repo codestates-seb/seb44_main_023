@@ -10,10 +10,8 @@ const SignupPage = () => {
       <SignupHeader />
       <BackgroundImg>
         <Container>
-          <Box>
-            <OauthSignup />
-            <Signup />
-          </Box>
+          <OauthSignup />
+          <Signup />
         </Container>
       </BackgroundImg>
     </>
@@ -37,8 +35,5 @@ const Container = styled.div`
   padding: 4.8rem;
   border-radius: 3.6rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* 그림자 효과 */
-`;
-
-const Box = styled.div`
   text-align: center;
 `;
