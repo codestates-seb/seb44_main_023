@@ -57,3 +57,15 @@ export const deleteMember = async (memberId, password) => {
     throw err;
   }
 };
+
+export const readProfileImage = async (memberId) => {
+  try {
+    const res = await API.get(`/api/members/${memberId}/profile-image`, {
+      responseType: "blob",
+    });
+    const url = URL.createObjectURL(res.data);
+    return url;
+  } catch (err) {
+    throw err;
+  }
+};
