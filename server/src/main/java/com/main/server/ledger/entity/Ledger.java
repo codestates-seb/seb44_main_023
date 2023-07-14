@@ -2,22 +2,12 @@ package com.main.server.ledger.entity;
 
 import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.Member;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter
@@ -39,7 +29,7 @@ public class Ledger {
     @Column(name = "ledger_amount", nullable = false)
     private Long ledgerAmount;
 
-    @Column(name = "ledger_date")
+    @Column(name = "ledger_schedule_date")
     private LocalDate ledgerDate;
 
     @ManyToOne

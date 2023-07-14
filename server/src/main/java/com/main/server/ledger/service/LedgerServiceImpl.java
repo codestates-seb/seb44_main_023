@@ -2,9 +2,8 @@ package com.main.server.ledger.service;
 
 import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
-import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.dto.LedgerPatchDto;
-import com.main.server.ledger.dto.LedgerResponseDto;
+import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledger.repository.LedgerRepository;
 import com.main.server.member.Member;

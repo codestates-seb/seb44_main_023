@@ -1,9 +1,6 @@
 package com.main.server.ledger.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.main.server.member.Member;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,7 +23,7 @@ public class LedgerPatchDto {
     @JsonProperty(value = "ledger_amount")
     private Long ledgerAmount;
 
-    @JsonProperty(value = "ledger_date")
+    @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
 
     public void setLedgerId(Long ledgerId) {

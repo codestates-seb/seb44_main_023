@@ -24,7 +24,7 @@ public class LedgerResponseDto {
     @JsonProperty(value = "ledger_amount")
     private Long ledgerAmount;
 
-    @JsonProperty(value = "ledger_date")
+    @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
 
     public LedgerResponseDto(Ledger ledger) {
