@@ -68,8 +68,6 @@ const InputInfo = styled.p`
 `;
 
 const SuffixContainer = styled.button`
-  top: 50px;
-  right: ${(props) => props.right || "30px"};
   position: absolute;
   background-color: transparent;
   color: ${(props) => props.color};
