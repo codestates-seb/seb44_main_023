@@ -2,6 +2,7 @@ import { useState } from "react";
 import ModalContentDetail from "./ModalContentDetail";
 import ModalContentCreate from "./ModalContentCreate";
 import Modal from "../../Modal/Modal";
+import ModalContentEdit from "./ModalContentEdit";
 
 const ModalTodo = ({
   isModalVisible,
@@ -11,6 +12,7 @@ const ModalTodo = ({
   todoId,
 }) => {
   const [modalType, setModalType] = useState(type);
+  const [todoInfo, setTodoInfo] = useState();
 
   const handleModalVisible = () => setIsModalVisible(!isModalVisible);
 
@@ -25,9 +27,14 @@ const ModalTodo = ({
         todoId={todoId}
         handleModalVisible={handleModalVisible}
         setModalType={setModalType}
+        todoInfo={todoInfo}
+        setTodoInfo={setTodoInfo}
       />
     ) : (
-      <></>
+      <ModalContentEdit
+        todoInfo={todoInfo}
+        handleModalVisible={handleModalVisible}
+      />
     );
 
   return (

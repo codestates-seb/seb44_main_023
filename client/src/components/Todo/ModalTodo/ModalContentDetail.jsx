@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import {
@@ -10,8 +10,13 @@ import { TodoListContext } from "../../../App";
 import Button from "../../Button/Button";
 import TodoComment from "./TodoComment";
 
-const ModalContentDetail = ({ todoId, handleModalVisible }) => {
-  const [todoInfo, setTodoInfo] = useState();
+const ModalContentDetail = ({
+  todoId,
+  handleModalVisible,
+  setModalType,
+  todoInfo,
+  setTodoInfo,
+}) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const requestData = useContext(TodoListContext);
@@ -55,6 +60,7 @@ const ModalContentDetail = ({ todoId, handleModalVisible }) => {
       <div className="todo-content">{todo_content}</div>
       <TodoComment
         groupId={groupId}
+        member_id={1}
         todoId={todo_id}
         isEdit={true}
         requestTodoInfo={requestTodoInfo}
@@ -85,6 +91,7 @@ const ModalContentDetail = ({ todoId, handleModalVisible }) => {
           style={{
             backgroundColor: "var(--color-blue-03)",
           }}
+          onClick={() => setModalType("edit")}
         />
       </ButtonWrapper>
     </StyledWrapper>
@@ -107,6 +114,7 @@ const StyledWrapper = styled.div`
     padding-bottom: 2.4rem;
 
     .modal-title-date {
+      font-size: 2rem;
     }
   }
 
@@ -128,7 +136,7 @@ const StyledWrapper = styled.div`
 `;
 
 const CommentWrapper = styled.div`
-  height: 20rem;
+  height: 18rem;
   overflow-y: scroll;
   width: 100%;
   margin-bottom: 1.6rem;

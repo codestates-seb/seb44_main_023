@@ -82,6 +82,16 @@ export const createTodo = async (data) => {
   }
 };
 
+export const updateTodo = async (groupId, todoId, data) => {
+  try {
+    await axios.patch(`/api/todogroups/${groupId}/todos/${todoId}`, {
+      ...data,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const readTodo = async (groupId, todoId) => {
   try {
     const res = await axios.get(`/api/todogroups/${groupId}/todos/${todoId}`);
