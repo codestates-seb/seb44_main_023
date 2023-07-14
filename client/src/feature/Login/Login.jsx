@@ -103,12 +103,12 @@ const Login = () => {
       </InputBox>
       <Button
         type="submit"
-        label="Sign Up"
+        label="Login"
         size="large"
         onClick={handleLogin}
       />
       <LoginLink onClick={handleLoginLinkClick}>
-        아직 회원이 아니신가요? Login
+        아직 회원이 아니신가요? Sign Up
       </LoginLink>
     </>
   );
