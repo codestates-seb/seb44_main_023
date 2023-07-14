@@ -11,6 +11,7 @@ import com.main.server.todo.repository.TodoRepository;
 import com.main.server.todogroup.domain.TodoGroup;
 import com.main.server.todogroup.service.TodoGroupService;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
@@ -80,6 +81,7 @@ public class TodoService {
         todoGroupService.findById(todoGroupId);
 
         List<Todo> todos = this.todoRepository.findAllByTodoScheduleDateBetween(startDate, endDate);
+        todos.sort(Comparator.comparing(Todo::getTodoScheduleDate));
 
         return todos;
 
