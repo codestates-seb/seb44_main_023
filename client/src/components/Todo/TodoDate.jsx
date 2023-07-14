@@ -2,14 +2,12 @@ import { styled } from "styled-components";
 import { AiOutlinePlus } from "react-icons/ai";
 import TodoItem from "./TodoItem";
 import { useEffect, useState } from "react";
-import TodoCreateModal from "./TodoCreateModal";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 
-const TodoDate = ({ date, todoList }) => {
+const TodoDate = ({ date, todoList, handleModalVisible }) => {
   const [dataSet, setDataSet] = useState(todoList);
   const [dataList, setDataList] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const sortTodoList = () => {
     let dataIncomplete = [];
@@ -35,16 +33,11 @@ const TodoDate = ({ date, todoList }) => {
 
   return (
     <StyledWrapper>
-      <TodoCreateModal
-        defaultDate={date}
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-      />
       <div className="title">
         <div className="date">
           {date ? dayjs(date).locale("ko").format("MM/DD dd") : "NODATE"}
         </div>
-        <div className="add-button" onClick={() => setIsModalVisible(true)}>
+        <div className="add-button" onClick={handleModalVisible(date)}>
           <AiOutlinePlus />
         </div>
       </div>

@@ -4,10 +4,19 @@ import { styled } from "styled-components";
 import { readTodoList } from "../../api/todogroups.api";
 import { TodoListContext } from "../../App";
 import TodoDate from "../../components/Todo/TodoDate";
+import ButtonFloating from "../../components/Button/ButtonFloating";
+import TodoCreateModal from "../../components/Todo/TodoCreateModal";
 
 const TodoList = ({ startDate }) => {
   const [todoList, setTodoList] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [date, setDate] = useState();
+
+  const handleModalVisible = (date) => () => {
+    setDate(date);
+    setIsModalVisible(!isModalVisible);
+  };
 
   const { groupId } = useParams();
 
@@ -34,10 +43,24 @@ const TodoList = ({ startDate }) => {
   return (
     <TodoListContext.Provider value={requestTodoList}>
       <StyledWrapper>
-        <TodoDate todoList={todoList} />
+        <TodoCreateModal
+          defaultDate={date}
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+        />
+        <TodoDate todoList={todoList} handleModalVisible={handleModalVisible} />
         {dateList.map((date) => (
-          <TodoDate key={`todo-item-${date}`} date={date} todoList={todoList} />
+          <TodoDate
+            key={`todo-item-${date}`}
+            date={date}
+            todoList={todoList}
+            handleModalVisible={handleModalVisible}
+          />
         ))}
+        <ButtonWrapper>
+          <ButtonFloating icon="plus" />
+          <ButtonFloating icon="setting" />
+        </ButtonWrapper>
       </StyledWrapper>
     </TodoListContext.Provider>
   );
@@ -52,4 +75,12 @@ const StyledWrapper = styled.div`
   overflow-x: scroll;
   display: flex;
   gap: 2.4rem;
+`;
+
+const ButtonWrapper = styled.div`
+  position: fixed;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  display: flex;
+  gap: 1.2rem;
 `;

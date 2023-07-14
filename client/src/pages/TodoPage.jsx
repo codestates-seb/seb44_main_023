@@ -8,7 +8,6 @@ import Layout from "../Layout/PagesLayout";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import { readTodoGroup, readTodoGroupMember } from "../api/todogroups.api";
-import ButtonFloating from "../components/Button/ButtonFloating";
 
 const TodoPage = () => {
   const { groupId } = useParams();
@@ -48,10 +47,6 @@ const TodoPage = () => {
             <TodoList startDate={startDate} />
           </>
         )}
-        <ButtonWrapper>
-          <ButtonFloating icon="plus" />
-          <ButtonFloating icon="setting" />
-        </ButtonWrapper>
       </StyledWrapper>
     </Layout>
   );
@@ -65,12 +60,4 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-`;
-
-const ButtonWrapper = styled.div`
-  position: fixed;
-  right: 1.6rem;
-  bottom: 1.6rem;
-  display: flex;
-  gap: 1.2rem;
 `;
