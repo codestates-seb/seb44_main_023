@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.domain.TodoStatus;
+import com.main.server.todogroup.domain.TodoGroup;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,9 +29,9 @@ public class TodoDto {
         @JsonProperty(value = "todo_schedule_date")
         private String todoScheduleDate;
 
-        public Todo toEntity(Member member) {
+        public Todo toEntity(Member member, TodoGroup todoGroup) {
             LocalDate date = LocalDate.parse(todoScheduleDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            return new Todo(member, todoTitle, todoContent, date);
+            return new Todo(member, todoGroup ,todoTitle, todoContent, date);
         }
 
 
@@ -67,6 +68,8 @@ public class TodoDto {
 
         @JsonProperty(value = "member_id")
         private Long memberId;
+        @JsonProperty(value = "todo_group_id")
+        private Long todoGroupId;
         @JsonProperty(value = "todo_id")
         private Long todoId;
         @JsonProperty(value = "todo_title")
@@ -80,6 +83,7 @@ public class TodoDto {
 
         public Response(Todo todo) {
             this.memberId = todo.getMember().getMemberId();
+            this.todoGroupId = todo.getTodoGroup().getTodoGroupId();
             this.todoId = todo.getTodoId();
             this.todoTitle = todo.getTodoTitle();
             this.todoContent = todo.getTodoContent();
