@@ -2,7 +2,7 @@ import { useState } from "react";
 import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
 import { useParams } from "react-router-dom";
-import { updateTodoStatus } from "../../api/todo.api";
+import { updateTodoStatus } from "../../api/todogroups.api";
 
 const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
   const { groupId } = useParams();

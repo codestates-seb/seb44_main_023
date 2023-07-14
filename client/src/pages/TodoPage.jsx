@@ -4,9 +4,12 @@ import { styled } from "styled-components";
 import Loading from "../components/Loading/Loading";
 import TodoGroup from "../feature/Todo/TodoGroup";
 import TodoList from "../feature/Todo/TodoList";
-import { readTodoGroupMember, readTodoList } from "../api/todo.api";
 import moment from "moment";
-import { readTodoGroup } from "../api/todogroups.api";
+import {
+  readTodoGroup,
+  readTodoList,
+  readTodoGroupMember,
+} from "../api/todogroups.api";
 import background from "../assets/background.png";
 
 const TodoPage = () => {
