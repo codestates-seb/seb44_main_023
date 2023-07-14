@@ -174,6 +174,7 @@ const PasswordWrap = styled.div`
   .password-input-wrap {
     display: flex;
     flex-direction: column;
+    gap: 8px;
   }
 
   .password-button-wrap {
