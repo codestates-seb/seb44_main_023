@@ -122,6 +122,7 @@ export const signupAPI = async (email, password, nickname) => {
     });
     return response.data;
   } catch (error) {
+    // status 다르게 받아서 중복 이메일, 닉네임 alert
     console.log("오류로 인한 회원가입 실패", error);
     navigate("*");
     throw new Error(error.response.data.error);
