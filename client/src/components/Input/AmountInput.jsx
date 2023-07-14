@@ -1,26 +1,18 @@
 import styled from "styled-components";
 
-const formatAmount = (value) => {
-  const numberValue = Number(value.replace(/[^0-9.-]+/g, ""));
-  const formattedValue = numberValue.toLocaleString();
-  return formattedValue;
-};
-
 const AmountInput = ({
   width,
   placeholder,
   size,
   height,
   fontSize,
-  $textSize,
   value,
   onChange,
   onKeyPress,
 }) => {
   const handleInputChange = (event) => {
     const inputValue = event.target.value;
-    const formattedValue = formatAmount(inputValue);
-    onChange(formattedValue);
+    onChange(inputValue);
   };
 
   return (
@@ -36,14 +28,14 @@ const AmountInput = ({
           onChange={handleInputChange}
           onKeyPress={onKeyPress}
         />
-        <CurrencyText textSize={$textSize}>원</CurrencyText>
+        <CurrencyText>원</CurrencyText>
       </AmountInputWrapper>
     </AmountInputContainer>
   );
 };
 
 const AmountInputContainer = styled.div`
-  width: ${(props) => props.width || "auto"};
+  width: ${(props) => props.width || "auto"}rem;
 `;
 
 const AmountInputWrapper = styled.div`
@@ -52,10 +44,10 @@ const AmountInputWrapper = styled.div`
 `;
 
 const AmountInputField = styled.input`
-  width: ${(props) => props.size || "100%"};
-  height: ${(props) => props.height || "3.2px"};
+  width: ${(props) => props.size || "100%"}rem;
+  height: ${(props) => props.height}rem;
   font-size: ${(props) => props.fontSize || "1.4rem"} !important;
-  padding: 8px;
+  padding: 0.8rem;
   border: none;
   outline: none;
   transition: border-bottom-color 0.3s ease;
@@ -68,10 +60,9 @@ const AmountInputField = styled.input`
 `;
 
 const CurrencyText = styled.span`
-  margin-left: 4px;
-  font-size: ${(props) =>
-    props.$textSize || "1.2rem"}; // $ 기호를 붙여 shouldForwardProp으로 필터링
+  margin-left: 0.4rem;
   color: var(--color-gray-05);
+  font-size: 1.4rem;
 `;
 
 export default AmountInput;
