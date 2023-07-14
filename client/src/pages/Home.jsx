@@ -24,33 +24,26 @@ const Home = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 500);
   };
-
-  useEffect(() => {
-    const handleScroll = (event) => {
-      const deltaY = event.deltaY;
-      if (deltaY > 0 ) {
-        detailedPageRef.current.scrollIntoView({ behavior: 'smooth' });
-      } else if (deltaY < 0 ) {
-        window.scrollTo({ top: "0rem", behavior: 'smooth' });
-      }
-    };
-
-    window.addEventListener('wheel', handleScroll);
-    return () => {
-      window.removeEventListener('wheel', handleScroll);
-    };
-  }, []);
-
-  // const handleBack = () => {
-  //   window.scrollTo({ top: 0, behavior: 'smooth' });
-  //   setTimeout(() => {
-  //     setShowDetails(false);
-  //   }, 500);
-  // };
   const handleBack = () => {
     detailedPageRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
+
+  const handleScroll = () => {
+        const scrollPosition = window.scrollY;
+        // 페이지 전환 조건을 정의합니다. 예를 들어, 스크롤이 300px 이상 이동했을 때 페이지 전환을 수행합니다.
+        if (scrollPosition >= 50) {
+          // setShowDetails(true);
+          console.log("여기들어왓지롱!")
+          handleBack;
+        }else{
+          console.log("다시여기지롱~")
+          handleClick;
+        }
+       
+      };
+
+  window.addEventListener('wheel', handleScroll);
 
 return (
   <HomeWrapper>
@@ -76,3 +69,4 @@ const DetailedPageWrapper = styled.div`
 `;
 
 export default Home;
+
