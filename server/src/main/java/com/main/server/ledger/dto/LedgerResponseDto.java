@@ -15,6 +15,9 @@ public class LedgerResponseDto {
     @JsonProperty(value = "ledger_id")
     private Long ledgerId;
 
+    @JsonProperty(value = "ledger_group_id")
+    private Long ledgerGroupId;
+
     @JsonProperty(value = "ledger_title")
     private String ledgerTitle;
 
@@ -29,6 +32,7 @@ public class LedgerResponseDto {
 
     public LedgerResponseDto(Ledger ledger) {
         this.memberId = ledger.getMember().getMemberId();
+        this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
         this.ledgerId = ledger.getLedgerId();
         this.ledgerTitle = ledger.getLedgerTitle();
         this.ledgerContent = ledger.getLedgerContent();

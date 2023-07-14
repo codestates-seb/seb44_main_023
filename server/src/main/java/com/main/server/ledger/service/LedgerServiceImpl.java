@@ -37,7 +37,7 @@ public class LedgerServiceImpl implements LedgerService {
     public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
         Member member = memberService.findMember(postDto.getMemberId());
         LedgerGroup ledgerGroup =ledgerGroupService.findByGroupId(ledgerGroupId);
-        Ledger savedLedger = ledgerRepository.save(postDto.toEntity(member));
+        Ledger savedLedger = ledgerRepository.save(postDto.toEntity(member, ledgerGroup));
 
         return savedLedger;
     }

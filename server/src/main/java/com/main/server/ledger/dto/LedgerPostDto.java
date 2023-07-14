@@ -2,6 +2,7 @@ package com.main.server.ledger.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.ledger.entity.Ledger;
+import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,8 @@ public class LedgerPostDto {
     @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
 
-    public Ledger toEntity(Member member) {
+    public Ledger toEntity(Member member, LedgerGroup ledgerGroup) {
         LocalDate date = LocalDate.parse(ledgerDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return new Ledger(member, ledgerTitle, ledgerContent, ledgerAmount, date);
+        return new Ledger(member, ledgerGroup, ledgerTitle, ledgerContent, ledgerAmount, date);
     }
 }

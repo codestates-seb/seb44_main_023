@@ -48,8 +48,9 @@ public class Ledger {
         this.member = member;
     }
 
-    public Ledger(Member member, String ledgerTitle, String ledgerContent, Long ledgerAmount, LocalDate ledgerDate) {
+    public Ledger(Member member, LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent, Long ledgerAmount, LocalDate ledgerDate) {
         this.member = member;
+        this.ledgerGroup = ledgerGroup;
         this.ledgerTitle = ledgerTitle;
         this.ledgerContent = ledgerContent;
         this.ledgerAmount = ledgerAmount;
