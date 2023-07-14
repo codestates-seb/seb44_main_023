@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.2.1",
     "axios": "^1.4.0",
     "browser-image-compression": "^2.0.2",
     "lottie-react": "^2.4.0",

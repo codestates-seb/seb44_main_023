@@ -7,6 +7,7 @@ const ModalInput = ({
   fontSize,
   onChange,
   suffix,
+  suffixSize,
   focused,
   ...props
 }) => {
@@ -21,7 +22,7 @@ const ModalInput = ({
           focused={focused}
           {...props}
         />
-        {suffix && <Suffix>{suffix}</Suffix>}
+        {suffix && <Suffix size={suffixSize}>{suffix}</Suffix>}
       </InputWrapper>
     </InputContainer>
   );
@@ -49,13 +50,14 @@ const InputField = styled.input`
 
   &:focus {
     border: ${(props) =>
-      props.focused ? "2px solid var(--color-blue-03)" : "none"};
+      props.focused ==="true" ? "2px solid var(--color-blue-03)" : "none"};
   }
 `;
 
 const Suffix = styled.div`
   margin-left: 0.8rem;
   color: var(--color-gray-05);
+  font-size: ${(props) => props.size || "inherit"};
   cursor: pointer;
 
   &:hover {
