@@ -6,6 +6,7 @@ import { TodoListContext } from "../../App";
 import TodoDate from "../../components/Todo/TodoDate";
 import ButtonFloating from "../../components/Button/ButtonFloating";
 import TodoCreateModal from "../../components/Todo/TodoCreateModal";
+import dayjs from "dayjs";
 
 const TodoList = ({ startDate }) => {
   const [todoList, setTodoList] = useState();
@@ -13,8 +14,8 @@ const TodoList = ({ startDate }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [date, setDate] = useState();
 
-  const handleModalVisible = (date) => () => {
-    setDate(date);
+  const handleModalVisible = (date) => async () => {
+    await setDate(date);
     setIsModalVisible(!isModalVisible);
   };
 
@@ -58,7 +59,10 @@ const TodoList = ({ startDate }) => {
           />
         ))}
         <ButtonWrapper>
-          <ButtonFloating icon="plus" />
+          <ButtonFloating
+            icon="plus"
+            onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
+          />
           <ButtonFloating icon="setting" />
         </ButtonWrapper>
       </StyledWrapper>

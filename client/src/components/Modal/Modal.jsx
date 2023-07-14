@@ -30,7 +30,7 @@ const Modal = ({
 
   return (
     <Portal id={id}>
-      <StyledModal close={close} onAnimationEnd={handleAnimationEnd}>
+      <StyledModal close={String(close)} onAnimationEnd={handleAnimationEnd}>
         <ModalOverlay onClick={handleClose} />
         <ModalWrapper ref={ref} tabIndex="-1" className="modal-wrapper">
           <ModalBody tabIndex="0" className="modal-body" style={bodyStyle}>
@@ -58,7 +58,7 @@ const StyledModal = styled.div`
     left: 0;
     right: 0;
     z-index: 2000;
-    animation: ${close ? fadeOut : fadeIn} 200ms;
+    animation: ${close === "true" ? fadeOut : fadeIn} 200ms;
     animation-fill-mode: forwards;
   `}
 `;

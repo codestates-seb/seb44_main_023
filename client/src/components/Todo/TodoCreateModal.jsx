@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import Modal from "../Modal/Modal";
 import Input from "../Input/ModalInput";
 import Button from "../Button/Button";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { createTodo } from "../../api/todogroups.api";
 import { TodoListContext } from "../../App";
 
@@ -11,7 +11,9 @@ const TodoCreateModal = ({
   setIsModalVisible,
   defaultDate,
 }) => {
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({
+    todo_schedule_date: defaultDate,
+  });
 
   const handleModalVisible = () => setIsModalVisible(!isModalVisible);
 
@@ -39,6 +41,13 @@ const TodoCreateModal = ({
       [event.target.id]: event.target.value,
     });
   };
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      todo_schedule_date: defaultDate,
+    });
+  }, [defaultDate]);
 
   return (
     <Modal
