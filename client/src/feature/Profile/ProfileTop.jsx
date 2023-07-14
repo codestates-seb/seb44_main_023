@@ -1,59 +1,108 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
+import Avatar from "../../assets/userAvarta.png";
+import {
+  deleteProfileImage,
+  readProfileImage,
+  updateMemberNickname,
+  updateProfileImage,
+} from "../../api/members.api";
+import { imageCompress } from "../../utils/imageCompress";
 
-const ProfileTop = () => {
+const ProfileTop = ({ profileInfo }) => {
   const [isEditMode, setEditMode] = useState(false);
-  const [nickname, setNickname] = useState("진아");
-  const [imageUrl, setImageUrl] = useState(null);
+  const [nickname, setNickname] = useState(profileInfo.nickname);
+  const [nicknameInput, setNicknameInput] = useState(profileInfo.nickname);
+  const [imageUrl, setImageUrl] = useState(Avatar);
+  const [validation, setValidation] = useState("");
 
   const handleEditMode = () => setEditMode(!isEditMode);
 
   const handleCancelEdit = () => {
     setEditMode(!isEditMode);
+    setNicknameInput(nickname);
+    setValidation("");
   };
 
-  const handleSaveNickName = async () => {
+  const handleSaveNickName = async (event) => {
     try {
+      event.preventDefault();
+      await updateMemberNickname(profileInfo.memberId, nicknameInput);
       setEditMode(!isEditMode);
-    } catch (err) {}
-  };
-
-  const [imageFile, setImageFile] = useState();
-
-  const readURL = (event) => {
-    setImageFile(event.target.files[0]);
-    const res = URL.createObjectURL(event.target.files[0]);
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("files", imageFile);
+      setValidation("");
+      setNickname(nicknameInput);
+    } catch (err) {
+      setValidation(err.response.data);
     }
-    // TODO 서버에 이미지 업로드
-    setImageUrl(res);
   };
 
-  const handleDeleteImage = (event) => {
-    event.preventDefault();
-    // TODO 서버에서 이미지 삭제
-    setImageFile();
-    setImageUrl();
+  const readURL = async (event) => {
+    try {
+      let fileBlob = event.target.files[0];
+      if (!fileBlob) return;
+
+      if (fileBlob.size > 1024 * 1024) {
+        fileBlob = await imageCompress(fileBlob);
+      }
+
+      const res = URL.createObjectURL(fileBlob);
+      const formData = new FormData();
+      formData.append("file", fileBlob);
+
+      await updateProfileImage(profileInfo.memberId, formData);
+      setImageUrl(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  const handleDeleteImage = async (event) => {
+    try {
+      event.preventDefault();
+      if (Avatar === imageUrl) return;
+      await deleteProfileImage(profileInfo.memberId);
+      setImageUrl(Avatar);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleErrorImage = (e) => {
+    console.log("error");
+    e.target.src = Avatar;
+  };
+
+  const requestProfileImage = async () => {
+    const url = await readProfileImage(profileInfo.memberId);
+    setImageUrl(url);
+  };
+
+  useEffect(() => {
+    requestProfileImage();
+  }, []);
 
   return (
     <StyledWrapper>
       <form>
         <ProfileWrapper>
           <div className="profile-image">
-            <input type="file" id="avatar" onChange={readURL} />
-            <img id="preview" src={imageUrl} />
+            <input
+              type="file"
+              id="avatar"
+              onChange={readURL}
+              accept="image/*"
+            />
+            <img id="preview" src={imageUrl} onError={handleErrorImage} />
           </div>
           <div className="nickname-wrapper">
             {isEditMode ? (
               <InputNickname
-                onChange={(e) => setNickname(e.target.value)}
+                onChange={(e) => setNicknameInput(e.target.value)}
                 defaultValue={nickname}
-                minLength={3}
+                minLength={2}
                 maxLength={10}
+                info={validation}
               />
             ) : (
               <div className="nickname">{nickname}</div>
@@ -118,9 +167,14 @@ const ProfileWrapper = styled.div`
     min-height: 16rem;
     width: 16rem;
     height: 16rem;
-    background-color: var(--color-gray-03);
     border-radius: 100%;
     overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
     input {
       display: none;
@@ -147,6 +201,7 @@ const ProfileWrapper = styled.div`
     display: flex;
     font-size: 2rem;
     gap: 2rem;
+    margin-top: 1.6rem;
   }
 `;
 
@@ -168,9 +223,7 @@ const TextButton = styled.button`
   background: none;
 `;
 
-const InputNickname = styled(Input)`
-  margin-bottom: 1.6rem;
-`;
+const InputNickname = styled(Input)``;
 
 const MediumButton = styled.div`
   width: 12.4rem;

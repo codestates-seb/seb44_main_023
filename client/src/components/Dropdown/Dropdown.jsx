@@ -1,22 +1,34 @@
 import { styled } from "styled-components";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlinePlus, AiOutlineDown } from "react-icons/ai";
 import Input from "../../components/Input/PageInput";
 
-const Dropdown = ({ id, menu, add = false, onAddItem = (item) => {} }) => {
+const Dropdown = ({
+  id,
+  menu,
+  add = false,
+  onAddItem = (item) => {},
+  defaultKey = { key: "", label: "" },
+}) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [selected, setSelected] = useState({
-    key: "",
-    label: "",
-  });
+  const [selected, setSelected] = useState({ key: "", label: "" });
   const [newItem, setNewItem] = useState("");
+
+  useEffect(() => {
+    if (
+      menu.some(
+        (item) => item.key == defaultKey.key && item.label == defaultKey.label
+      )
+    )
+      setSelected(defaultKey);
+  }, []);
 
   const inputRef = useRef(selected.label);
 
   const handleChangeOption = (item) => () => {
     setSelected(item);
-    inputRef.current.setAttribute("value", item.label);
+    inputRef.current.setAttribute("value", JSON.stringify(item));
     inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
     handleClickOption();
   };
@@ -38,6 +50,10 @@ const Dropdown = ({ id, menu, add = false, onAddItem = (item) => {} }) => {
 
   return (
     <StyledDropdown className="dropdown">
+      <div
+        className={`overlay ${isActive}`}
+        onClick={() => setIsActive(!isActive)}
+      />
       <input id={id} ref={inputRef} readOnly style={{ display: "none" }} />
       <div className="selected" onClick={handleClickOption}>
         <div className="selected-value">{selected?.label}</div>
@@ -94,14 +110,22 @@ const StyledDropdown = styled.div`
 
   .overlay {
     width: 100vw;
+    z-index: 1;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    pointer-events: ${({ isactive }) =>
-      isactive === "true" ? "default" : "none"};
+
+    &.true {
+      pointer-events: default;
+    }
+
+    &.false {
+      display: none;
+      pointer-events: none;
+    }
   }
 
   .selected {

@@ -5,6 +5,8 @@ import background from "../assets/background.png";
 import ProfileTop from "../feature/Profile/ProfileTop";
 import ProfileBottom from "../feature/Profile/ProfileBottom";
 import Loading from "../components/Loading/Loading";
+import { readMemberInfo } from "../api/members.api";
+import Layout from "../Layout/PagesLayout";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,26 +15,9 @@ const ProfilePage = () => {
   const { id } = useParams();
 
   const requestProfileInfo = async () => {
-    try {
-      const res = {
-        status: 200,
-        data: {
-          member_id: 1,
-          nickname: "닉네임",
-          email: "example@example.com",
-          profile_image:
-            "https://i.pinimg.com/474x/df/2d/25/df2d253fbd0eb7d50193f1374128e9f0.jpg",
-        },
-      };
-
-      // TODO 프로필 정보 받아오기 API 연결
-      if (res.status !== 200) throw res;
-
-      setProfileInfo(res.data);
-      setTimeout(() => setIsLoading(false), 2000);
-    } catch (err) {
-      console.log("error 발생", err);
-    }
+    const profileInfo = await readMemberInfo(id);
+    setProfileInfo(profileInfo);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -40,8 +25,7 @@ const ProfilePage = () => {
   }, []);
 
   return (
-    <P>
-      {/* 후에 레이아웃 적용하게 되면 P는 삭제할 에정 */}
+    <Layout>
       <StyledWrapper>
         <ProfileBox>
           {isLoading ? (
@@ -54,7 +38,7 @@ const ProfilePage = () => {
           )}
         </ProfileBox>
       </StyledWrapper>
-    </P>
+    </Layout>
   );
 };
 
