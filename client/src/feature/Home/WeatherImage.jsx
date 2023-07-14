@@ -27,6 +27,6 @@ const HomeWrapper = styled.div`
     filter: brightness(1.4);
   }
   background-image: url(${props => props.background});
-  z-index: -1;
+  z-index: -2;
   `
   // filter: blur(0.5rem);
