@@ -80,7 +80,7 @@ export const loginAPI = async (email, password) => {
     localStorage.setItem("accessToken", accessToken);
 
     // refreshToken
-    const refreshToken = response.headers['x-refresh-token'];
+    const refreshToken = response.headers["x-refresh-token"];
     localStorage.setItem("refreshToken", refreshToken);
 
     return response.data;

@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const PageInput = ({
   width,
@@ -37,12 +37,7 @@ const InputField = styled.input`
   outline: none;
   transition: border-bottom-color 0.3s ease;
   background-color: transparent;
-
-  ${(props) =>
-    props.fontSize &&
-    css`
-      font-size: ${props.fontSize}rem !important;
-    `}
+  font-size: ${(props) => props.fontSize || "1.4rem"};
 
   &:focus {
     border-bottom-color: var(--color-blue-03);

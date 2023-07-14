@@ -11,8 +11,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (validation.email || validation.password) {
-      return; // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+    if (!isValidEmail(email) || !password) {
+       // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
+      alert("유효한 이메일인지 확인해주세요.")
+      return;
     }
     
     try {
@@ -67,6 +69,9 @@ const Login = () => {
     setValidation({ ...validation, password: passwordValidation });
     setPassword(password);
   };
+
+  // 등록된 계정이 아닐경우 status가 404면 존재하지 않는 회원입니다..?
+    // 그럼 만약 비밀번호만 틀린경우 status가 다르게 뜨는지?
 
   return (
     <div>
