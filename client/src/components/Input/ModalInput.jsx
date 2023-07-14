@@ -29,7 +29,7 @@ const ModalInput = ({
 };
 
 const InputContainer = styled.div`
-  width: ${(props) => props.width || "auto"};
+  width: ${(props) => props.width || "auto"}rem;
 `;
 
 const InputWrapper = styled.div`
@@ -38,8 +38,8 @@ const InputWrapper = styled.div`
 `;
 
 const InputField = styled.input`
-  width: ${(props) => props.size || "100%"};
-  height: ${(props) => props.height || "auto"};
+  width: ${(props) => props.size || "100%"}rem;
+  height: ${(props) => props.height || "auto"}rem;
   padding: 0.8rem;
   border: none;
   outline: none;
@@ -50,14 +50,14 @@ const InputField = styled.input`
 
   &:focus {
     border: ${(props) =>
-      props.focused ==="true" ? "2px solid var(--color-blue-03)" : "none"};
+      props.focused === "true" ? "2px solid var(--color-blue-03)" : "none"};
   }
 `;
 
 const Suffix = styled.div`
   margin-left: 0.8rem;
   color: var(--color-gray-05);
-  font-size: ${(props) => props.size || "inherit"};
+  font-size: ${(props) => props.size || "inherit"}rem;
   cursor: pointer;
 
   &:hover {
