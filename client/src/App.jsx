@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProfilePage from "./pages/ProfilePage";
-import ErrorPage from "./pages/ErrorPage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
