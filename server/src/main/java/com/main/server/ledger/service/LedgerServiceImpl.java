@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Transactional
@@ -44,16 +45,18 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
     public Ledger updateLedger(Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto) {
-        ledgerGroupService.findByGroupId(ledgerGroupId);
+        LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
         Ledger updatedLedger = findVerifiedLedger(ledgerId);
 
         updatedLedger.changeTitle(patchDto.getLedgerTitle());
         updatedLedger.changeContent(patchDto.getLedgerContent());
         updatedLedger.changeAmount(patchDto.getLedgerAmount());
         updatedLedger.changeDate(LocalDate.parse(patchDto.getLedgerDate()));
+        updatedLedger.changeLedgerGroup(ledgerGroup); // 그룹 아이디 변경
 
         return updatedLedger;
     }
+
 
     @Override
     public Ledger getLedger(Long ledgerGroupId, Long ledgerId) {
@@ -61,10 +64,20 @@ public class LedgerServiceImpl implements LedgerService {
         return findVerifiedLedger(ledgerId);
     }
 
+//    @Override
+//    public List<Ledger> getLedgers(Long ledgerGroupId) {
+//        ledgerGroupService.findByGroupId(ledgerGroupId);
+//        return ledgerRepository.findAll();
+//    }
+
     @Override
     public List<Ledger> getLedgers(Long ledgerGroupId) {
-        ledgerGroupService.findByGroupId(ledgerGroupId);
-        return ledgerRepository.findAll();
+        LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
+        if (ledgerGroup == null) {
+            // 그룹이 존재하지 않을 경우
+            return Collections.emptyList();
+        }
+        return ledgerGroup.getLedgers();
     }
 
     @Override

@@ -82,4 +82,9 @@ public class Ledger {
         }
     }
 
+    public void changeLedgerGroup(final LedgerGroup ledgerGroup) {
+        if(ledgerGroup != null) {
+            this.ledgerGroup = ledgerGroup;
+        }
+    }
 }
