@@ -98,6 +98,7 @@ const GroupDivCol=styled.div`
 	flex-direction : column;
 	justify-content : space-between;
 	width : 38.6rem;
+	height:85%;
 `
 const GroupDivRow=styled.div`
 	display:flex;
@@ -110,8 +111,9 @@ const GroupWapper=styled.div`
 	height: 54.4rem;
 	justify-content : center;
 	background-color: var(--color-white);
+	align-items: center;
 `	
-//align-items: center;
+//
  
 
 	
