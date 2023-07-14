@@ -13,7 +13,7 @@ import InputContainer  from "../Modal/Modal";
 import InputWrapper  from "../Modal/Modal";
 import ModalInput  from "../Input/ModalInput";
 import Button  from "../Button/Button";
-import { FaTrashCan } from "react-icons/fa6";
+import GroupEdit from "../../feature/Group/GroupEdit"
 
 const Group = () => {
 	// <InputContainer width={width}> {/*InputContainer의 width 설정*/}
@@ -30,7 +30,7 @@ const Group = () => {
 	// </InputContainer>
 
 	//for test. It should be true
-	const [isModalVisible, setIsModalVisible] = useState(true); 
+ const [isModalVisible, setIsModalVisible] = useState(true); 
 
   const handleModalVisible = () => setIsModalVisible(!isModalVisible);
   const handleCancel=()=>{};
@@ -56,103 +56,13 @@ return (
 		onClose={handleModalVisible} // 모달 열고 닫는 state 변화 함수
 	>
 	<div className='group-modal'>
-		<GroupContent></GroupContent>
+		<GroupEdit></GroupEdit>
 		<button onClick={handleModalVisible}>취소</button>
 	</div>
 	</Modal>
 	</>
   );
 };
-const GroupContent = () => {
-	
-	return(
-		<GroupWapper>
-		  <GroupDivCol>
-			<div>
-			  <div>
-			  	<GroupTitle>현재 그룹명</GroupTitle>
-				  <EmptyBox style={{height:"2.3rem"}}/>
-				  <div>인풋자리</div>
-				  <GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
-			  </div>
-			  <EmptyBox style={{height:"3.8rem"}}/>
-		  	  <div>
-				<GroupTitle>친구 초대</GroupTitle>
-				<div>인풋자리</div>
-				<GroupInviteList>초대하려고 입력한 친구</GroupInviteList>
-			  </div>
-			</div>
-			<GroupDivRow>
-			  <Button
-				label={<div><FaTrashCan/> 그룹삭제</div>} // 버튼 Text 지정 가능
-				size="small" // 버튼 사이즈
-				onClick={() => console.log("그룹삭제")} // onClick
-				fontcolor={"var(--color-white)"} // 폰트 색 변경
-			  />
-				{/* bordercolor={"var(--color-red-01)"} */}
- 			  <Button
-				label="저장하기" // 버튼 Text 지정 가능
-				size="small" // 버튼 사이즈
-				onClick={() => console.log("작은 버튼")} // onClick				fontcolor={"var(--color-white)"} // 폰트 색 변경
-				fontcolor={"var(--color-white)"}
-			  />
-				{/* bordercolor={"var(--color-blue-03)"} */}
-			</GroupDivRow>
-		  </GroupDivCol>
-		</GroupWapper>
-	);
-}
-const GroupInviteList=styled.div`
-display:flex;
-	flex-direction : column;
-
-	margin-top: 0.6rem;
-`
-
-
-const GroupDescription=styled.div`
-	display:flex;
-	flex-direction : column;
-
-	margin-top: 0.9rem;
-	font-size: 1.3rem;
-	color: var(--color-gray-05);
-`
-// justify-self: center;
-const GroupTitle=styled.div`
-	display:flex;
-	flex-direction : column;
-	color: var(--color-gray-06);
-  font-size: 2rem;
-  justify-self: center;
-`
-const EmptyBox=styled.div`
-	display:flex;
-	width:100%;
-`
-// border : solid red 5px;
-
-const GroupDivCol=styled.div`
-	width:100%;
-	
-	display:flex;
-	flex-direction : column;
-	justify-content : space-between;
-
-	
-`
-// border : solid red 5px;
-
-const GroupDivRow=styled.div`
-	display:flex;
-	flex-direction : row;
-	justify-content: space-between;
-`
-const GroupWapper=styled.div`
-	display:flex;
-	width : 47.2rem;
-	height: 54.4rem;
-`
 // /	padding : 4.6rem  3.8rem 3.8rem 4.6rem;
 
 
