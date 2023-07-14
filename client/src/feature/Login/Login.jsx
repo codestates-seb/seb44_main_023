@@ -70,6 +70,12 @@ const Login = () => {
     navigate("/signup");
   };
 
+  const handleInputKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   // 등록된 계정이 아닐경우 status가 404면 존재하지 않는 회원입니다..?
   // 그럼 만약 비밀번호만 틀린경우 status가 다르게 뜨는지?
 
@@ -84,9 +90,10 @@ const Login = () => {
           type="email"
           placeholder="Email"
           value={email}
+          onKeyDown={handleInputKeyDown}
           onChange={handleEmailValidation}
+          info={validation.email && <p>{validation.email}</p>}
         />
-        {validation.email && <ValidMsg>{validation.email}</ValidMsg>}
       </InputBox>
       <InputBox>
         Password:
@@ -97,9 +104,10 @@ const Login = () => {
           type="password"
           placeholder="Password"
           value={password}
+          onKeyDown={handleInputKeyDown}
           onChange={handlePasswordValidation}
+          info={validation.password && <p>{validation.password}</p>}
         />
-        {validation.password && <ValidMsg>{validation.password}</ValidMsg>}
       </InputBox>
       <Button
         type="submit"
