@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import Portal from "../Portal/Portal";
@@ -52,6 +52,7 @@ const StyledModal = styled.div`
     right: 0;
     z-index: 2000;
     animation: ${close ? fadeOut : fadeIn} 200ms;
+    animation-fill-mode: forwards;
   `}
 `;
 

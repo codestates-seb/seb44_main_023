@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const loginAPI = async (email, password, navigate) => {
+export const loginAPI = async (email, password) => {
   try {
     const response = await axios.post(`/api/auths`, { email, password });
     console.log(response.data);
@@ -20,7 +20,7 @@ export const loginAPI = async (email, password, navigate) => {
         alert("존재하지 않는 이메일입니다.");
         // navigate is not a function 오류 뜸
         // const navigate = useNavigate();
-        // Hook call 잘못됐다고 뜸 하지만 지금 작동은 함..
+        // Hook call
         navigate("/login");
       } else if (error.response.status === 401) {
         alert("비밀번호를 다시 확인해주세요.");
@@ -45,8 +45,6 @@ export const signupAPI = async (email, password, nickname) => {
     });
     return response.data;
   } catch (error) {
-    console.log("오류로 인한 회원가입 실패", error);
-    navigate("*");
     throw new Error(error.response.data.error);
   }
 };

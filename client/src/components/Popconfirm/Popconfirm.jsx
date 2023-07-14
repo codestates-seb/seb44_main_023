@@ -22,8 +22,12 @@ const Popconfirm = ({
   };
 
   const handleConfirm = () => {
-    onConfirm();
-    handlePopupVisible();
+    try {
+      onConfirm();
+      handlePopupVisible();
+    } catch (err) {
+      throw err;
+    }
   };
 
   const confirmButton = document.querySelector(".popconfirmButton");
@@ -79,7 +83,7 @@ const PopupWrapper = styled.div`
   right: 50%;
   z-index: 100;
   width: 32rem;
-  ${({ down }) => (down ? "top: 3rem;" : "bottom: 4rem;")}
+  ${({ down }) => (down ? "top: 4rem;" : "bottom: 5rem;")}
   background-color: var(--color-gray-01);
   text-align: center;
   border-radius: 1rem;
