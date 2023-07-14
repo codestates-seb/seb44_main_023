@@ -57,7 +57,6 @@ return (
 	>
 	<div className='group-modal'>
 		<GroupEdit></GroupEdit>
-		<button onClick={handleModalVisible}>취소</button>
 	</div>
 	</Modal>
 	</>

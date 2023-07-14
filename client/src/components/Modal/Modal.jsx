@@ -13,9 +13,9 @@ const Modal = ({ id, open, closable = true, onClose, children }) => {
     setClose(true);
   };
 
-  const handleAnimationEnd = useCallback( () => {
+  const handleAnimationEnd = () => {
     close && onClose?.();
-  }, []);
+  };
 
   useEffect(() => {
     ref.current?.focus();
@@ -52,6 +52,7 @@ const StyledModal = styled.div`
     right: 0;
     z-index: 2000;
     animation: ${close ? fadeOut : fadeIn} 200ms;
+    animation-fill-mode: forwards;
   `}
 `;
 

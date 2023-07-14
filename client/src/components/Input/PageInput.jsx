@@ -8,6 +8,9 @@ const PageInput = ({
   height,
   fontSize,
   onChange,
+  eyebutton,
+  suffixSize,
+  color,
   ...props
 }) => {
   return (
@@ -20,12 +23,18 @@ const PageInput = ({
         {...props}
       />
       {info && <InputInfo>{info}</InputInfo>}
+      {eyebutton && (
+        <SuffixContainer size={suffixSize} color={color}>
+          {eyebutton}
+        </SuffixContainer>
+      )}
     </InputContainer>
   );
 };
 
 const InputContainer = styled.div`
   width: ${(props) => props.width || "auto"};
+  position: relative;
 `;
 
 const InputField = styled.input`
@@ -49,10 +58,23 @@ const InputField = styled.input`
   }
 `;
 
-const InputInfo = styled.div`
+const InputInfo = styled.p`
   margin-top: 0.8rem;
   font-size: 1.2rem;
   color: var(--color-red-01);
+  word-wrap: break-word;
+`;
+
+const SuffixContainer = styled.button`
+  position: absolute;
+  background-color: transparent;
+  color: ${(props) => props.color};
+  font-size: ${(props) => props.size || "inherit"};
+  cursor: pointer;
+
+  :hover {
+    fill: var(--color-blue-04);
+  }
 `;
 
 export default PageInput;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/PageInput";
+import { FaTrashCan } from "react-icons/fa6";
 
 const GroupEdit = () => {
 
@@ -46,17 +47,21 @@ const GroupEdit = () => {
 
 			<GroupDivRow>
 				<Button
-				label="그룹삭제" // 버튼 Text 지정 가능
+				label={<div><FaTrashCan/> 그룹삭제</div>} // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
 				onClick={ handleSubmitCancle} // onClick
 				fontcolor={"var(--color-white)"} // 폰트 색 변경
-				background-color={"var(--color-blue-03)"} // 폰트 색 변경
+				backgroundColor={"var(--color-red-01)"} // 배경색 변경
+				bordercolor={"var(--color-red-01)"} // 배경색 변경
+				
 				/>
 				<Button
 				label="저장하기" // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
 				onClick={handleSubmitSave} // onClick				
 				fontcolor={"var(--color-white)"} // 폰트 색 변경
+				backgroundColor={"var(--color-blue-03)"} // 배경색 변경
+				bordercolor={"var(--color-blue-03)"} // 배경색 변경
 
 				/>
 			</GroupDivRow>
@@ -93,22 +98,18 @@ const GroupDivCol=styled.div`
 	flex-direction : column;
 	justify-content : space-between;
 	width : 38.6rem;
-	border : solid red 5px;
-
-	
 `
 const GroupDivRow=styled.div`
 	display:flex;
 	flex-direction : row;
 	justify-content : space-between;
-
-	
 `
-
 const GroupWapper=styled.div`
 	display:flex;
+	width : 47rem;
 	height: 54.4rem;
 	justify-content : center;
+	background-color: var(--color-white);
 `	
 //align-items: center;
  

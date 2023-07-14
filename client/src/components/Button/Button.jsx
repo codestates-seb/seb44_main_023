@@ -8,6 +8,7 @@ export default function Button(props) {
     bordercolor,
     fontcolor,
     fontWeight,
+    backgroundColor,
     ...restProps
   } = props;
 
@@ -18,6 +19,7 @@ export default function Button(props) {
       fontcolor={fontcolor}
       bordercolor={bordercolor}
       fontWeight={fontWeight}
+      backgroundColor={backgroundColor}
       {...restProps}
     >
       {label}
@@ -38,13 +40,13 @@ const StyledButton = styled.button`
       height: 3.3rem;
       font-size: 12px;
       font-weight: ${(props) => props.fontWeight};
-      filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-      background-color: var(--color-gray-01);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      background-color: ${(props) => props.backgroundColor};
       color: ${(props) => props.fontcolor};
       border: 0.15rem solid ${(props) => props.bordercolor};
 
       &:hover {
-        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       }
     `}
 
@@ -59,10 +61,10 @@ const StyledButton = styled.button`
       border-color: transparent;
       border-style: solid;
       background-color: var(--color-red-01);
-      filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
       &:hover {
-        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       }
     `}
 
@@ -77,10 +79,10 @@ const StyledButton = styled.button`
       border-color: transparent;
       border-style: solid;
       background-color: var(--color-blue-03);
-      filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
       &:hover {
-        filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
       }
     `}
 `;

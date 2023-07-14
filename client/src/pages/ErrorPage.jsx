@@ -51,13 +51,12 @@ const ErrorPage = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
 
   const handleButtonClick = () => {
-    navigate("/main"); 
+    navigate("/"); 
   };
 
   return (
     <ErrorContainer>
       <Error>
-        <ErrorCodeImage src={ErrorCode} alt="Error Code" />
         <Text>
           앗, 여기는 길을 잃은 페이지 같아요. 조금만 기다려주세요, 길을
           찾아갈게요!
