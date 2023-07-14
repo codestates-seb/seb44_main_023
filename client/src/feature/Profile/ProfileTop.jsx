@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Avatar from "../../assets/userAvarta.png";
 import {
+  deleteProfileImage,
   readProfileImage,
   updateMemberNickname,
   updateProfileImage,
@@ -32,9 +33,7 @@ const ProfileTop = ({ profileInfo }) => {
       setValidation("");
       setNickname(nicknameInput);
     } catch (err) {
-      if (err.response.status === 400) {
-        setValidation(err.response.data);
-      }
+      setValidation(err.response.data);
     }
   };
 
@@ -58,10 +57,15 @@ const ProfileTop = ({ profileInfo }) => {
     }
   };
 
-  const handleDeleteImage = (event) => {
-    event.preventDefault();
-    // TODO 프로필 사진 삭제
-    setImageUrl(Avatar);
+  const handleDeleteImage = async (event) => {
+    try {
+      event.preventDefault();
+      if (Avatar === imageUrl) return;
+      await deleteProfileImage(profileInfo.memberId);
+      setImageUrl(Avatar);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleErrorImage = (e) => {

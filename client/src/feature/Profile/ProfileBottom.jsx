@@ -18,6 +18,7 @@ const ProfileBottom = ({ profileInfo }) => {
   const [passwordInput, setPasswordInput] = useState();
   const [newPasswordInput, setNewPasswordInput] = useState();
   const [passwordConfirmInput, setPasswordConfirmInput] = useState();
+  const [validation, setValidation] = useState("");
 
   const navigate = useNavigate();
 
@@ -30,6 +31,7 @@ const ProfileBottom = ({ profileInfo }) => {
       setPasswordInput();
       setNewPasswordInput();
     } catch (err) {
+      setValidation(err.response.data);
       console.log(err);
     }
   };
@@ -60,6 +62,7 @@ const ProfileBottom = ({ profileInfo }) => {
               placeholder="새 비밀번호"
               value={newPasswordInput}
               onChange={(event) => setNewPasswordInput(event.target.value)}
+              info={validation}
             />
           </div>
         ) : (
