@@ -33,8 +33,8 @@ public class TodoService {
 
     public Todo createTodo(Long todoGroupId, TodoDto.Post postDto) {
         Member member = memberService.findMember(postDto.getMemberId());
-        todoGroupService.findById(todoGroupId);
-        Todo savedTodo = todoRepository.save(postDto.toEntity(member));
+        TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
+        Todo savedTodo = todoRepository.save(postDto.toEntity(member, todoGroup));
 
         return savedTodo;
     }
