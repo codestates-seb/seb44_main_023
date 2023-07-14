@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import { updateTodoStatus } from "../../api/todogroups.api";
+import ModalTodo from ".//ModalTodo/ModalTodo";
 
 const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
   const { groupId } = useParams();
@@ -10,9 +11,14 @@ const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
   const { todo_id, todo_title, todo_status } = todoInfo;
 
   const [checked, setChecked] = useState(todo_status === "COMPLETE");
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
 
-  const handleCheckTodo = async () => {
+  const handleModalVisible = () =>
+    setIsDetailModalVisible(!isDetailModalVisible);
+
+  const handleCheckTodo = async (event) => {
     try {
+      event.stopPropogation();
       let isCheck = checked;
 
       setChecked((check) => !check);
@@ -37,15 +43,26 @@ const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
   };
 
   return (
-    <StyledWrapper className={`todo-item ${checked ? "checked" : ""}`}>
-      <div
-        className={`todo-checkbox ${checked ? "checked" : ""}`}
-        onClick={handleCheckTodo}
+    <>
+      <ModalTodo
+        type="detail"
+        todoId={todo_id}
+        isModalVisible={isDetailModalVisible}
+        setIsModalVisible={setIsDetailModalVisible}
+      />
+      <StyledWrapper
+        className={`todo-item ${checked ? "checked" : ""}`}
+        onClick={handleModalVisible}
       >
-        <AiOutlineCheck className="check-icon" />
-      </div>
-      <div className="todo-title">{todo_title}</div>
-    </StyledWrapper>
+        <div
+          className={`todo-checkbox ${checked ? "checked" : ""}`}
+          onClick={handleCheckTodo}
+        >
+          <AiOutlineCheck className="check-icon" />
+        </div>
+        <div className="todo-title">{todo_title}</div>
+      </StyledWrapper>
+    </>
   );
 };
 
@@ -66,6 +83,9 @@ const StyledWrapper = styled.div`
   }
 
   .todo-checkbox {
+    z-index: 1;
+    min-width: 2rem;
+    min-height: 2rem;
     width: 2rem;
     height: 2rem;
     border-radius: 100%;
@@ -90,5 +110,6 @@ const StyledWrapper = styled.div`
 
   .todo-title {
     font-size: 1.6rem;
+    word-break: break-all;
   }
 `;

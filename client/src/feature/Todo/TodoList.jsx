@@ -5,18 +5,18 @@ import { readTodoList } from "../../api/todogroups.api";
 import { TodoListContext } from "../../App";
 import TodoDate from "../../components/Todo/TodoDate";
 import ButtonFloating from "../../components/Button/ButtonFloating";
-import TodoCreateModal from "../../components/Todo/TodoCreateModal";
 import dayjs from "dayjs";
+import ModalTodo from "../../components/Todo/ModalTodo/ModalTodo";
 
 const TodoList = ({ startDate }) => {
   const [todoList, setTodoList] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
   const [date, setDate] = useState();
 
   const handleModalVisible = (date) => async () => {
     await setDate(date);
-    setIsModalVisible(!isModalVisible);
+    setIsCreateModalVisible(!isCreateModalVisible);
   };
 
   const { groupId } = useParams();
@@ -44,10 +44,10 @@ const TodoList = ({ startDate }) => {
   return (
     <TodoListContext.Provider value={requestTodoList}>
       <StyledWrapper>
-        <TodoCreateModal
+        <ModalTodo
           defaultDate={date}
-          isModalVisible={isModalVisible}
-          setIsModalVisible={setIsModalVisible}
+          isModalVisible={isCreateModalVisible}
+          setIsModalVisible={setIsCreateModalVisible}
         />
         <TodoDate todoList={todoList} handleModalVisible={handleModalVisible} />
         {dateList.map((date) => (

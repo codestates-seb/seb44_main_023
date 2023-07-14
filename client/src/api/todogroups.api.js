@@ -81,3 +81,47 @@ export const createTodo = async (data) => {
     throw err;
   }
 };
+
+export const readTodo = async (groupId, todoId) => {
+  try {
+    const res = await axios.get(`/api/todogroups/${groupId}/todos/${todoId}`);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteTodo = async (groupId, todoId) => {
+  try {
+    await axios.delete(`/api/todogroups/${groupId}/todos/${todoId}`);
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const readTodoComment = async (groupId, todoId) => {
+  try {
+    const res = await axios.get(
+      `/api/todogroups/${groupId}/todos/${todoId}/comments`
+    );
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createTodoComment = async (
+  groupId,
+  todoId,
+  member_id,
+  content
+) => {
+  try {
+    await axios.post(`/api/todogroups/${groupId}/todos/${todoId}/comments`, {
+      member_id,
+      comment_content: content,
+    });
+  } catch (err) {
+    throw err;
+  }
+};
