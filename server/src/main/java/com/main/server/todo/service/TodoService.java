@@ -76,6 +76,15 @@ public class TodoService {
         return todos;
     }
 
+    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate) {
+        todoGroupService.findById(todoGroupId);
+
+        List<Todo> todos = this.todoRepository.findAllByTodoScheduleDateBetween(startDate, endDate);
+
+        return todos;
+
+    }
+
     public void deleteTodo(Long todoGroupId, Long todoId) {
         todoGroupService.findById(todoGroupId);
 
