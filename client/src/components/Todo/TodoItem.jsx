@@ -13,16 +13,17 @@ const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
   const [checked, setChecked] = useState(todo_status === "COMPLETE");
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
 
-  const handleModalVisible = () =>
+  const handleModalVisible = () => {
     setIsDetailModalVisible(!isDetailModalVisible);
+  };
 
   const handleCheckTodo = async (event) => {
     try {
-      event.stopPropogation();
+      event.stopPropagation();
+
       let isCheck = checked;
 
       setChecked((check) => !check);
-
       await updateTodoStatus(
         groupId,
         todo_id,
