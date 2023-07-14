@@ -6,7 +6,11 @@ import { useContext, useState } from "react";
 import { createTodo } from "../../api/todogroups.api";
 import { TodoListContext } from "../../App";
 
-const TodoCreateModal = ({ isModalVisible, setIsModalVisible }) => {
+const TodoCreateModal = ({
+  isModalVisible,
+  setIsModalVisible,
+  defaultDate,
+}) => {
   const [formData, setFormData] = useState();
 
   const handleModalVisible = () => setIsModalVisible(!isModalVisible);
@@ -50,7 +54,11 @@ const TodoCreateModal = ({ isModalVisible, setIsModalVisible }) => {
           <div className="modal-title">
             <div className="modal-title-text">Todo 추가하기</div>
             <div className="modal-title-date">
-              <input id="todo_schedule_date" type="date" />
+              <input
+                id="todo_schedule_date"
+                type="date"
+                defaultValue={defaultDate}
+              />
             </div>
           </div>
           <Input

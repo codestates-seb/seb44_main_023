@@ -12,7 +12,7 @@ const TodoGroup = ({ groupInfo, members, setStartDate }) => {
         setStartDate((startDate) => startDate.clone().subtract(7, "day"));
         break;
       case "TODAY":
-        setStartDate(dayjs().locale("ko").startOf("isoWeek"));
+        setStartDate(dayjs().locale("ko").startOf("week").add(1, "day"));
         break;
       case "NEXT":
         setStartDate((startDate) => startDate.clone().add(7, "day"));

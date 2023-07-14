@@ -10,7 +10,6 @@ const TodoDate = ({ date, todoList }) => {
   const [dataSet, setDataSet] = useState(todoList);
   const [dataList, setDataList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  dayjs.locale("ko");
 
   const sortTodoList = () => {
     let dataIncomplete = [];
@@ -37,12 +36,13 @@ const TodoDate = ({ date, todoList }) => {
   return (
     <StyledWrapper>
       <TodoCreateModal
+        defaultDate={date}
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
       />
       <div className="title">
         <div className="date">
-          {date ? dayjs(date).format("MM/DD dd") : "NODATE"}
+          {date ? dayjs(date).locale("ko").format("MM/DD dd") : "NODATE"}
         </div>
         <div className="add-button" onClick={() => setIsModalVisible(true)}>
           <AiOutlinePlus />
