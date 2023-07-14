@@ -8,6 +8,7 @@ import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.ledgerGroup.repository.LedgerGroupRepository;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.todogroup.domain.TodoGroup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +60,8 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
         ledgerGroupRepository.delete(foundLedgerGroup);
     }
 
-    @Transactional(readOnly = true)
-    public LedgerGroup findById(Long ledgerGroupId) {
+    @Transactional
+    public LedgerGroup findByGroupId(final Long ledgerGroupId) {
         return ledgerGroupRepository.findById(ledgerGroupId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEDGER_GROUP_NOT_FOUND));
     }

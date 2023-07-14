@@ -8,14 +8,14 @@ import java.util.List;
 
 public interface LedgerService {
 
-    Ledger createLedger(LedgerPostDto postDto);
+    Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto);
 
-    Ledger updateLedger(Long ledgerId, LedgerPatchDto patchDto);
+    Ledger updateLedger(Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto);
 
-    Ledger getLedger(Long ledgerId);
+    Ledger getLedger(Long ledgerGroupId, Long ledgerId);
 
-    List<Ledger> getLedgers();
+    List<Ledger> getLedgers(Long ledgerGroupId);
 
-    void deleteLedger(Long ledgerId);
+    void deleteLedger(Long ledgerGroupId, Long ledgerId);
 
 }

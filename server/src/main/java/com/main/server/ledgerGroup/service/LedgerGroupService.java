@@ -12,4 +12,6 @@ public interface LedgerGroupService {
     LedgerGroup getLedgerGroup(Long ledgerGroupId);
     List<LedgerGroup> getLedgerGroups();
     void deleteLedgerGroup(Long ledgerGroupId);
+
+    LedgerGroup findByGroupId(Long ledgerGroupId);
 }

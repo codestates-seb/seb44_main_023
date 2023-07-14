@@ -32,7 +32,7 @@ public class LedgerController {
     @PostMapping
     public ResponseEntity createLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @Valid @RequestBody LedgerPostDto postDto) {
-        Ledger ledger = ledgerService.createLedger(postDto);
+        Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto);
 
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.CREATED);
     }
@@ -41,7 +41,7 @@ public class LedgerController {
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
                                       @Valid @RequestBody LedgerPatchDto patchDto) {
-        Ledger ledger = ledgerService.updateLedger(ledgerId, patchDto);
+        Ledger ledger = ledgerService.updateLedger(ledgerGroupId, ledgerId, patchDto);
 
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
     }
@@ -49,13 +49,13 @@ public class LedgerController {
     @GetMapping("/{ledger-id}")
     public ResponseEntity getLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                     @PathVariable("ledger-id") @Positive Long ledgerId) {
-        Ledger ledger = ledgerService.getLedger(ledgerId);
+        Ledger ledger = ledgerService.getLedger(ledgerGroupId, ledgerId);
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId) {
-        List<Ledger> ledgers = this.ledgerService.getLedgers();
+        List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
         List<LedgerResponseDto> responses = ledgers.stream()
                 .map((ledger -> new LedgerResponseDto(ledger)))
                 .collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class LedgerController {
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @PathVariable("ledger-id") @Positive Long ledgerId) {
-        ledgerService.deleteLedger(ledgerId);
+        ledgerService.deleteLedger(ledgerGroupId, ledgerId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
