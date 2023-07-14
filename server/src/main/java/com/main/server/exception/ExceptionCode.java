@@ -18,7 +18,10 @@ public enum ExceptionCode {
     SAME_NICKNAME(400, "현재 사용 중인 닉네임과 동일합니다."),
     INVALID_NICKNAME_FORMAT(401, "닉네임은 특수문자를 제외한 2~10자리여야 합니다."),
     SAME_CURRENT_PASSWORD(409, "현재 비밀번호와 일치합니다."),
-    INVALID_PASSWORD_FORMAT(400, "비밀번호 형식이 올바르지 않습니다.");
+    INVALID_PASSWORD_FORMAT(400, "비밀번호 형식이 올바르지 않습니다."),
+    LEDGER_NOT_FOUND(404, "Ledger not found"),
+    LEDGER_GROUP_NOT_FOUND(404, "LedgerGroup not found");
+
 
     @Getter
     private int status;
