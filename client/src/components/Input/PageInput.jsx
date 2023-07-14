@@ -35,13 +35,13 @@ const PageInput = ({
 };
 
 const InputContainer = styled.div`
-  width: ${(props) => props.width || "auto"};
+  width: ${(props) => props.width || "auto"}rem;
   position: relative;
 `;
 
 const InputField = styled.input`
-  width: ${(props) => props.size || "100%"};
-  height: ${(props) => props.height || "auto"};
+  width: ${(props) => props.size || "100%"}rem;
+  height: ${(props) => props.height || "auto"}rem;
   padding: 0.2rem;
   border: none;
   border-bottom: 1px solid #ccc;
@@ -68,12 +68,10 @@ const InputInfo = styled.p`
 `;
 
 const SuffixContainer = styled.button`
-  top: 50px;
-  right: ${(props) => props.right || "30px"};
   position: absolute;
   background-color: transparent;
   color: ${(props) => props.color};
-  font-size: ${(props) => props.size || "inherit"};
+  font-size: ${(props) => props.size || "inherit"}rem;
   cursor: pointer;
 
   :hover {
