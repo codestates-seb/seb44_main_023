@@ -24,10 +24,16 @@ const TodoList = ({ startDate }) => {
   const requestTodoList = async () => {
     try {
       setIsLoading(true);
-      const todoList = await readTodoList(groupId);
+      const todoList = await readTodoList(
+        groupId,
+        startDate.format("YYYY-MM-DD"),
+        startDate.clone().add(7, "day").format("YYYY-MM-DD")
+      );
       setTodoList(todoList);
       setIsLoading(false);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const dateList = [];

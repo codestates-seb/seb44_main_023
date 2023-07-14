@@ -18,9 +18,12 @@ export const readTodoGroup = async (groupId) => {
   }
 };
 
-export const readTodoList = async (groupId) => {
+export const readTodoList = async (groupId, startDate, endDate) => {
   try {
     const response = await axios.get(`/api/todogroups/${groupId}/todos`);
+    // const response = await axios.get(
+    //   `/api/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
+    // );
     return response.data;
   } catch (err) {
     throw err;
