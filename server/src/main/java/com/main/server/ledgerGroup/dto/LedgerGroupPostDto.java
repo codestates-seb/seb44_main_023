@@ -3,7 +3,6 @@ package com.main.server.ledgerGroup.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.Member;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
