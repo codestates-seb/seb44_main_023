@@ -21,12 +21,12 @@ const Main = ({ onClick , weatherType}) => {
     return (
       <MainWrapper>
         <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
-            <MainBody >
+            <MainContents>
             <MainHeader>
                 <SmallLogo src={smallLogo}></SmallLogo>
                 <WeatherWidget scale={0.95} />
             </MainHeader>
-            <MainContents>
+            <MainBody>
                 <MainContainer>
                 <MainDivCol>
                     <BigLogo src={bigLogo}></BigLogo>
@@ -52,8 +52,8 @@ const Main = ({ onClick , weatherType}) => {
                     <MoveTo src={moveTo} onClick={onClick}></MoveTo>
                 </div>
                 </MainContainer>
-            </MainContents>
             </MainBody>
+            </MainContents>
       </MainWrapper>
     
     );
@@ -99,10 +99,12 @@ const MainContainer = styled.div`
 `;
 
 const MainContents = styled.div`
-  display: flex;
-  justify-content:center;
-  align-items: center;
-  height: 90%;
+position:absolute;
+  top:0rem;
+  width:100%;
+  height:100vh;
+  background-position: center;
+
 `;
 const MainHeader = styled.div`
   position: relative;;
@@ -115,11 +117,11 @@ const MainHeader = styled.div`
 `;
 
 const MainBody = styled.div`
-  position:absolute;
-  top:0rem;
-  width:100%;
-  height:100vh;
-  background-position: center;
+  
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  height: 90%;
 `
 const MainWrapper = styled.div`
   position:absolute;
