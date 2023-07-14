@@ -1,5 +1,6 @@
 package com.main.server.todo.domain;
 
+import com.main.server.comment.domain.Comment;
 import com.main.server.member.Member;
 //import com.main.server.comment.domain.Comment;
 import com.main.server.todogroup.domain.TodoGroup;
@@ -60,11 +61,12 @@ public class Todo {
         this.member = member;
     }
 
-//    @OneToMany(mappedBy = "todo")
-//    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "todo")
+    private List<Comment> comments = new ArrayList<>();
 
-    public Todo(Member member, String todoTitle, String todoContent, LocalDate todoScheduleDate) {
+    public Todo(Member member, TodoGroup todoGroup, String todoTitle, String todoContent, LocalDate todoScheduleDate) {
         this.member = member;
+        this.todoGroup = todoGroup;
         this.todoTitle = todoTitle;
         this.todoContent = todoContent;
         this.todoScheduleDate = todoScheduleDate;
