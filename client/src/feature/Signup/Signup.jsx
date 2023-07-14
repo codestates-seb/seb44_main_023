@@ -15,7 +15,6 @@ const Signup = () => {
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
-    e.preventDefault();
 
     if (
       !isValidEmail(email) ||
@@ -103,6 +102,13 @@ const Signup = () => {
     navigate("/login");
   };
 
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSignup();
+    }
+  };
+
   return (
     <>
       <InputBox>
@@ -113,9 +119,10 @@ const Signup = () => {
           fontSize={"1rem"}
           type="email"
           placeholder="Email"
+          onKeyDown={handleInputKeyDown}
           onChange={handleEmailValidation}
+          info={validation.email && <p>{validation.email}</p>}
         />
-        {validation.email && <ValidMsg>{validation.email}</ValidMsg>}
       </InputBox>
       <InputBox>
         Password:
@@ -125,10 +132,11 @@ const Signup = () => {
           fontSize={"2.4rem"}
           type="password"
           placeholder="Password"
+          onKeyDown={handleInputKeyDown}
           onChange={handlePasswordValidation}
+          info={validation.password && <p>{validation.password}</p>}
         />
         {/* 비밀번호 보이기 버튼 */}
-        {validation.password && <ValidMsg>{validation.password}</ValidMsg>}
       </InputBox>
       <InputBox>
         Nick Name:
@@ -138,9 +146,10 @@ const Signup = () => {
           fontSize={"1rem"}
           type="text"
           placeholder="Nick Name"
+          onKeyDown={handleInputKeyDown}
           onChange={handleNickNamelValidation}
+          info={validation.nickname && <p>{validation.nickname}</p>}
         />
-        {validation.nickname && <ValidMsg>{validation.nickname}</ValidMsg>}
       </InputBox>
       <Button
         type="submit"
@@ -162,16 +171,6 @@ const InputBox = styled.div`
   text-align: left;
   font-size: 2.2rem;
   padding-bottom: 4rem;
-`;
-
-const ValidMsg = styled.p`
-  width: 32.4rem;
-  height: 4.8rem;
-  text-align: left;
-  font-size: 1.4rem;
-  color: var(--color-red-01);
-  word-wrap: break-word;
-  padding-bottom: 3rem;
 `;
 
 const LoginLink = styled.a`
