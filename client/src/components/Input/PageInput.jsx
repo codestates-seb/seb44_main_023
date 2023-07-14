@@ -5,8 +5,6 @@ const PageInput = ({
   width,
   info,
   size,
-  top,
-  right,
   height,
   fontSize,
   onChange,
@@ -26,7 +24,7 @@ const PageInput = ({
       />
       {info && <InputInfo>{info}</InputInfo>}
       {eyebutton && (
-        <SuffixContainer top={top} right={right} size={suffixSize} color={color}>
+        <SuffixContainer size={suffixSize} color={color}>
           {eyebutton}
         </SuffixContainer>
       )}
