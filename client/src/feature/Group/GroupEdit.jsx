@@ -49,9 +49,9 @@ const GroupEdit = () => {
 		 	  <GroupTitle>현재 그룹명</GroupTitle>
 			  <EmptyBox style={{height:"3.3rem"}}/>
 				<Input
-					width="386px"
-					height="30px"
-					size="386px"					
+					width={38.6}//"386px"
+					height={3}//"30px"
+					size={38.6}//"386px"					
 					placeHolder=" Group1"//추후 설정을누른 그룹의 이름을 받아오는 로직으로 변경필요
 					fontSize={2}
 					value={groupTitle}
@@ -62,9 +62,9 @@ const GroupEdit = () => {
 			<GroupTitle>친구 초대</GroupTitle>
 			<EmptyBox style={{height:"1.8rem"}}/>
 			<Input
-				width="300px"//투명박스 px
-				height="30px"//투명박스px
-				size="386px" //가로길이 px
+				width={38.6}//"300px"//투명박스 px
+				height={3}//"30px"//투명박스px
+				size={38.6}//"386px" //가로길이 px
 				placeHolder=" 이메일을 입력해주세요"
 				fontSize={1.6} //인풋에쓰여지는 텍스트싸이즈
 				onChange={handleMemberChange}
