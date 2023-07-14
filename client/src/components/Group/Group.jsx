@@ -13,7 +13,7 @@ import InputContainer  from "../Modal/Modal";
 import InputWrapper  from "../Modal/Modal";
 import ModalInput  from "../Input/ModalInput";
 import Button  from "../Button/Button";
-
+import { FaTrashCan } from "react-icons/fa6";
 
 const Group = () => {
 	// <InputContainer width={width}> {/*InputContainer의 width 설정*/}
@@ -64,63 +64,61 @@ return (
   );
 };
 const GroupContent = () => {
+	
 	return(
 		<GroupWapper>
 		  <GroupDivCol>
 			<div>
-				<div>
-					<GroupTitle>현재 그룹명</GroupTitle>
-					<div>
-						<div>인풋자리</div>
-						<GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
-						
-					</div>
-				</div>
-				
-				<div>
+			  <div>
+			  	<GroupTitle>현재 그룹명</GroupTitle>
+				  <EmptyBox style={{height:"2.3rem"}}/>
+				  <div>인풋자리</div>
+				  <GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
+			  </div>
+			  <EmptyBox style={{height:"3.8rem"}}/>
+		  	  <div>
 				<GroupTitle>친구 초대</GroupTitle>
-				<div>
-					<div>인풋자리</div>
-					<div>초대되어져있는 친구</div>
-
-				</div>
-				
-				</div>
-			
+				<div>인풋자리</div>
+				<GroupInviteList>초대하려고 입력한 친구</GroupInviteList>
+			  </div>
 			</div>
-			
-
 			<GroupDivRow>
-				<Button
-				label="그룹삭제" // 버튼 Text 지정 가능
+			  <Button
+				label={<div><FaTrashCan/> 그룹삭제</div>} // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
 				onClick={() => console.log("그룹삭제")} // onClick
-				fontcolor={"var(--color-red-01)"} // 폰트 색 변경
-				bordercolor={"var(--color-red-01)"}
-
-				/>
-				<Button
+				fontcolor={"var(--color-white)"} // 폰트 색 변경
+			  />
+				{/* bordercolor={"var(--color-red-01)"} */}
+ 			  <Button
 				label="저장하기" // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
 				onClick={() => console.log("작은 버튼")} // onClick				fontcolor={"var(--color-white)"} // 폰트 색 변경
-				fontcolor={"var(--color-blue-03)"} // 폰트 색 변경
-				bordercolor={"var(--color-blue-03)"}
-
-				/>
-				
+				fontcolor={"var(--color-white)"}
+			  />
+				{/* bordercolor={"var(--color-blue-03)"} */}
 			</GroupDivRow>
 		  </GroupDivCol>
 		</GroupWapper>
 	);
 }
+const GroupInviteList=styled.div`
+display:flex;
+	flex-direction : column;
+
+	margin-top: 0.6rem;
+`
+
 
 const GroupDescription=styled.div`
 	display:flex;
 	flex-direction : column;
+
+	margin-top: 0.9rem;
+	font-size: 1.3rem;
 	color: var(--color-gray-05);
-  font-size: 1.3rem;
-  justify-self: center;
 `
+// justify-self: center;
 const GroupTitle=styled.div`
 	display:flex;
 	flex-direction : column;
@@ -128,6 +126,11 @@ const GroupTitle=styled.div`
   font-size: 2rem;
   justify-self: center;
 `
+const EmptyBox=styled.div`
+	display:flex;
+	width:100%;
+`
+// border : solid red 5px;
 
 const GroupDivCol=styled.div`
 	width:100%;
@@ -135,10 +138,11 @@ const GroupDivCol=styled.div`
 	display:flex;
 	flex-direction : column;
 	justify-content : space-between;
-	border : solid red 5px;
 
 	
 `
+// border : solid red 5px;
+
 const GroupDivRow=styled.div`
 	display:flex;
 	flex-direction : row;
