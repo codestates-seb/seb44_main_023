@@ -4,14 +4,42 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/PageInput";
 import { FaTrashCan } from "react-icons/fa6";
 
-const GroupEdit = () => {
+import { useGroupMemberStore } from "../../store/store.groupMember"; 
+import { useGroupTitleStore ,useGetGroupTitle} from "../../store/store.grouptitle"; 
 
-	const handleInputChange =()=>{}
+const GroupEdit = () => {
+	//const [inputGroupTitle, setInpuGroupTitle] = useState('');
+	//const [inputGroupMember, setInputGroupMembere] = useState('');
+
+	const { groupTitle, setGroupTitle } = useGroupTitleStore();
+	const { groupMembers, setGroupMembers, addGroupMember } = useGroupMemberStore();
+	
+	const newtitle = useGetGroupTitle();
+	console.log("in useGetGroupTitle : ",newtitle )
+
+	const handleKeyDown = (event) => {
+		console.log("in handleKeyDown1 : ",event.target.value )
+		if (event.key === 'Enter') {
+		  setGroupTitle(event.target.value);
+		}
+	  };
+	  
+	  const handleGroupTitleChange = (event) => {
+		if (event.key === 'Enter') {
+			setGroupTitle(event.target.value);
+		  }
+		setGroupTitle(event.target.value);
+	  };
+	
+	const handleMemberChange =()=>{}
+
 	const handleSubmitSave =()=>{
 		console.log("작은 버튼 handleSubmitSave")
+		setGroupTitle(groupTitle)
 	}
 	const handleSubmitCancle =()=>{
 		console.log("그룹삭제")
+		setGroupTitle("")
 	}
 
 	return(
@@ -26,8 +54,9 @@ const GroupEdit = () => {
 					size="386px"					
 					placeHolder=" Group1"//추후 설정을누른 그룹의 이름을 받아오는 로직으로 변경필요
 					fontSize={2}
-					onChange={handleInputChange}
-				/>
+					value={groupTitle}
+				/>					
+			
 			<GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
 			<EmptyBox style={{height:"3.8rem"}}/>
 			<GroupTitle>친구 초대</GroupTitle>
@@ -38,8 +67,16 @@ const GroupEdit = () => {
 				size="386px" //가로길이 px
 				placeHolder=" 이메일을 입력해주세요"
 				fontSize={1.6} //인풋에쓰여지는 텍스트싸이즈
-				onChange={handleInputChange}
+				onChange={handleMemberChange}
 			/>
+			{/* <div style={{border:"solid red 5px"}}>
+			<input
+					type="text"
+					value={groupTitle}
+					onChange={handleMemberChange}
+					onKeyDown={handleKeyDown}
+					/>
+			</div> */}
 			<EmptyBox style={{height:"0.6rem"}}/>
 
 			<GroupInviteList>초대될친구 리스트 보여줄 부분</GroupInviteList>
