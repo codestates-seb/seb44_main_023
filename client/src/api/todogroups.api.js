@@ -72,13 +72,10 @@ export const readTodoGroupMember = async (groupId) => {
   }
 };
 
-export const createTodo = async () => {
+export const createTodo = async (data) => {
   try {
     await axios.post(`/api/todogroups/1/todos`, {
-      member_id: 2,
-      todo_title: "청소",
-      todo_content: "빨래하고 설거지",
-      todo_schedule_date: "2023-07-10",
+      ...data,
     });
   } catch (err) {}
 };

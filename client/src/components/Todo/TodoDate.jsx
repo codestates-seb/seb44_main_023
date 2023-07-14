@@ -2,10 +2,12 @@ import { styled } from "styled-components";
 import { AiOutlinePlus } from "react-icons/ai";
 import TodoItem from "./TodoItem";
 import { useEffect, useState } from "react";
+import TodoCreateModal from "./TodoCreateModal";
 
 const TodoDate = ({ date, todoList }) => {
   const [dataSet, setDataSet] = useState(todoList);
   const [dataList, setDataList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const sortTodoList = () => {
     let dataIncomplete = [];
@@ -31,9 +33,13 @@ const TodoDate = ({ date, todoList }) => {
 
   return (
     <StyledWrapper>
+      <TodoCreateModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
       <div className="title">
         <div className="date">{date ? date : "NODATE"}</div>
-        <div className="add-button">
+        <div className="add-button" onClick={() => setIsModalVisible(true)}>
           <AiOutlinePlus />
         </div>
       </div>
@@ -58,7 +64,7 @@ const StyledWrapper = styled.div`
   padding: 0 0 1.2rem;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 2rem;
-  background-color: var(--color-gray-01);
+  background-color: var(--color-gray-02);
   height: 100%;
   overflow: hidden;
 
