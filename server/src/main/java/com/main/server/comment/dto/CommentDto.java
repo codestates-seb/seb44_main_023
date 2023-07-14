@@ -42,6 +42,8 @@ public class CommentDto {
 
         @JsonProperty(value = "member_id")
         private Long memberId;
+        @JsonProperty(value = "todo_group_id")
+        private Long todoGroupId;
         @JsonProperty(value = "todo_id")
         private Long todoId;
         @JsonProperty(value = "comment_id")
@@ -55,6 +57,7 @@ public class CommentDto {
 
         public Response(Comment comment) {
             this.memberId = comment.getMember().getMemberId();
+            this.todoGroupId = comment.getTodo().getTodoGroup().getTodoGroupId();
             this.todoId = comment.getTodo().getTodoId();
             this.commentId = comment.getCommentId();
             this.nickName = comment.getMember().getNickname();

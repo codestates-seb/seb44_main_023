@@ -28,14 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
     private final CommentService commentService;
-    private final TodoGroupService todoGroupService;
-    private final TodoService todoService;
 
-    public CommentController(CommentService commentService, TodoGroupService todoGroupService,
-        TodoService todoService) {
+    public CommentController(CommentService commentService) {
         this.commentService = commentService;
-        this.todoGroupService = todoGroupService;
-        this.todoService = todoService;
     }
 
     @PostMapping("/todogroups/{todo-group-id}/todos/{todo-id}/comments")
