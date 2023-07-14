@@ -67,16 +67,11 @@ const MainWrapper = styled.div`
   width:100%;
   height:100vh;
   background-position: center;
-  border : yellow solid 5px;
 `
-
-
-
 const HomeWrapper = styled.div`
   position:absolute;
   top:0rem;
   width:100%;
   height:100vh;
   background-position: center;
-  border : red solid 5px;
  `

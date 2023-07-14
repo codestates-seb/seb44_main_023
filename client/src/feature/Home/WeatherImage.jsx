@@ -24,10 +24,9 @@ const HomeWrapper = styled.div`
   background-position: center;
   height: 100vh;
   &.blurred {
-     filter: blur(0.5rem);
+    filter: brightness(1.4);
   }
   background-image: url(${props => props.background});
-  top: 0rem;
-  left: 0rem;
   z-index: -1;
   `
+  // filter: blur(0.5rem);
