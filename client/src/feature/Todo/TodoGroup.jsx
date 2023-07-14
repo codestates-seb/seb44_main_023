@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 
 const TodoGroup = ({ groupInfo, members, setStartDate }) => {
   const { todo_group_title } = groupInfo;
@@ -11,7 +12,7 @@ const TodoGroup = ({ groupInfo, members, setStartDate }) => {
         setStartDate((startDate) => startDate.clone().subtract(7, "day"));
         break;
       case "TODAY":
-        setStartDate(moment().startOf("isoWeek"));
+        setStartDate(dayjs().locale("ko").startOf("isoWeek"));
         break;
       case "NEXT":
         setStartDate((startDate) => startDate.clone().add(7, "day"));

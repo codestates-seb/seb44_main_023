@@ -77,5 +77,7 @@ export const createTodo = async (data) => {
     await axios.post(`/api/todogroups/1/todos`, {
       ...data,
     });
-  } catch (err) {}
+  } catch (err) {
+    throw err;
+  }
 };

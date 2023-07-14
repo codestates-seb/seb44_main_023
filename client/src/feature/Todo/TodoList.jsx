@@ -30,17 +30,14 @@ const TodoList = ({ startDate }) => {
     requestTodoList();
   }, []);
 
+  if (isLoading) return null;
   return (
     <TodoListContext.Provider value={requestTodoList}>
       <StyledWrapper>
-        {!isLoading &&
-          dateList.map((date) => (
-            <TodoDate
-              key={`todo-item-${date}`}
-              date={date}
-              todoList={todoList}
-            />
-          ))}
+        <TodoDate todoList={todoList} />
+        {dateList.map((date) => (
+          <TodoDate key={`todo-item-${date}`} date={date} todoList={todoList} />
+        ))}
       </StyledWrapper>
     </TodoListContext.Provider>
   );

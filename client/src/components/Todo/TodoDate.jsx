@@ -3,11 +3,14 @@ import { AiOutlinePlus } from "react-icons/ai";
 import TodoItem from "./TodoItem";
 import { useEffect, useState } from "react";
 import TodoCreateModal from "./TodoCreateModal";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
 
 const TodoDate = ({ date, todoList }) => {
   const [dataSet, setDataSet] = useState(todoList);
   const [dataList, setDataList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  dayjs.locale("ko");
 
   const sortTodoList = () => {
     let dataIncomplete = [];
@@ -38,7 +41,9 @@ const TodoDate = ({ date, todoList }) => {
         setIsModalVisible={setIsModalVisible}
       />
       <div className="title">
-        <div className="date">{date ? date : "NODATE"}</div>
+        <div className="date">
+          {date ? dayjs(date).format("MM/DD dd") : "NODATE"}
+        </div>
         <div className="add-button" onClick={() => setIsModalVisible(true)}>
           <AiOutlinePlus />
         </div>

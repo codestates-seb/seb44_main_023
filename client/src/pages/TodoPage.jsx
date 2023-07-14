@@ -4,16 +4,19 @@ import { styled } from "styled-components";
 import Loading from "../components/Loading/Loading";
 import TodoGroup from "../feature/Todo/TodoGroup";
 import TodoList from "../feature/Todo/TodoList";
-import moment from "moment";
-import { readTodoGroup, readTodoGroupMember } from "../api/todogroups.api";
 import Layout from "../Layout/PagesLayout";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import { readTodoGroup, readTodoGroupMember } from "../api/todogroups.api";
 
 const TodoPage = () => {
   const { groupId } = useParams();
   const [groupInfo, setGroupInfo] = useState();
   const [members, setMembers] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const [startDate, setStartDate] = useState(moment().startOf("isoWeek"));
+  const [startDate, setStartDate] = useState(
+    dayjs().locale("ko").startOf("isoWeek")
+  );
 
   const requestData = async () => {
     try {
@@ -21,7 +24,6 @@ const TodoPage = () => {
       const members = await readTodoGroupMember(groupId);
       setGroupInfo(groupInfo);
       setMembers(members);
-
       setIsLoading(false);
     } catch (err) {}
   };
