@@ -50,6 +50,10 @@ const Dropdown = ({
 
   return (
     <StyledDropdown className="dropdown">
+      <div
+        className={`overlay ${isActive}`}
+        onClick={() => setIsActive(!isActive)}
+      />
       <input id={id} ref={inputRef} readOnly style={{ display: "none" }} />
       <div className="selected" onClick={handleClickOption}>
         <div className="selected-value">{selected?.label}</div>
@@ -106,14 +110,22 @@ const StyledDropdown = styled.div`
 
   .overlay {
     width: 100vw;
+    z-index: 1;
     height: 100vh;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    pointer-events: ${({ isactive }) =>
-      isactive === "true" ? "default" : "none"};
+
+    &.true {
+      pointer-events: default;
+    }
+
+    &.false {
+      display: none;
+      pointer-events: none;
+    }
   }
 
   .selected {

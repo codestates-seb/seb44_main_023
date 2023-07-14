@@ -6,6 +6,7 @@ import ProfileTop from "../feature/Profile/ProfileTop";
 import ProfileBottom from "../feature/Profile/ProfileBottom";
 import Loading from "../components/Loading/Loading";
 import { readMemberInfo } from "../api/members.api";
+import Layout from "../Layout/PagesLayout";
 
 const ProfilePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -24,8 +25,7 @@ const ProfilePage = () => {
   }, []);
 
   return (
-    <P>
-      {/* 후에 레이아웃 적용하게 되면 P는 삭제할 에정 */}
+    <Layout>
       <StyledWrapper>
         <ProfileBox>
           {isLoading ? (
@@ -38,7 +38,7 @@ const ProfilePage = () => {
           )}
         </ProfileBox>
       </StyledWrapper>
-    </P>
+    </Layout>
   );
 };
 
