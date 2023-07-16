@@ -1,8 +1,5 @@
 import axios from "axios";
 
-<<<<<<< HEAD
-export const loginAPI = async (email, password) => {
-=======
 export const readMemberInfo = async (memberId) => {
   try {
     const response = await axios.get(`/api/members/${memberId}`);
@@ -82,7 +79,6 @@ export const deleteProfileImage = async (memberId) => {
 };
 
 export const loginAPI = async (email, password, navigate) => {
->>>>>>> 2fbb05d8e4ce1ee57a988f076a60d381a4a4a8ae
   try {
     const response = await axios.post(`/api/auths`, { email, password });
     // console.log(response.data);
@@ -126,12 +122,9 @@ export const signupAPI = async (email, password, nickname) => {
     });
     return response.data;
   } catch (error) {
-<<<<<<< HEAD
-=======
     // status 다르게 받아서 중복 이메일, 닉네임 alert
     console.log("오류로 인한 회원가입 실패", error);
     navigate("*");
->>>>>>> 2fbb05d8e4ce1ee57a988f076a60d381a4a4a8ae
     throw new Error(error.response.data.error);
   }
 };
