@@ -114,41 +114,42 @@ const Signup = () => {
       <InputBox>
         Email:
         <Input
-          size={"32.4rem"}
-          height={"4.8rem"}
-          fontSize={"1rem"}
+          size={"32.4"}
+          height={"4.8"}
+          fontSize={"1.8"}
           type="email"
           placeholder="Email"
           onKeyDown={handleInputKeyDown}
           onChange={handleEmailValidation}
-          info={validation.email && <p>{validation.email}</p>}
+          info={validation.email}
         />
       </InputBox>
       <InputBox>
         Password:
         <Input
-          size={"32.4rem"}
-          height={"4.8rem"}
-          fontSize={"2.4rem"}
+          width={32.4}
+          size={"32.4"}
+          height={"4.8"}
+          fontSize={"1.8"}
           type="password"
           placeholder="Password"
           onKeyDown={handleInputKeyDown}
           onChange={handlePasswordValidation}
-          info={validation.password && <p>{validation.password}</p>}
+          info={validation.password}
         />
         {/* 비밀번호 보이기 버튼 */}
       </InputBox>
       <InputBox>
         Nick Name:
         <Input
-          size={"32.4rem"}
-          height={"4.8rem"}
-          fontSize={"1rem"}
+          size={"32.4"}
+          height={"4.8"}
+          fontSize={"1.8"}
           type="text"
           placeholder="Nick Name"
           onKeyDown={handleInputKeyDown}
           onChange={handleNickNamelValidation}
-          info={validation.nickname && <p>{validation.nickname}</p>}
+          info={validation.nickname}
         />
       </InputBox>
       <Button
