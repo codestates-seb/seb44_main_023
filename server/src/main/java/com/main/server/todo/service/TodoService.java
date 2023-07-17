@@ -71,16 +71,25 @@ public class TodoService {
 
     @Transactional
     public List<Todo> getTodos(Long todoGroupId) {
-        todoGroupService.findById(todoGroupId);
 
-        List<Todo> todos = this.todoRepository.findAll();
+//        todoGroupService.findById(todoGroupId);
+//        List<Todo> todos = this.todoRepository.findAll();
+//        return todos;
+
+//        todoGroupService.findById(todoGroupId);
+//        List<Todo> todos = this.todoRepository.findByTodoGroup(todoGroupId);
+//        return todos;
+
+        TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
+
+        List<Todo> todos = todoGroup.getTodos();
         return todos;
     }
 
     public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate) {
-        todoGroupService.findById(todoGroupId);
+        TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
 
-        List<Todo> todos = this.todoRepository.findAllByTodoScheduleDateBetween(startDate, endDate);
+        List<Todo> todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup ,startDate, endDate);
         todos.sort(Comparator.comparing(Todo::getTodoScheduleDate));
 
         return todos;
