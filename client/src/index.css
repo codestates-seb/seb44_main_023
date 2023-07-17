@@ -1,6 +1,6 @@
 :root {
   --color-red-01: #fa5f64;
-  --color-red-02: #B74646;
+  --color-red-02: #b74646;
   --color-blue-01: #e0eefb;
   --color-blue-02: #b1d9fa;
   --color-blue-03: #569fdc;
@@ -17,6 +17,10 @@
   --color-gray-07: #4b4b4b;
   --color-gray-08: #3b3b3b;
   --color-gray-09: #2b2b2b;
+  --color-gray-10: #6a717d;
+  --color-gray-11: #636363;
+  --color-gray-12: #aaaaaa;
+  --color-gray-13: #797979;
   --color-black: #000000;
 }
 html,

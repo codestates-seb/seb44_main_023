@@ -13,6 +13,7 @@
     "@emotion/is-prop-valid": "^1.2.1",
     "axios": "^1.4.0",
     "browser-image-compression": "^2.0.2",
+    "dayjs": "^1.11.9",
     "lottie-react": "^2.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

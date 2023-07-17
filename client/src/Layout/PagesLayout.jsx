@@ -34,7 +34,6 @@ const BackgroundImage = styled.img`
   z-index: -1;
 `;
 
-
 const LayoutContent = styled.div`
   display: flex;
   height: 100%;
@@ -42,9 +41,9 @@ const LayoutContent = styled.div`
 
 const Content = styled.div`
   flex: 1;
-  margin-top: 6rem;
-  margin-left: 8rem;
-  z-index: 1;
+  padding-top: 6rem;
+  padding-left: 8rem;
+  width: 100%;
 `;
 
 export default Layout;
