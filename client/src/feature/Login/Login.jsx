@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginAPI } from "../../api/members.api";
+import { login } from "../../api/members.api";
 import useLoginStore from "../../store/store.login";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ const Login = () => {
     }
 
     try {
-      const response = await loginAPI(email, password);
+      const response = await login(email, password);
       // console.log("사용자 정보:", response);
       
       
