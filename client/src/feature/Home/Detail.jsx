@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import smallLogo from "../../assets/home/smallLogo.svg";
 
-const DetailedPage = () => {
+const Detail = () => {
     return (
       <DetailWarpper>
         <DetailContainer>
@@ -89,4 +89,4 @@ const DetailWarpper = styled.div`
 `
 
 
-  export default DetailedPage;
+  export default Detail;

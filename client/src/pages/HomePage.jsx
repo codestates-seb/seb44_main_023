@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import '../index.css';
 import '../feature/Home/home.css';
-import Main from '../feature/Home/Main';
-import DetailedPage from '../feature/Home/DetailedPage';
+import Intro from '../feature/Home/Intro';
+import Detailed from '../feature/Home/Detailed';
 import { useGetWeatherInfo } from '../store/store.weather';
 import WeatherImage from '../feature/Home/WeatherImage';
 
@@ -89,8 +89,8 @@ return (
    <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
 
    <HomeWrapper ref={outerDivRef} >
-    <Main onClick={handleDown} weatherType={weatherType} />
-    <DetailedPage weatherType={weatherType} />
+    <Intro onClick={handleDown} weatherType={weatherType} />
+    <Detailed weatherType={weatherType} />
  </HomeWrapper>
  </Out>
 );

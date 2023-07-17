@@ -1,6 +1,6 @@
 import React  from 'react';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
+import { useNavigate } from "react-router-dom"; 
 import smallLogo from "../../assets/home/smallLogo.svg";
 import bigLogo from "../../assets/home/BigLogo.svg";
 import moveTo from "../../assets/home/moveTo.svg";
@@ -8,8 +8,8 @@ import Button from "../../components/Button/Button";
 
 import WeatherWidget from '../../components/WeatherWidget/WeatherWidget';
 
-const Main = ({ onClick }) => {
-    const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
+const Intro = ({ onClick }) => {
+    const navigate = useNavigate(); 
     const handleLoginButtonClick = () => {
       navigate("/login"); 
     };
@@ -128,4 +128,4 @@ const MainWrapper = styled.div`
  align-items: center;
 `
 
-export default Main;
+export default Intro;
