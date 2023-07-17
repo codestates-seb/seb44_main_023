@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -8,6 +9,8 @@ import Layout from "../Layout/PagesLayout";
 
 const LedgerPage = () => {
   const [pageType, setPageType] = useState("list");
+  const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,6 +20,26 @@ const LedgerPage = () => {
     const newSearch = searchParams.toString();
     const newUrl = window.location.pathname + "?" + newSearch;
     navigate(newUrl);
+  };
+
+  const handleSelectedMonth = (type) => () => {
+    switch (type) {
+      case "PREV":
+        setSelectedMonth((selectedMonth) =>
+          selectedMonth.clone().subtract(1, "month")
+        );
+        break;
+      case "TODAY":
+        setSelectedMonth(dayjs().locale("ko"));
+        break;
+      case "NEXT":
+        setSelectedMonth((selectedMonth) =>
+          selectedMonth.clone().add(1, "month")
+        );
+        break;
+      default:
+        break;
+    }
   };
 
   let unselectedColor = {
@@ -55,7 +78,17 @@ const LedgerPage = () => {
             />
           </ButtonWrapper>
         </GroupTitle>
-        {pageType === "calendar" ? <LedgerCalendar /> : <LedgerList />}
+        {pageType === "calendar" ? (
+          <LedgerCalendar
+            selectedMonth={selectedMonth}
+            handleSelectedMonth={handleSelectedMonth}
+          />
+        ) : (
+          <LedgerList
+            selectedMonth={selectedMonth}
+            handleSelectedMonth={handleSelectedMonth}
+          />
+        )}
       </StyledWrapper>
     </Layout>
   );
