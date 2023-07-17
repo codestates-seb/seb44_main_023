@@ -1,28 +1,16 @@
-import React, { useState, useEffect,useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React from 'react';
+import styled from 'styled-components';
 import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
 import smallLogo from "../../assets/home/smallLogo.svg";
-import bigLogo from "../../assets/home/BigLogo.svg";
-import moveUp from "../../assets/home/moveUp.svg";
-import Button from "../../components/Button/Button";
-import WeatherImage from './WeatherImage';
-const DetailedPage = ({onClick, weatherType}) => {
+
+const DetailedPage = () => {
     const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
-    const handleLoginButtonClick = () => {
-      navigate("/login"); 
-    };
-    const handleSignUpButtonClick = () => {
-      navigate("/signup"); 
-    };
-  
+   
     return (
       <DetailWarpper>
-        <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
         <DetailContainer>
           <DetailHeader>
             <SmallLogo src={smallLogo}></SmallLogo>
-            <MoveUp src={moveUp} onClick={onClick} ></MoveUp>
-            <div style={{width:"22rem"}}/>
           </DetailHeader>
             <DetailBody>
               <ContentsDiv>
@@ -37,11 +25,6 @@ const DetailedPage = ({onClick, weatherType}) => {
   };
 
 
-
-const MoveUp = styled.img`
-  width: 6.4rem;
-  height: 3.2rem;
-`
 const Text = styled.div`
   font-size: 2.0rem;
   line-height: 2.7rem;
@@ -60,14 +43,14 @@ const DetailDivCol= styled.div`
   flex-direction:column;
   align-items: center;
 `
-
 const ContentsDiv=styled.div`
-  width:85%;
+  width:90%;
   height: 85%;
   background: rgba(255, 255, 255, 0.4);
   padding : 2rem  2rem 2rem 2rem;
   border-radius: 3rem;
-
+ justify-content: center;
+ align-items: center;
 `
 const SmallLogo = styled.img`
   width: 15rem;
@@ -85,29 +68,21 @@ const DetailHeader = styled.div`
 `;
 
 const DetailBody = styled.div`
-   display: flex;
+ display: flex;
   justify-content:center;
   align-items: center;
   height: 90%;
-
 `
 const DetailContainer = styled.div`
-  position:absolute;
-  top:100vh;
   width:100%;
-  height:100vh;
   background-position: center;
-  z-index:1;
 `;
 
 const DetailWarpper = styled.div`
-  width:100%;
   background-position: center;
+  width:100%;
+  height: 100vh;
+  display: flex;
 `
-// height: 100vh;
-// display: flex;
-// justify-content: center;
-// align-items: center;
 
-
-  export default DetailedPage;
+export default DetailedPage;
