@@ -5,12 +5,13 @@ import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
+import Main from "./pages/Main"
 
 function App() {
   return (
     <>
       <Routes>
-        {/* <Route path="/" element={<Main />} />    */}
+        <Route path="/" element={<Main />} />   
         <Route path="/home" element={<Home />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/weatherWidget" element={<TestWidget />} />
