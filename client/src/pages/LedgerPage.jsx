@@ -1,7 +1,12 @@
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import {
+  readLedgerGroup,
+  readLedgerGroupMember,
+  readLedgerList,
+} from "../api/ledgergroups.api";
 import Button from "../components/Button/Button";
 import LedgerCalendar from "../feature/Ledger/LedgerCalendar/LedgerCalendar";
 import LedgerList from "../feature/Ledger/LedgerList/LedgerList";
@@ -10,9 +15,13 @@ import Layout from "../Layout/PagesLayout";
 const LedgerPage = () => {
   const [pageType, setPageType] = useState("list");
   const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
+  const [groupInfo, setGroupInfo] = useState();
+  const [ledgerList, setLedgerList] = useState();
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { groupId } = useParams();
 
   const handleChangeParameter = (type) => () => {
     const searchParams = new URLSearchParams(location.search);
@@ -42,14 +51,36 @@ const LedgerPage = () => {
     }
   };
 
+  const requestLedgerInfo = async () => {
+    try {
+      const groupInfo = await readLedgerGroup(groupId);
+      // const members = await readLedgerGroupMember(groupId);
+      // console.log(members);
+      setGroupInfo(groupInfo);
+    } catch (err) {}
+  };
+
+  const requestLedgerList = async () => {
+    try {
+      const ledgerList = await readLedgerList(
+        groupId,
+        "2023-07-21",
+        "2023-07-21"
+      );
+      setLedgerList(ledgerList);
+    } catch (err) {}
+  };
+
   let unselectedColor = {
     border: "1px solid var(--color-blue-03)",
     color: "var(--color-blue-03)",
     backgroundColor: "var(--color-white)",
+    fontSize: "1.6rem",
   };
 
   let selectedColor = {
     backgroundColor: "var(--color-blue-03)",
+    fontSize: "1.6rem",
   };
 
   useEffect(() => {
@@ -57,6 +88,11 @@ const LedgerPage = () => {
     const currentParams = searchParams.get("type");
     setPageType(currentParams);
   }, [location]);
+
+  useEffect(() => {
+    requestLedgerInfo();
+    requestLedgerList();
+  }, []);
 
   return (
     <Layout>
