@@ -33,8 +33,9 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-core'
 	implementation 'com.auth0:java-jwt:4.3.0'
 
+
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
