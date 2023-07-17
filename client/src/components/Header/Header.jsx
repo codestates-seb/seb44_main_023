@@ -58,7 +58,7 @@ const Header = () => {
       if (response.status === 200) {
         setAccessToken(null);
       } 
-      navigate("*");
+      navigate("/home");
       setPopupVisible(false);
     } catch (error) {
       if (error === 400) {
@@ -67,7 +67,6 @@ const Header = () => {
     }
   };
 
-  console.log(accessToken);
 
   const handlePopupClick = () => {
     // 팝업 영역 클릭 시 이벤트 전파를 막지 않음
