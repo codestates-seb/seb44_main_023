@@ -132,11 +132,10 @@ const LedgerPage = () => {
 
 export default LedgerPage;
 
-const StyledWrapper = styled.div`
-  padding: 6.4rem;
-`;
+const StyledWrapper = styled.div``;
 
 const GroupTitle = styled.div`
+  padding: 6.4rem 6.4rem 0;
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.4rem;
