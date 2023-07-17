@@ -10,6 +10,7 @@ const ModalTodo = ({
   type = "create",
   defaultDate,
   todoId,
+  setTodoList,
 }) => {
   const [modalType, setModalType] = useState(type);
   const [todoInfo, setTodoInfo] = useState();
@@ -21,6 +22,7 @@ const ModalTodo = ({
       <ModalContentCreate
         defaultDate={defaultDate}
         handleModalVisible={handleModalVisible}
+        setTodoList={setTodoList}
       />
     ) : modalType === "detail" ? (
       <ModalContentDetail
@@ -34,6 +36,8 @@ const ModalTodo = ({
       <ModalContentEdit
         todoInfo={todoInfo}
         handleModalVisible={handleModalVisible}
+        setModalType={setModalType}
+        setTodoList={setTodoList}
       />
     );
 

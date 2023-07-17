@@ -13,14 +13,15 @@ const TodoComment = ({
   todoId,
   groupId,
   isEdit = false,
-  requestTodoInfo,
+  setTodoComment,
 }) => {
-  const [comment, setComment] = useState();
+  const [comment, setComment] = useState("");
 
   const handleCreate = async () => {
     try {
-      await createTodoComment(groupId, todoId, member_id, comment);
-      requestTodoInfo();
+      const res = await createTodoComment(groupId, todoId, member_id, comment);
+      setTodoComment((todoComment) => [res, ...todoComment]);
+      setComment("");
     } catch (err) {}
   };
 
@@ -43,6 +44,7 @@ const TodoComment = ({
           <CommentInput
             fontSize={16}
             placeholder="댓글을 입력해주세요"
+            value={comment}
             onChange={(event) => setComment(event.target.value)}
           />
         ) : (

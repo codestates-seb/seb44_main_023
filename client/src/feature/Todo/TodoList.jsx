@@ -53,8 +53,8 @@ const TodoList = ({ startDate }) => {
         defaultDate={date}
         isModalVisible={isCreateModalVisible}
         setIsModalVisible={setIsCreateModalVisible}
+        setTodoList={setTodoList}
       />
-
       <StyledWrapper>
         <TodoDate todoList={todoList} handleModalVisible={handleModalVisible} />
         {dateList.map((date) => (
@@ -62,6 +62,7 @@ const TodoList = ({ startDate }) => {
             key={`todo-item-${date}`}
             date={date}
             todoList={todoList}
+            setTodoList={setTodoList}
             handleModalVisible={handleModalVisible}
           />
         ))}

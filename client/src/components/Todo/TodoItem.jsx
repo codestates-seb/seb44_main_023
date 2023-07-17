@@ -50,6 +50,7 @@ const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
         todoId={todo_id}
         isModalVisible={isDetailModalVisible}
         setIsModalVisible={setIsDetailModalVisible}
+        setTodoList={setTodoList}
       />
       <StyledWrapper
         className={`todo-item ${checked ? "checked" : ""}`}

@@ -5,7 +5,11 @@ import { useContext, useEffect, useState } from "react";
 import { createTodo } from "../../../api/todogroups.api";
 import { TodoListContext } from "../../../App";
 
-const ModalContentCreate = ({ defaultDate, handleModalVisible }) => {
+const ModalContentCreate = ({
+  defaultDate,
+  handleModalVisible,
+  setTodoList,
+}) => {
   const [formData, setFormData] = useState({
     todo_schedule_date: defaultDate,
   });
@@ -20,8 +24,8 @@ const ModalContentCreate = ({ defaultDate, handleModalVisible }) => {
         ...formData,
       };
 
-      await createTodo(data);
-      await requestData();
+      const res = await createTodo(data);
+      setTodoList((todoList) => [...todoList, res]);
       handleModalVisible();
     } catch (err) {
       console.log(err);

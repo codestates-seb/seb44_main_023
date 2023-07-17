@@ -29,7 +29,7 @@ const ModalContentDetail = ({
       const todoInfo = await readTodo(groupId, todoId);
       const todoComment = await readTodoComment(groupId, todoId);
       setTodoInfo(todoInfo);
-      setTodoComment(todoComment);
+      setTodoComment(todoComment.reverse());
       setIsLoading(false);
     } catch (err) {}
   };
@@ -63,13 +63,18 @@ const ModalContentDetail = ({
         member_id={1}
         todoId={todo_id}
         isEdit={true}
-        requestTodoInfo={requestTodoInfo}
+        setTodoComment={setTodoComment}
         nickname="진아"
         profile_image="https://i.pinimg.com/474x/df/2d/25/df2d253fbd0eb7d50193f1374128e9f0.jpg"
       />
       <CommentWrapper>
-        {todoComment.reverse().map((item) => (
-          <TodoComment groupId={groupId} todoId={todo_id} {...item} />
+        {todoComment.map((item, index) => (
+          <TodoComment
+            key={`comment-${index}`}
+            groupId={groupId}
+            todoId={todo_id}
+            {...item}
+          />
         ))}
       </CommentWrapper>
       <ButtonWrapper>

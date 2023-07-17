@@ -5,16 +5,15 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 
-const TodoDate = ({ date, todoList, handleModalVisible }) => {
-  const [dataSet, setDataSet] = useState(todoList);
+const TodoDate = ({ date, todoList, handleModalVisible, setTodoList }) => {
   const [dataList, setDataList] = useState([]);
 
   const sortTodoList = () => {
     let dataIncomplete = [];
     let dataComplete = [];
 
-    dataSet?.length &&
-      dataSet.forEach((item) => {
+    todoList?.length &&
+      todoList.forEach((item) => {
         if (
           item.todo_schedule_date === date &&
           item.todo_status === "INCOMPLETE"
@@ -29,7 +28,7 @@ const TodoDate = ({ date, todoList, handleModalVisible }) => {
 
   useEffect(() => {
     sortTodoList();
-  }, [dataSet]);
+  }, [todoList]);
 
   return (
     <StyledWrapper>
@@ -46,8 +45,8 @@ const TodoDate = ({ date, todoList, handleModalVisible }) => {
           <TodoItem
             key={`todo-list-item-${item.todo_id}`}
             todoInfo={item}
-            todoList={dataSet}
-            setTodoList={setDataSet}
+            todoList={todoList}
+            setTodoList={setTodoList}
           />
         ))}
       </div>

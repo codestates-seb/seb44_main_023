@@ -1,14 +1,16 @@
 import { styled } from "styled-components";
 import Input from "../../Input/ModalInput";
 import Button from "../../Button/Button";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateTodo } from "../../../api/todogroups.api";
-import { TodoListContext } from "../../../App";
 
-const ModalContentEdit = ({ todoInfo, handleModalVisible }) => {
+const ModalContentEdit = ({
+  todoInfo,
+  handleModalVisible,
+  setTodoList,
+  setModalType,
+}) => {
   const [formData, setFormData] = useState({});
-
-  const requestData = useContext(TodoListContext);
 
   const {
     member_id,
@@ -26,9 +28,14 @@ const ModalContentEdit = ({ todoInfo, handleModalVisible }) => {
         ...formData,
       };
 
-      await updateTodo(todo_group_id, todo_id, data);
-      await requestData();
-      handleModalVisible();
+      const res = await updateTodo(todo_group_id, todo_id, data);
+      setTodoList((todoList) =>
+        todoList.map((item) => {
+          if (item.todo_id === todo_id) return res;
+          return item;
+        })
+      );
+      handleCloseEditModal();
     } catch (err) {
       console.log(err);
     }
@@ -39,6 +46,11 @@ const ModalContentEdit = ({ todoInfo, handleModalVisible }) => {
       ...formData,
       [event.target.id]: event.target.value,
     });
+  };
+
+  const handleCloseEditModal = () => {
+    handleModalVisible();
+    setModalType("detail");
   };
 
   useEffect(() => {
@@ -87,7 +99,7 @@ const ModalContentEdit = ({ todoInfo, handleModalVisible }) => {
               border: "1px solid var(--color-blue-03)",
               color: "var(--color-blue-03)",
             }}
-            onClick={handleModalVisible}
+            onClick={handleCloseEditModal}
           />
           <Button
             label="추가하기"

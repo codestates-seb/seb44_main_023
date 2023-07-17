@@ -77,9 +77,10 @@ export const readTodoGroupMember = async (groupId) => {
 
 export const createTodo = async (data) => {
   try {
-    await axios.post(`/api/todogroups/1/todos`, {
+    const res = await axios.post(`/api/todogroups/1/todos`, {
       ...data,
     });
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -87,9 +88,13 @@ export const createTodo = async (data) => {
 
 export const updateTodo = async (groupId, todoId, data) => {
   try {
-    await axios.patch(`/api/todogroups/${groupId}/todos/${todoId}`, {
-      ...data,
-    });
+    const res = await axios.patch(
+      `/api/todogroups/${groupId}/todos/${todoId}`,
+      {
+        ...data,
+      }
+    );
+    return res.data;
   } catch (err) {
     throw err;
   }
@@ -130,10 +135,14 @@ export const createTodoComment = async (
   content
 ) => {
   try {
-    await axios.post(`/api/todogroups/${groupId}/todos/${todoId}/comments`, {
-      member_id,
-      comment_content: content,
-    });
+    const res = await axios.post(
+      `/api/todogroups/${groupId}/todos/${todoId}/comments`,
+      {
+        member_id,
+        comment_content: content,
+      }
+    );
+    return res.data;
   } catch (err) {
     throw err;
   }
