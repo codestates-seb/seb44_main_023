@@ -1,6 +1,7 @@
 package com.main.server.ledger.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.main.server.labels.entity.Category;
 import com.main.server.ledger.entity.Ledger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,8 @@ public class LedgerResponseDto {
 
     @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
+    @JsonProperty(value = "category")
+    private CategoryDto category;
 
     public LedgerResponseDto(Ledger ledger) {
         this.memberId = ledger.getMember().getMemberId();
@@ -38,5 +41,21 @@ public class LedgerResponseDto {
         this.ledgerContent = ledger.getLedgerContent();
         this.ledgerAmount = ledger.getLedgerAmount();
         this.ledgerDate = String.valueOf(ledger.getLedgerDate());
+        this.category = new CategoryDto(ledger.getCategory());
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class CategoryDto {
+        @JsonProperty(value = "category_id")
+        private Long categoryId;
+
+        @JsonProperty(value = "category_name")
+        private String categoryName;
+
+        public CategoryDto(Category category) {
+            this.categoryId = category.getCategoryId();
+            this.categoryName = category.getCategoryName();
+        }
     }
 }

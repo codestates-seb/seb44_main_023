@@ -26,6 +26,9 @@ public class LedgerPatchDto {
     @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
 
+    @JsonProperty(value = "category_id")
+    private Long categoryId;
+
     public void setLedgerId(Long ledgerId) {
         this.ledgerId = ledgerId;
     }

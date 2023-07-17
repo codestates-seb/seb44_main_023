@@ -23,6 +23,16 @@ public class InvitationTodoGroup {
         @JsonProperty(value = "emails")
         private List<EmailDto> emails;
 
+        /**
+         * Dto -> Entity 변환하는 역할
+         * new Entity(getField1, getField2);
+         * @param member
+         * @return
+         */
+//        public TodoGroup toEntity(Member member) {
+//            return new TodoGroup(member, emails);
+//        }
+
     }
 
     @Getter
