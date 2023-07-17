@@ -49,12 +49,13 @@ const TodoList = ({ startDate }) => {
   if (isLoading) return null;
   return (
     <TodoListContext.Provider value={requestTodoList}>
+      <ModalTodo
+        defaultDate={date}
+        isModalVisible={isCreateModalVisible}
+        setIsModalVisible={setIsCreateModalVisible}
+      />
+
       <StyledWrapper>
-        <ModalTodo
-          defaultDate={date}
-          isModalVisible={isCreateModalVisible}
-          setIsModalVisible={setIsCreateModalVisible}
-        />
         <TodoDate todoList={todoList} handleModalVisible={handleModalVisible} />
         {dateList.map((date) => (
           <TodoDate
@@ -83,7 +84,8 @@ const StyledWrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow-x: scroll;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
   gap: 2.4rem;
 `;
 
