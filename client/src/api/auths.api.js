@@ -24,5 +24,3 @@ export const logout = async (accessToken) => {
     throw error.response.status;
   }
 };
-
-export default logout;
