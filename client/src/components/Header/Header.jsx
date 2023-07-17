@@ -7,7 +7,7 @@ import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
-import { logout } from "../../api/auths";
+import { logout } from "../../api/auths.api";
 
 const Header = () => {
   const navigate = useNavigate();
