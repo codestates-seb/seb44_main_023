@@ -5,6 +5,7 @@ import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
+import LedgerPage from "./pages/LedgerPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
 
         <Route path="/todo/:groupId" element={<TodoPage />} />
+        <Route path="/ledger/:groupId" element={<LedgerPage />} />
       </Routes>
     </>
   );
