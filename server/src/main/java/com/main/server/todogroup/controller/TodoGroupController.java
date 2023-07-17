@@ -3,7 +3,7 @@ package com.main.server.todogroup.controller;
 import com.main.server.todogroup.domain.TodoGroup;
 //import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.domain.TodoGroup;
-import com.main.server.todogroup.dto.InvitationTodoGroup;
+// import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto.Response;
 import com.main.server.todogroup.service.TodoGroupService;

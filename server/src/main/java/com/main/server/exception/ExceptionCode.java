@@ -25,7 +25,11 @@ public enum ExceptionCode {
     INVALID_ACCESS_TOKEN(400, "유효하지 않은 Access Token입니다."),
     INVALID_REFRESH_TOKEN (401, "유효하지 않은 Refresh Token입니다."),
     INVALID_EMAIL(409, "유효하지 않은 이메일입니다."),
-    INVALID_NICKNAME(401, "유효하지 않은 닉네임입니다.");
+    INVALID_NICKNAME(401, "유효하지 않은 닉네임입니다."),
+    CATEGORY_NOT_FOUND(404, "Category not found"),
+    PAYMENT_NOT_FOUND(404, "Payment not found"),
+    INOUTCOME_NOT_FOUND(404, "Inoutcome not found");
+
 
 
     @Getter

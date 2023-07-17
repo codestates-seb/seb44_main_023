@@ -9,7 +9,7 @@ import com.main.server.todo.domain.Todo;
 import com.main.server.todogroup.Repository.TodoGroupRepository;
 import com.main.server.todogroup.domain.TodoGroup;
 //import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
-import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
+// import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
