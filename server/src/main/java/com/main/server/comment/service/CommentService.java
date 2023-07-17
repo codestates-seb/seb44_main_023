@@ -55,9 +55,10 @@ public class CommentService {
 
     @Transactional
     public List<Comment> getComments(Long todoGroupId, Long todoId) {
-        todoGroupService.findById(todoGroupId);
-        todoService.findById(todoId);
-        List<Comment> comments = this.commentRepository.findAll();
+        TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
+        Todo todo = todoService.findById(todoId);
+
+        List<Comment> comments = todo.getComments();
 
         return comments;
     }

@@ -30,7 +30,11 @@ public class TodoDto {
         private String todoScheduleDate;
 
         public Todo toEntity(Member member, TodoGroup todoGroup) {
-            LocalDate date = LocalDate.parse(todoScheduleDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate date = null;
+            if (todoScheduleDate != null) {
+                date = LocalDate.parse(todoScheduleDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            }
+//            LocalDate date = LocalDate.parse(todoScheduleDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             return new Todo(member, todoGroup ,todoTitle, todoContent, date);
         }
 

@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 @NoArgsConstructor
 @Getter
@@ -38,6 +39,7 @@ public class Todo {
     @Column(name = "todo_content", nullable = false)
     private String todoContent;
 
+    @Nullable
     @Column(name = "todo_schedule_date")
     private LocalDate todoScheduleDate;
 
