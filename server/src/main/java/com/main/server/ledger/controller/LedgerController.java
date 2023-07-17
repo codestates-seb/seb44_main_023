@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping("/ledgergroups/{ledger-group-id}/ledgers")
-@Validated
 public class LedgerController {
 
     private final LedgerService ledgerService;
@@ -28,13 +27,23 @@ public class LedgerController {
     public LedgerController(LedgerService ledgerService) {
         this.ledgerService = ledgerService;
     }
-
+/*
     @PostMapping
     public ResponseEntity createLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @Valid @RequestBody LedgerPostDto postDto) {
         Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto);
 
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.CREATED);
+    }
+ */
+
+    @PostMapping
+    public ResponseEntity<LedgerResponseDto> createLedger(
+            @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+            @Validated @RequestBody LedgerPostDto postDto) {
+        Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto);
+
+        return new ResponseEntity<>(new LedgerResponseDto(ledger), HttpStatus.OK);
     }
 
     @PatchMapping("/{ledger-id}")
