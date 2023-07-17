@@ -6,12 +6,15 @@ import UserAvatar from "../../assets/userAvarta.png";
 import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
 import { TiWeatherPartlySunny } from "react-icons/ti";
-import axios from "axios";
+import useAccessTokenStore from "../../store/store.accessToken";
+import { logout } from "../../api/auths.api";
 
 const Header = () => {
   const navigate = useNavigate();
   const [isPopupVisible, setPopupVisible] = useState(false);
   const popupRef = useRef(null);
+  const setAccessToken = useAccessTokenStore((state) => state.setAccessToken);
+  const accessToken = useAccessTokenStore((state) => state.accessToken);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -48,20 +51,19 @@ const Header = () => {
     setPopupVisible(false);
   };
 
-  // api 폴더 생성되면 멤버스에 넣어주기
   const handleConfirm = async () => {
     try {
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.delete("/api/logouts", {
-        headers: {
-          Authorization: accessToken,
-        },
-      });
-      localStorage.removeItem("accessToken");
+      const response = await logout(accessToken);
+
+      if (response.status === 200) {
+        setAccessToken(null);
+      }
       navigate("/home");
       setPopupVisible(false);
     } catch (error) {
-      console.log(error);
+      if (error === 400) {
+        alert("실패");
+      }
     }
   };
 
