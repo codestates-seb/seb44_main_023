@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useRef } from 'react';
-import styled, { keyframes } from 'styled-components';
+import React  from 'react';
+import styled from 'styled-components';
 import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
 import smallLogo from "../../assets/home/smallLogo.svg";
 import bigLogo from "../../assets/home/BigLogo.svg";
@@ -7,9 +7,8 @@ import moveTo from "../../assets/home/moveTo.svg";
 import Button from "../../components/Button/Button";
 
 import WeatherWidget from '../../components/WeatherWidget/WeatherWidget';
-import WeatherImage from './WeatherImage';
 
-const Main = ({ onClick , weatherType}) => {
+const Main = ({ onClick }) => {
     const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
     const handleLoginButtonClick = () => {
       navigate("/login"); 
@@ -20,7 +19,6 @@ const Main = ({ onClick , weatherType}) => {
   
     return (
       <MainWrapper>
-        <WeatherImage weatherType={weatherType} style={{zIndex:"-1"}}/>
             <MainContainer>
             <MainHeader>
                 <SmallLogo src={smallLogo}></SmallLogo>
@@ -95,12 +93,10 @@ const  MainContents= styled.div`
   display: flex;
   flex-direction : column;
   text-align: center;
-  height: 60%;
+  height: 80%;
 `;
 
 const MainContainer = styled.div`
-  position:absolute;
-  top:0rem;
   width:100%;
   height:100vh;
   background-position: center;
@@ -126,15 +122,10 @@ const MainBody = styled.div`
   height: 85%;
 `
 const MainWrapper = styled.div`
-  
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-   background-position: center;
-`
-// height: 100vh;
-// display: flex;
-// justify-content: center;
-// align-items: center;
 
-  export default Main;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+`
+
+export default Main;
