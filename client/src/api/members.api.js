@@ -78,15 +78,6 @@ export const deleteProfileImage = async (memberId) => {
   }
 };
 
-export const loginAPI = async (email, password) => {
-  try {
-    const response = await axios.post(`/api/auths`, { email, password });
-    return response;
-  } catch (error) {
-    throw error.response.status;
-  }
-};
-
 export const signupAPI = async (email, password, nickname) => {
   try {
     const response = await axios.post(`/api/members`, {
