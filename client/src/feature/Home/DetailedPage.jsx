@@ -104,6 +104,10 @@ const DetailWarpper = styled.div`
   width:100%;
   background-position: center;
 `
+// height: 100vh;
+// display: flex;
+// justify-content: center;
+// align-items: center;
 
 
   export default DetailedPage;

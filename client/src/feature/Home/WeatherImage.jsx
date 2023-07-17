@@ -1,6 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
 import {weatherTypeToName, getWeatherImage} from "../../utils/weatherTypeToImage"
+import './home.css';
 
 const WeatherImage = ({ weatherType }) => {
   
@@ -13,19 +14,17 @@ const WeatherImage = ({ weatherType }) => {
   const weatherImage = getWeatherImage(weatherName);
 
   return (
-    <HomeWrapper background={weatherImage}  className="blurred" />
+    <ImageWrapper background={weatherImage}  className="brighten" />
   );
 };
 
 export default WeatherImage;
 
-const HomeWrapper = styled.div`
+const ImageWrapper = styled.div`
   background-size: cover;
   background-position: center;
   height: 100vh;
-  &.blurred {
-    filter: brightness(1.4);
-  }
+  
   background-image: url(${props => props.background});
   z-index: -2;
   `

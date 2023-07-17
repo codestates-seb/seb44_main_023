@@ -113,7 +113,9 @@ const MainHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-left:7.2rem ;
-  height: 10%;
+  padding-right:3rem;
+
+  height: 15%;
 `;
 
 const MainBody = styled.div`
@@ -121,13 +123,18 @@ const MainBody = styled.div`
   display: flex;
   justify-content:center;
   align-items: center;
-  height: 90%;
+  height: 85%;
 `
 const MainWrapper = styled.div`
-  width:100%;
-  height:100vh;
-  background-position: center;
+  
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+   background-position: center;
 `
-
+// height: 100vh;
+// display: flex;
+// justify-content: center;
+// align-items: center;
 
   export default Main;
