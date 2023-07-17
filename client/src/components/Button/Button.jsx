@@ -8,7 +8,7 @@ export default function Button(props) {
     bordercolor,
     fontcolor,
     fontWeight,
-    backgroundColor,
+    backgroundcolor,
     ...restProps
   } = props;
 
@@ -19,7 +19,7 @@ export default function Button(props) {
       fontcolor={fontcolor}
       bordercolor={bordercolor}
       fontWeight={fontWeight}
-      backgroundColor={backgroundColor}
+      backgroundcolor={backgroundcolor}
       {...restProps}
     >
       {label}
@@ -41,7 +41,7 @@ const StyledButton = styled.button`
       font-size: 12px;
       font-weight: ${(props) => props.fontWeight};
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      background-color: ${(props) => props.backgroundColor};
+      background-color: ${(props) => props.backgroundcolor};
       color: ${(props) => props.fontcolor};
       border: 0.15rem solid ${(props) => props.bordercolor};
 
