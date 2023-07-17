@@ -70,6 +70,7 @@ const StyledWrapper = styled.div`
 const GroupTitle = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 2.4rem;
 `;
 
 const Title = styled.div`
