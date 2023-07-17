@@ -1,9 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled, { css, keyframes } from "styled-components";
 import { AiOutlineClose } from "react-icons/ai";
 import Portal from "../Portal/Portal";
 
-const Modal = ({ id, open, closable = true, onClose, children }) => {
+const Modal = ({
+  id,
+  open,
+  closable = true,
+  onClose,
+  children,
+  bodyStyle = {},
+}) => {
   if (!open) return null;
 
   const ref = useRef(null);
@@ -23,10 +30,10 @@ const Modal = ({ id, open, closable = true, onClose, children }) => {
 
   return (
     <Portal id={id}>
-      <StyledModal close={close} onAnimationEnd={handleAnimationEnd}>
+      <StyledModal close={String(close)} onAnimationEnd={handleAnimationEnd}>
         <ModalOverlay onClick={handleClose} />
         <ModalWrapper ref={ref} tabIndex="-1" className="modal-wrapper">
-          <ModalBody tabIndex="0" className="modal-body">
+          <ModalBody tabIndex="0" className="modal-body" style={bodyStyle}>
             {closable && (
               <AiOutlineClose
                 onClick={handleClose}
@@ -51,7 +58,7 @@ const StyledModal = styled.div`
     left: 0;
     right: 0;
     z-index: 2000;
-    animation: ${close ? fadeOut : fadeIn} 200ms;
+    animation: ${close === "true" ? fadeOut : fadeIn} 200ms;
     animation-fill-mode: forwards;
   `}
 `;
@@ -85,7 +92,7 @@ const ModalBody = styled.div`
   z-index: 1000;
   min-width: 24rem;
   padding: 2rem;
-  background-color: var(--color-white);
+  background-color: var(--color-gray-02);
 
   .modal-close-button {
     position: absolute;
@@ -93,12 +100,12 @@ const ModalBody = styled.div`
     top: 2rem;
     right: 2rem;
     z-index: 2;
+    font-size: 2rem;
   }
 `;
 
 const ModalContent = styled.div`
   margin: 0 auto;
-  background-color: var(--color-gray-02);
 `;
 
 export const fadeIn = keyframes`
