@@ -1,5 +1,6 @@
 package com.main.server.ledger.entity;
 
+import com.main.server.labels.entity.Category;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.Member;
 import lombok.Getter;
@@ -48,13 +49,23 @@ public class Ledger {
         this.member = member;
     }
 
-    public Ledger(Member member, LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent, Long ledgerAmount, LocalDate ledgerDate) {
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    public void addCategory(Category category) {
+        this.category = category;
+    }
+
+    public Ledger(Member member, LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent,
+                  Long ledgerAmount, LocalDate ledgerDate, Category category) {
         this.member = member;
         this.ledgerGroup = ledgerGroup;
         this.ledgerTitle = ledgerTitle;
         this.ledgerContent = ledgerContent;
         this.ledgerAmount = ledgerAmount;
         this.ledgerDate = ledgerDate;
+        this.category = category;
     }
 
 
@@ -85,6 +96,12 @@ public class Ledger {
     public void changeLedgerGroup(final LedgerGroup ledgerGroup) {
         if(ledgerGroup != null) {
             this.ledgerGroup = ledgerGroup;
+        }
+    }
+
+    public void changeCategory(Category category) {
+        if(category != null) {
+            this.category = category;
         }
     }
 }
