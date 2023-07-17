@@ -1,23 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNavigate를 import합니다.
 import smallLogo from "../../assets/home/smallLogo.svg";
 
 const DetailedPage = () => {
-    const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
-   
     return (
       <DetailWarpper>
         <DetailContainer>
           <DetailHeader>
-            <SmallLogo src={smallLogo}></SmallLogo>
           </DetailHeader>
-            <DetailBody>
+             <DetailBody>
+              <DetailDivRow>
+              <SmallLogo src={smallLogo}></SmallLogo>
+              <Text>   : Plan, Finance 그리고 Infinity 의 합성어로 무한한 가능성과 편의성을 제공합니다 </Text>
+              </DetailDivRow>
               <ContentsDiv>
                <Text> 서비스 상세 내용입니다. </Text>
               </ContentsDiv>
             </DetailBody>
-
         </DetailContainer>
       </DetailWarpper>
     
@@ -25,8 +24,10 @@ const DetailedPage = () => {
   };
 
 
+
 const Text = styled.div`
   font-size: 2.0rem;
+  margin-left : 1rem;
   line-height: 2.7rem;
   letter-spacing: 0em;
   color: var(--color-gray-09);
@@ -34,15 +35,9 @@ const Text = styled.div`
 const DetailDivRow= styled.div`
   display: flex;
   flex-direction:row;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-top: 13.5rem;
  `
-const DetailDivCol= styled.div`
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-`
 const ContentsDiv=styled.div`
   width:90%;
   height: 85%;
@@ -53,6 +48,8 @@ const ContentsDiv=styled.div`
  align-items: center;
 `
 const SmallLogo = styled.img`
+  margin-left : 3rem;
+
   width: 15rem;
   height: 4.5rem;
 `
@@ -68,13 +65,18 @@ const DetailHeader = styled.div`
 `;
 
 const DetailBody = styled.div`
- display: flex;
+ display: flex;  
+ flex-direction:column;
   justify-content:center;
-  align-items: center;
+
+    width:100%;
+
   height: 90%;
 `
+
 const DetailContainer = styled.div`
   width:100%;
+  display:flex;
   background-position: center;
 `;
 
@@ -83,6 +85,8 @@ const DetailWarpper = styled.div`
   width:100%;
   height: 100vh;
   display: flex;
+  
 `
 
-export default DetailedPage;
+
+  export default DetailedPage;
