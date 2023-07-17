@@ -1,5 +1,7 @@
 package com.main.server.member;
 
+import com.main.server.ledger.entity.Ledger;
+import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.dto.NicknameDto;
 import com.main.server.member.dto.PasswordDto;
 import com.main.server.member.dto.SignUpDto;
@@ -40,6 +42,7 @@ public class Member {
 
     @Column(nullable = false)
     private boolean terminated;
+    private String refreshToken;
 
 
     public Member(SignUpDto signUpDto) {
@@ -60,6 +63,9 @@ public class Member {
     public boolean isSameNickname(String nickname) {
         return this.nickname.equals(nickname);
     }
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
 
     @OneToMany(mappedBy = "member")
@@ -73,4 +79,12 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<TodoGroup> todoGroups = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Ledger> ledgers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<LedgerGroup> ledgerGroups = new ArrayList<>();
+
+
 }

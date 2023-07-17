@@ -20,7 +20,12 @@ public enum ExceptionCode {
     SAME_CURRENT_PASSWORD(409, "현재 비밀번호와 일치합니다."),
     INVALID_PASSWORD_FORMAT(400, "비밀번호 형식이 올바르지 않습니다."),
     LEDGER_NOT_FOUND(404, "Ledger not found"),
-    LEDGER_GROUP_NOT_FOUND(404, "LedgerGroup not found");
+    LEDGER_GROUP_NOT_FOUND(404, "LedgerGroup not found"),
+
+    INVALID_ACCESS_TOKEN(400, "유효하지 않은 Access Token입니다."),
+    INVALID_REFRESH_TOKEN (401, "유효하지 않은 Refresh Token입니다."),
+    INVALID_EMAIL(409, "유효하지 않은 이메일입니다."),
+    INVALID_NICKNAME(401, "유효하지 않은 닉네임입니다.");
 
 
     @Getter

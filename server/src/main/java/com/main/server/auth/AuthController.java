@@ -3,9 +3,13 @@ package com.main.server.auth;
 import com.main.server.auth.dto.AuthDto;
 import com.main.server.auth.dto.AuthResponse;
 import com.main.server.exception.BusinessLogicException;
+import com.main.server.exception.ExceptionCode;
+import com.main.server.member.Member;
+import com.main.server.member.MemberService;
 import com.main.server.security.JwtTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -16,38 +20,26 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
-@CrossOrigin//(exposedHeaders = {"Authorization", "X-Refresh-Token"})
+@CrossOrigin
 @RestController
 public class AuthController {
 
     private AuthService authService;
     private JwtTokenizer jwtTokenizer;
-
+    private MemberService memberService;
     private Set<String> tokenBlacklist = new HashSet<>();
+
 
     @Autowired
     public AuthController(AuthService authService,
-                          JwtTokenizer jwtTokenizer) {
+                          JwtTokenizer jwtTokenizer,
+                          MemberService memberService,
+                          Set<String> tokenBlacklist) {
         this.authService = authService;
         this.jwtTokenizer = jwtTokenizer;
-
+        this.memberService = memberService;
+        this.tokenBlacklist = tokenBlacklist;
     }
-
-//    @PostMapping("/auths")
-//    public ResponseEntity<AuthResponse> postAuth(@Valid @RequestBody AuthDto authDto) {
-//
-//        String email = authDto.getEmail();
-//        String password = authDto.getPassword();
-//
-//        authService.authenticate(email, password);
-//
-//        String accessToken = jwtTokenizer.generateAccessToken(email);
-//        String refreshToken = jwtTokenizer.generateRefreshToken(email);
-//
-//        AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
-//
-//        return ResponseEntity.ok(authResponse);
-//    }
 
     @PostMapping("/auths")
     public ResponseEntity<?> postAuth(@Valid @RequestBody AuthDto authDto,
@@ -59,45 +51,37 @@ public class AuthController {
                 errorMessage.append(error.getDefaultMessage())
                         .append("; \n");
             }
-            // 에러 메시지를 포스트맨으로 보내기 위해 ResponseEntity를 사용한다.
             return ResponseEntity.badRequest().body(errorMessage.toString());
         }
 
-        String email = authDto.getEmail();
-        String password = authDto.getPassword();
-
         try {
-            authService.authenticate(email, password);
+            authService.authenticate(authDto.getEmail(), authDto.getPassword());
+            AuthResponse authResponse = authService.processLogin(authDto.getEmail());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + authResponse.getAccessToken());
+            headers.add("X-Refresh-Token", authResponse.getRefreshToken());
+            return ResponseEntity.ok().headers(headers).body("로그인에 성공했습니다");
         } catch (BusinessLogicException e) {
             return ResponseEntity.status(e.getExceptionCode().getStatus())
                     .body(e.getExceptionCode().getMessage());
         }
-
-        String accessToken = jwtTokenizer.generateAccessToken(email);
-        String refreshToken = jwtTokenizer.generateRefreshToken(email);
-
-        AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
-
-        // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headers에 추가
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("X-Refresh-Token", refreshToken);
-        return ResponseEntity.ok().headers(headers).body("로그인에 성공했습니다");
     }
 
+    // 로그아웃
     @DeleteMapping("/logouts")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
         String accessToken = extractAccessToken(authorizationHeader);
 
         // 토큰 유효성 검사
         if (!jwtTokenizer.validateToken(accessToken)) {
-            return ResponseEntity.badRequest().body("Invalid Access Token");
+            return ResponseEntity.badRequest().body("유효하지 않은 액세스 토큰입니다");
         }
 
-        // 로그아웃한 토큰을 블랙리스트에 추가
-        tokenBlacklist.add(accessToken);
+        // 로그아웃한 토큰을 무효화
+        authService.invalidateToken(accessToken);
 
-        return ResponseEntity.ok("Logged out successfully");
+        return ResponseEntity.ok("로그아웃에 성공하였습니다");
     }
 
     @GetMapping("/validate")
