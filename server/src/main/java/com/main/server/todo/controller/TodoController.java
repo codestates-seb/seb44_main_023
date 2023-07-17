@@ -8,10 +8,13 @@ import com.main.server.todo.service.TodoService;
 import com.main.server.todogroup.domain.TodoGroup;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import com.main.server.todogroup.service.TodoGroupService;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -80,6 +83,20 @@ public class TodoController {
             .collect(Collectors.toList());
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @GetMapping("/todogroups/{todo-group-id}/todos/dates")
+    public ResponseEntity<List<Response>> dateGetTodos(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<Todo> todos = this.todoService.dateGetTodos(todoGroupId, startDate, endDate);
+        List<TodoDto.Response> responses = todos.stream()
+            .map((todo -> new TodoDto.Response(todo)))
+            .collect(Collectors.toList());
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/todogroups/{todo-group-id}/todos/{todo-id}")
