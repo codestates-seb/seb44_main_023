@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import { readAllTodoGroups } from "../../api/todogroups.api";
-import { readLedgerGroups } from "../../api/ledgergroups.api";
+import { readAllLedgerGroups } from "../../api/ledgergroups.api";
 
 const ProfileGroupSetting = () => {
   const [groups, setGroups] = useState({ todoGroup: [], ledgerGroup: [] });
@@ -24,7 +24,7 @@ const ProfileGroupSetting = () => {
   const requestGroup = async () => {
     try {
       const todoGroup = await readAllTodoGroups();
-      const ledgerGroup = await readLedgerGroups();
+      const ledgerGroup = await readAllLedgerGroups();
 
       setGroups({ todoGroup, ledgerGroup });
       let defaultGroup = JSON.parse(localStorage.getItem("planfinity-group"));
