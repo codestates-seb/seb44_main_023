@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import { readTodoList } from "../../api/todogroups.api";
-import { TodoListContext } from "../../App";
 import TodoDate from "../../components/Todo/TodoDate";
 import ButtonFloating from "../../components/Button/ButtonFloating";
 import dayjs from "dayjs";
@@ -48,7 +47,7 @@ const TodoList = ({ startDate }) => {
 
   if (isLoading) return null;
   return (
-    <TodoListContext.Provider value={requestTodoList}>
+    <>
       <ModalTodo
         defaultDate={date}
         isModalVisible={isCreateModalVisible}
@@ -74,7 +73,7 @@ const TodoList = ({ startDate }) => {
           <ButtonFloating icon="setting" />
         </ButtonWrapper>
       </StyledWrapper>
-    </TodoListContext.Provider>
+    </>
   );
 };
 

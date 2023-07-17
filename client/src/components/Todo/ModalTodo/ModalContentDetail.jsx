@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import {
@@ -6,7 +6,6 @@ import {
   readTodo,
   readTodoComment,
 } from "../../../api/todogroups.api";
-import { TodoListContext } from "../../../App";
 import Button from "../../Button/Button";
 import TodoComment from "./TodoComment";
 
@@ -16,10 +15,10 @@ const ModalContentDetail = ({
   setModalType,
   todoInfo,
   setTodoInfo,
+  setTodoList,
 }) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
-  const requestData = useContext(TodoListContext);
 
   const { groupId } = useParams();
 
@@ -45,7 +44,10 @@ const ModalContentDetail = ({
   const handleDeleteTodo = async () => {
     try {
       await deleteTodo(groupId, todo_id);
-      await requestData();
+      setTodoList((todoList) =>
+        todoList.filter((item) => item.todo_id != todo_id)
+      );
+
       handleModalVisible();
     } catch (err) {}
   };

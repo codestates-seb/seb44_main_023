@@ -31,6 +31,7 @@ const ModalTodo = ({
         setModalType={setModalType}
         todoInfo={todoInfo}
         setTodoInfo={setTodoInfo}
+        setTodoList={setTodoList}
       />
     ) : (
       <ModalContentEdit

@@ -1,12 +1,10 @@
-import React, { createContext } from "react";
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
-
-export const TodoListContext = createContext(null);
 
 function App() {
   return (

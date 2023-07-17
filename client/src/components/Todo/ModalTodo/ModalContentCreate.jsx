@@ -1,9 +1,8 @@
 import { styled } from "styled-components";
 import Input from "../../Input/ModalInput";
 import Button from "../../Button/Button";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createTodo } from "../../../api/todogroups.api";
-import { TodoListContext } from "../../../App";
 
 const ModalContentCreate = ({
   defaultDate,
@@ -13,8 +12,6 @@ const ModalContentCreate = ({
   const [formData, setFormData] = useState({
     todo_schedule_date: defaultDate,
   });
-
-  const requestData = useContext(TodoListContext);
 
   const handleCreateTodo = async (event) => {
     try {
