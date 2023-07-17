@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import '../index.css';
 import '../feature/Home/home.css';
 import Intro from '../feature/Home/Intro';
-import Detailed from '../feature/Home/Detailed';
+import Detail from '../feature/Home/Detail';
 import { useGetWeatherInfo } from '../store/store.weather';
 import WeatherImage from '../feature/Home/WeatherImage';
 
@@ -90,7 +90,7 @@ return (
 
    <HomeWrapper ref={outerDivRef} >
     <Intro onClick={handleDown} weatherType={weatherType} />
-    <Detailed weatherType={weatherType} />
+    <Detail weatherType={weatherType} />
  </HomeWrapper>
  </Out>
 );
