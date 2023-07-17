@@ -1,8 +1,11 @@
 package com.main.server.member;
 
+import com.main.server.auth.AuthService;
+import com.main.server.auth.dto.AuthResponse;
 import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
 import com.main.server.member.dto.*;
+import com.main.server.security.JwtTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -17,42 +20,72 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
 public class MemberController {
     private MemberService memberService;
+    private JwtTokenizer jwtTokenizer;
+    private AuthService authService;
 
     @Autowired
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, AuthService authService, JwtTokenizer jwtTokenizer) {
         this.memberService = memberService;
+        this.jwtTokenizer = jwtTokenizer;
+        this.authService = authService;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/members")
-    public ResponseEntity<?> postMember(@Valid @RequestBody SignUpDto signUpDto,
-                                        BindingResult bindingResult) {
+    public ResponseEntity<?> postMember(@RequestBody SignUpDto signUpDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // 유효성 검증에 실패한 경우 에러 메시지를 처리하고 응답을 구성한다.
-            StringBuilder errorMessage = new StringBuilder();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errorMessage.append(error.getDefaultMessage())
-                        .append(" \n");
+            FieldError emailError = bindingResult.getFieldError("email");
+            FieldError nicknameError = bindingResult.getFieldError("nickname");
+            FieldError passwordError = bindingResult.getFieldError("password");
+
+            if (emailError != null) {
+                throw new BusinessLogicException(ExceptionCode.INVALID_EMAIL);
             }
-            // 에러 메시지를 포스트맨으로 보내기 위해 ResponseEntity를 사용한다.
-            return ResponseEntity.badRequest().body(errorMessage.toString());
+
+            if (nicknameError != null) {
+                throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME);
+            }
+
+            if (passwordError != null) {
+                throw new BusinessLogicException(ExceptionCode.INVALID_PASSWORD_FORMAT);
+            }
         }
 
         try {
+            // 회원 등록 로직
             Member member = new Member(signUpDto);
             Member registeredMember = memberService.registerMember(member);
 
-            ResponseDto responseDto = new ResponseDto(registeredMember);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+            // 최초 Refresh 토큰 발급
+            String refreshToken = jwtTokenizer.generateRefreshToken(registeredMember.getEmail());
+            registeredMember.setRefreshToken(refreshToken); // 회원 정보에 Refresh 토큰 저장
+
+            // AccessToken 발급
+            String accessToken = jwtTokenizer.generateAccessToken(registeredMember.getEmail());
+
+            // 회원 정보 업데이트
+            memberService.updateMember(registeredMember.getMemberId(), registeredMember);
+
+            AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
+
+            // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headers에 추가
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + accessToken);
+            headers.add("X-Refresh-Token", refreshToken);
+            return ResponseEntity.ok().headers(headers).body("회원가입에 성공했습니다");
         } catch (BusinessLogicException e) {
-            return handleBusinessLogicException(e);
+            return ResponseEntity.status(e.getExceptionCode().getStatus())
+                    .body(e.getExceptionCode().getMessage());
         }
     }
 

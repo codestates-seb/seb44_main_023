@@ -38,22 +38,24 @@ public class MemberService {
         String memberEmail = member.getEmail();
         Optional<Member> optionalMember = memberRepository.findByEmail(memberEmail);
 
-        if (optionalMember.isPresent())
+        if (optionalMember.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.EMAIL_ALREADY_USED);
+        }
 
         String memberNickname = member.getNickname();
         Optional<Member> optionalNickname = memberRepository.findByNickname(memberNickname);
 
-        if (optionalNickname.isPresent())
+        if (optionalNickname.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_USED);
+        }
 
         String encodedPassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encodedPassword);
         member.setRegisteredAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        Member registerdMember = memberRepository.save(member);
+        Member registeredMember = memberRepository.save(member);
 
-        return registerdMember;
+        return registeredMember;
     }
 
     public List<Member> findAllMembers() {
@@ -81,22 +83,26 @@ public class MemberService {
         if (foundMember != null) {
             String newNickname = member.getNickname();
 
-            if (foundMember.isSameNickname(newNickname)) {
-                throw new BusinessLogicException(ExceptionCode.SAME_NICKNAME);
+            if (!foundMember.isSameNickname(newNickname)) {
+                // 닉네임이 변경된 경우에만 중복 체크를 수행
+                if (memberRepository.existsByNickname(newNickname)) {
+                    throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_USED);
+                }
+                foundMember.setNickname(newNickname);
             }
-
-            if (memberRepository.existsByNickname(newNickname)) {
-                throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_USED);
-            }
-
-            foundMember.setNickname(newNickname);
         }
-        Member updatedMember = memberRepository.save(foundMember);
 
+        Member updatedMember = memberRepository.save(foundMember);
         return updatedMember;
     }
 
-        // 비밀번호 변경
+    public Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
+
+
+    // 비밀번호 변경
         public boolean updatePassword(long memberId, String password, String newPassword) {
             Member foundMember = findMember(memberId);
 

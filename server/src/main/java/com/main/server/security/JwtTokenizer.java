@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Component
@@ -23,11 +25,14 @@ public class JwtTokenizer {
     private Algorithm algorithm;
     private JWTVerifier jwtVerifier;
 
-    private long accessTokenExpirationTime = 86400000; // 1일
-    private long refreshTokenExpirationTime = 1209600000; // 2주
+    @Value("${jwt.token.access.expiration:86400000}") // 기본값: 1일 (밀리초 단위)
+    private long accessTokenExpirationTime;
+    @Value("${jwt.token.refresh.expiration:1209600000}") // 기본값: 2주 (밀리초 단위)
+    private long refreshTokenExpirationTime;
 
     @Autowired
     private TokenBlacklist tokenBlacklist;
+    private Set<String> refreshTokenBlacklist = new HashSet<>();
 
     @PostConstruct
     public void init() {
@@ -35,9 +40,9 @@ public class JwtTokenizer {
         jwtVerifier = JWT.require(algorithm).build();
     }
 
-    public String generateToken(String subject, long accessTokenExpirationTime) {
+    public String generateToken(String subject, long expirationTime) {
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + accessTokenExpirationTime);
+        Date expirationDate = new Date(now.getTime() + expirationTime);
 
         String generatedToken = JWT.create()
                 .withSubject(subject)
@@ -53,21 +58,43 @@ public class JwtTokenizer {
     }
 
     public String generateRefreshToken(String subject) {
+        String existingRefreshToken = refreshTokenBlacklist.stream()
+                .filter(token -> validateToken(token))
+                .findFirst()
+                .orElse(null);
+
+        if (existingRefreshToken != null) {
+            return existingRefreshToken;
+        }
+
         return generateToken(subject, refreshTokenExpirationTime);
     }
 
-    public String getVerifiedSubject(String token) throws JWTVerificationException {
-        DecodedJWT decodedJWT = jwtVerifier.verify(token);
-        String subject = decodedJWT.getSubject();
-
-        return subject;
-    }
     public boolean validateToken(String token) {
         try {
-            jwtVerifier.verify(token);
-            return true;
+            // 블랙리스트에 있는 토큰인지 확인
+            if (tokenBlacklist.isTokenBlacklisted(token)) {
+                return false;
+            }
+
+            DecodedJWT decodedJWT = jwtVerifier.verify(token);
+            Date expirationDate = decodedJWT.getExpiresAt();
+            return expirationDate != null && expirationDate.after(new Date());
         } catch (JWTVerificationException e) {
             return false;
         }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        // RefreshToken이 블랙리스트에 있는 경우에도 검증을 통과하도록 수정
+        return validateToken(token);
+    }
+
+    public long getAccessTokenExpirationTime() {
+        return accessTokenExpirationTime;
+    }
+
+    public long getRefreshTokenExpirationTime() {
+        return refreshTokenExpirationTime;
     }
 }
