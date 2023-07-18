@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
-@CrossOrigin
+@CrossOrigin(origins = "https://codestates.shop", allowedHeaders = "*")
 @RestController
 public class AuthController {
 
@@ -99,6 +99,8 @@ public class AuthController {
     private String extractAccessToken(String authorizationHeader) {
         return authorizationHeader.replace("Bearer ", "");
     }
+
+
 }
 
 
