@@ -7,6 +7,7 @@ import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import LedgerPage from "./pages/LedgerPage";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="*" element={<ErrorPage />} />
-
+        <Route path="/ledger/:groupId" element={<LedgerPage />} />
       </Routes>
     </>
   );
