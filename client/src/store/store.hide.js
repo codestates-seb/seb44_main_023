@@ -16,4 +16,6 @@ const store = (set) => ({
   },
 });
 
-export const useStoreHide = create()(import.meta.DEV ? devtools(store) : store);
+export const useStoreHide = create()(
+  import.meta.env.MODE === "development" ? devtools(store) : store
+);
