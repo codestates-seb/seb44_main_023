@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "https://codestates.shop", allowedHeaders = "*")
+@CrossOrigin
 @RestController
 @Validated
 public class TodoController {

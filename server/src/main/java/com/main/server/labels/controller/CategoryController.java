@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "https://codestates.shop", allowedHeaders = "*")
+@CrossOrigin
 @RequestMapping("/categories")
 public class CategoryController {
 
