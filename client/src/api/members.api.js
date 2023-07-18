@@ -1,4 +1,5 @@
 import { API } from "./api";
+import Avatar from "../assets/userAvarta.png";
 
 export const readMemberInfo = async (memberId) => {
   try {
