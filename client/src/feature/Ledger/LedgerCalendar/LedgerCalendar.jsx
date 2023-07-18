@@ -37,11 +37,6 @@ const LedgerCalendar = () => {
       content: { expense: "10,000", income: "10,000" },
       type: "expense_income",
     },
-    {
-      date: 30,
-      content: { expense: "10,000", income: "10,000" },
-      type: "expense_income",
-    },
   ];
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
