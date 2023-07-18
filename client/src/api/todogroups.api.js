@@ -1,8 +1,8 @@
-import axios from "axios";
+import { API } from "./api";
 
 export const readAllTodoGroups = async () => {
   try {
-    const response = await axios.get("/api/todogroups");
+    const response = await API.get("/todogroups");
     return response.data ?? [];
   } catch (err) {
     throw err;
@@ -11,7 +11,7 @@ export const readAllTodoGroups = async () => {
 
 export const readTodoGroup = async (groupId) => {
   try {
-    const response = await axios.get(`/api/todogroups/${groupId}`);
+    const response = await API.get(`/todogroups/${groupId}`);
     return response.data;
   } catch (err) {
     throw err;
@@ -20,9 +20,9 @@ export const readTodoGroup = async (groupId) => {
 
 export const readTodoList = async (groupId, startDate, endDate) => {
   try {
-    const response = await axios.get(`/api/todogroups/${groupId}/todos`);
-    // const response = await axios.get(
-    //   `/api/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
+    const response = await API.get(`/todogroups/${groupId}/todos`);
+    // const response = await API.get(
+    //   `/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
     // );
     return response.data;
   } catch (err) {
@@ -32,7 +32,7 @@ export const readTodoList = async (groupId, startDate, endDate) => {
 
 export const updateTodoStatus = async (groupId, todoId, status) => {
   try {
-    await axios.patch(`/api/todogroups/${groupId}/todos/${todoId}/status`, {
+    await API.patch(`/todogroups/${groupId}/todos/${todoId}/status`, {
       status,
     });
   } catch (err) {
@@ -77,7 +77,7 @@ export const readTodoGroupMember = async (groupId) => {
 
 export const createTodo = async (data) => {
   try {
-    const res = await axios.post(`/api/todogroups/1/todos`, {
+    const res = await API.post(`/todogroups/1/todos`, {
       ...data,
     });
     return res.data;
@@ -88,12 +88,9 @@ export const createTodo = async (data) => {
 
 export const updateTodo = async (groupId, todoId, data) => {
   try {
-    const res = await axios.patch(
-      `/api/todogroups/${groupId}/todos/${todoId}`,
-      {
-        ...data,
-      }
-    );
+    const res = await API.patch(`/todogroups/${groupId}/todos/${todoId}`, {
+      ...data,
+    });
     return res.data;
   } catch (err) {
     throw err;
@@ -102,7 +99,7 @@ export const updateTodo = async (groupId, todoId, data) => {
 
 export const readTodo = async (groupId, todoId) => {
   try {
-    const res = await axios.get(`/api/todogroups/${groupId}/todos/${todoId}`);
+    const res = await API.get(`/todogroups/${groupId}/todos/${todoId}`);
     return res.data;
   } catch (err) {
     throw err;
@@ -111,7 +108,7 @@ export const readTodo = async (groupId, todoId) => {
 
 export const deleteTodo = async (groupId, todoId) => {
   try {
-    await axios.delete(`/api/todogroups/${groupId}/todos/${todoId}`);
+    await API.delete(`/todogroups/${groupId}/todos/${todoId}`);
   } catch (err) {
     throw err;
   }
@@ -119,8 +116,8 @@ export const deleteTodo = async (groupId, todoId) => {
 
 export const readTodoComment = async (groupId, todoId) => {
   try {
-    const res = await axios.get(
-      `/api/todogroups/${groupId}/todos/${todoId}/comments`
+    const res = await API.get(
+      `/todogroups/${groupId}/todos/${todoId}/comments`
     );
     return res.data;
   } catch (err) {
@@ -135,8 +132,8 @@ export const createTodoComment = async (
   content
 ) => {
   try {
-    const res = await axios.post(
-      `/api/todogroups/${groupId}/todos/${todoId}/comments`,
+    const res = await API.post(
+      `/todogroups/${groupId}/todos/${todoId}/comments`,
       {
         member_id,
         comment_content: content,
