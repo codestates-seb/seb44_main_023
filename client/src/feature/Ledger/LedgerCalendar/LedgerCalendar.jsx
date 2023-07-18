@@ -16,7 +16,6 @@ const LedgerCalendar = () => {
   const firstDayOfWeek = firstDayOfMonth.getDay();
   const lastDateOfMonth = lastDayOfMonth.getDate();
 
-
   const dates = [];
   for (let i = 1; i <= lastDateOfMonth; i++) {
     dates.push(i);
@@ -177,8 +176,8 @@ const CalendarHeader = styled.div`
 `;
 
 const Movement = styled.div`
-display: flex;
-`
+  display: flex;
+`;
 
 const Button = styled.button`
   margin-top: 4px;
