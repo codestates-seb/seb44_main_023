@@ -1,0 +1,12 @@
+body{
+    overflow-y: hidden;
+
+}
+
+.blurred {
+    filter: blur(0.5rem);
+  }
+
+.brighten {
+filter: brightness(1.4);
+}

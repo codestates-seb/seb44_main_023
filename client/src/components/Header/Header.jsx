@@ -7,7 +7,7 @@ import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
-import logout from "../../api/logout.api";
+import { logout } from "../../api/auths.api";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ const Header = () => {
 
       if (response.status === 200) {
         setAccessToken(null);
-      } 
+      }
       navigate("/home");
       setPopupVisible(false);
     } catch (error) {
@@ -66,7 +66,6 @@ const Header = () => {
       }
     }
   };
-
 
   const handlePopupClick = () => {
     // 팝업 영역 클릭 시 이벤트 전파를 막지 않음
