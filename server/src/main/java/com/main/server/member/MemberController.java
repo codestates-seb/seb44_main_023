@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://codestates.shop", allowedHeaders = "*")
+@CrossOrigin
 @RestController
 public class MemberController {
     private MemberService memberService;
