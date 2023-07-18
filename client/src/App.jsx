@@ -6,6 +6,8 @@ import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
 import LedgerPage from "./pages/LedgerPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   return (
