@@ -1,8 +1,8 @@
-import axios from "axios";
+import { API } from "./api";
 
 export const readMemberInfo = async (memberId) => {
   try {
-    const response = await axios.get(`/api/members/${memberId}`);
+    const response = await API.get(`/members/${memberId}`);
     return response.data;
   } catch (err) {
     throw err;
@@ -11,7 +11,7 @@ export const readMemberInfo = async (memberId) => {
 
 export const updateMemberNickname = async (memberId, nickname) => {
   try {
-    await axios.patch(`/api/members/${memberId}/nickname`, {
+    await API.patch(`/members/${memberId}/nickname`, {
       member_id: memberId,
       nickname,
     });
@@ -22,8 +22,8 @@ export const updateMemberNickname = async (memberId, nickname) => {
 
 export const updateProfileImage = async (memberId, formData) => {
   try {
-    await axios.patch(
-      `/api/members/${memberId}/profile-image?memberId=${memberId}`,
+    await API.patch(
+      `/members/${memberId}/profile-image?memberId=${memberId}`,
       formData,
       {
         headers: {
@@ -38,7 +38,7 @@ export const updateProfileImage = async (memberId, formData) => {
 
 export const updatePassword = async (memberId, password, newPassword) => {
   try {
-    await axios.patch(`/api/members/${memberId}/password`, {
+    await API.patch(`/members/${memberId}/password`, {
       password,
       newPassword: newPassword,
     });
@@ -49,7 +49,7 @@ export const updatePassword = async (memberId, password, newPassword) => {
 
 export const deleteMember = async (memberId, password) => {
   try {
-    await axios.delete(`/api/members/${memberId}?password=${password}`, {
+    await API.delete(`/members/${memberId}?password=${password}`, {
       member_id: memberId,
       password,
     });
@@ -60,7 +60,7 @@ export const deleteMember = async (memberId, password) => {
 
 export const readProfileImage = async (memberId) => {
   try {
-    const res = await axios.get(`/api/members/${memberId}/profile-image`, {
+    const res = await API.get(`/members/${memberId}/profile-image`, {
       responseType: "blob",
     });
     const url = URL.createObjectURL(res.data);
@@ -72,7 +72,7 @@ export const readProfileImage = async (memberId) => {
 
 export const deleteProfileImage = async (memberId) => {
   try {
-    await axios.delete(`/api/members/${memberId}/profile-image`);
+    await API.delete(`/members/${memberId}/profile-image`);
   } catch (err) {
     throw err;
   }
@@ -80,7 +80,7 @@ export const deleteProfileImage = async (memberId) => {
 
 export const signupAPI = async (email, password, nickname) => {
   try {
-    const response = await axios.post(`/api/members`, {
+    const response = await API.post(`/members`, {
       email,
       password,
       nickname,
