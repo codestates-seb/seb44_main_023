@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "https://codestates.shop", allowedHeaders = "*")
+@CrossOrigin
 @RestController
 @Validated
 public class TodoGroupController {
