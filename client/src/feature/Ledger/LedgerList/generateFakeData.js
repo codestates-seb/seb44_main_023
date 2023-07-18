@@ -50,6 +50,10 @@ export const generateFakeData = (count) => {
     }
   }
 
+  generatedData.sort((a, b) => {
+    return new Date(b.ledger_schedule_date) - new Date(a.ledger_schedule_date);
+  });
+
   return generatedData;
 };
 

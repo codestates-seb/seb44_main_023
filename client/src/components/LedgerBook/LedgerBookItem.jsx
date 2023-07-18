@@ -2,8 +2,6 @@ import dayjs from "dayjs";
 import { styled } from "styled-components";
 
 const LedgerBookItem = ({ bookInfo }) => {
-  console.log(bookInfo);
-
   const {
     ledger_schedule_date,
     ledger_title,
