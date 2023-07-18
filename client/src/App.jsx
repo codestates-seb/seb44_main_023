@@ -5,6 +5,7 @@ import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
+import LedgerPage from "./pages/LedgerPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import useUserInfoStore from "./store/store.userInfo";
@@ -26,6 +27,7 @@ function App() {
         <Route path="/todo/:groupId" element={<TodoPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/ledger/:groupId" element={<LedgerPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>

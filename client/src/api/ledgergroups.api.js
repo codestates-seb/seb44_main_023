@@ -1,9 +1,8 @@
-import axios from "axios";
 import { API } from "./api";
 
 export const readAllLedgerGroups = async () => {
   try {
-    const res = await API.get("/api/ledgergroups");
+    const res = await API.get("/ledgergroups");
     return res.data;
   } catch (err) {
     throw err;
@@ -12,7 +11,7 @@ export const readAllLedgerGroups = async () => {
 
 export const readLedgerGroup = async (groupId) => {
   try {
-    const res = await axios.get(`/api/ledgergroups/${groupId}`);
+    const res = await API.get(`/ledgergroups/${groupId}`);
     return res.data;
   } catch (err) {
     throw err;
@@ -21,7 +20,7 @@ export const readLedgerGroup = async (groupId) => {
 
 export const readLedgerGroupMember = async (groupId) => {
   try {
-    const res = await axios.get(`/api/ledgergroups/${groupId}/members`);
+    const res = await API.get(`/ledgergroups/${groupId}/members`);
     return res.data;
   } catch (err) {
     throw err;
@@ -30,7 +29,7 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    const response = await axios.get(`/api/ledgergroups/${groupId}/ledgers`);
+    const response = await API.get(`/ledgergroups/${groupId}/ledgers`);
     return response.data;
   } catch (err) {
     throw err;
