@@ -1,3 +1,4 @@
+import Avatar from "../assets/userAvarta.png";
 import axios from "axios";
 
 export const readMemberInfo = async (memberId) => {
@@ -66,7 +67,7 @@ export const readProfileImage = async (memberId) => {
     const url = URL.createObjectURL(res.data);
     return url;
   } catch (err) {
-    throw err;
+    return Avatar;
   }
 };
 
