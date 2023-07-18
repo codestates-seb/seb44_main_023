@@ -17,6 +17,7 @@ const LedgerPage = () => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
   const [groupInfo, setGroupInfo] = useState();
   const [ledgerList, setLedgerList] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ const LedgerPage = () => {
         "2023-07-21"
       );
       setLedgerList(ledgerList);
+      setIsLoading(false);
     } catch (err) {}
   };
 
@@ -92,13 +94,14 @@ const LedgerPage = () => {
   useEffect(() => {
     requestLedgerInfo();
     requestLedgerList();
-  }, []);
+  }, [selectedMonth]);
 
+  if (isLoading) return null;
   return (
     <Layout>
       <StyledWrapper>
         <GroupTitle>
-          <Title>Group 1</Title>
+          <Title>{groupInfo?.ledger_group_title}</Title>
           <ButtonWrapper>
             <Button
               size="medium"
@@ -121,6 +124,7 @@ const LedgerPage = () => {
           />
         ) : (
           <LedgerList
+            ledgerList={ledgerList}
             selectedMonth={selectedMonth}
             handleSelectedMonth={handleSelectedMonth}
           />
@@ -133,10 +137,14 @@ const LedgerPage = () => {
 export default LedgerPage;
 
 const StyledWrapper = styled.div`
-  padding: 6.4rem;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 
 const GroupTitle = styled.div`
+  padding: 6.4rem 6.4rem 0;
   display: flex;
   justify-content: space-between;
   margin-bottom: 2.4rem;
