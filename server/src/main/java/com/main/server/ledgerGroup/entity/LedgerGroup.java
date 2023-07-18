@@ -28,6 +28,7 @@ public class LedgerGroup {
 //    private List<LedgerGroupMember> ledgerGroupMembers = new ArrayList<>();
 
     @OneToMany(mappedBy = "ledgerGroup")
+    @Getter
     private List<Ledger> ledgers = new ArrayList<>();
 
     @ManyToOne
