@@ -29,11 +29,6 @@ const LedgerBookSummary = ({
     return acc;
   }, 0);
 
-  console.log(
-    balance.toLocaleString(),
-    totalExpense.toLocaleString(),
-    totalIncome.toLocaleString()
-  );
   return (
     <StyledWrapper>
       <MonthSetting>
@@ -54,11 +49,19 @@ const LedgerBookSummary = ({
         </div>
       </MonthSetting>
       <Summary>
-        <div className="balance">잔액 {balance.toLocaleString()}원</div>
-        <div className="balance-detail">
-          <div className="income">소득 {totalIncome.toLocaleString()}</div>
-          <div className="expense">지출 {totalExpense.toLocaleString()}</div>
-        </div>
+        {ledgerList?.length === 0 ? (
+          <div className="empty">이번 달 금액을 추가해주세요</div>
+        ) : (
+          <>
+            <div className="balance">잔액 {balance.toLocaleString()}원</div>
+            <div className="balance-detail">
+              <div className="income">소득 {totalIncome.toLocaleString()}</div>
+              <div className="expense">
+                지출 {totalExpense.toLocaleString()}
+              </div>
+            </div>
+          </>
+        )}
       </Summary>
     </StyledWrapper>
   );
@@ -108,6 +111,12 @@ const Summary = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .empty {
+    text-align: center;
+    width: 100%;
+    font-size: 2.4rem;
+  }
 
   .balance {
     font-size: 3.2rem;

@@ -97,12 +97,11 @@ const LedgerPage = () => {
   }, [selectedMonth]);
 
   if (isLoading) return null;
-
   return (
     <Layout>
       <StyledWrapper>
         <GroupTitle>
-          <Title>Group 1</Title>
+          <Title>{groupInfo?.ledger_group_title}</Title>
           <ButtonWrapper>
             <Button
               size="medium"
