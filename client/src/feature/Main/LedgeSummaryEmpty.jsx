@@ -5,8 +5,7 @@ import Loading from '../../components/Loading/Loading';
 import Button from '../../components/Button/Button';
 import { IoChevronBack,IoChevronForward } from "react-icons/io5";
 import { useGetIsLedgerNull } from '../../store/store.contentIsNull';
-import LedgeSummaryEmpty from './LedgeSummaryEmpty';
-const LedgeSummary=()=>{
+const LedgeSummaryEmpty=()=>{
     const navigate = useNavigate(); 
     const isLegderNull = useGetIsLedgerNull();
     const btnColor ="var(--color-blue-03)";
@@ -31,10 +30,6 @@ const LedgeSummary=()=>{
       };
 
   return (
-    <>
-        {isLegderNull ? (
-          <LedgeSummaryEmpty />
-        ) : (
          <LedgerWrapper>
           <LedgerTitle>{ledgerGroupName}</LedgerTitle>
           <div style={{display:"flex",flexDirection:"ro"}}>
@@ -45,11 +40,7 @@ const LedgeSummary=()=>{
           
           <LedgerSummayWapper> 
             <SummayDiv>
-                <LeftDiv>잔액 {LeftAmount}원</LeftDiv>
-                <InOutWapper>
-                    <IncomeDiv>소득 {income}</IncomeDiv>
-                    <OutcomeDiv>지출 {outcome}</OutcomeDiv>
-                </InOutWapper>
+                <LeftDiv>이번 달 금액을 추가해주세요</LeftDiv>
             </SummayDiv>
           </LedgerSummayWapper>
           <LedgerAddBtn> 
@@ -73,24 +64,18 @@ const LedgeSummary=()=>{
                     /> 
             </LedgerAddBtn>
           <LedgerListWapper>
-            <LedgerListDiv>30일 - 동네술집 51,000</LedgerListDiv>
-            <LedgerListDiv></LedgerListDiv>
-            <LedgerListDiv></LedgerListDiv>
-          </LedgerListWapper>
-          <ShowAll onClick={handleClickShowAll}>show all veiws</ShowAll>
+            <Empty>
+              아직 내역이 없습니다. 
+            </Empty>
+                                  </LedgerListWapper>
+          
         </LedgerWrapper>
-        )}
-    </>
     
   );
 };
-    export default LedgeSummary;
+    export default LedgeSummaryEmpty;
 
-    const NullComponent=()=>{
-    return (
-        <div>빈 그룹입니다. </div>
-    );
-    }
+
 
 
 const ShowAll = styled.div`
@@ -111,20 +96,23 @@ cursor: pointer;
 ` 
 
 
-const LedgerListDiv = styled.div`
+const Empty = styled.div`
 
-height:6.4rem;
-border-bottom: 0.1rem solid var(--color-gray-03);
-
-display: flex;
-align-items: center;
+  display: flex;
+  font-size: 3.0rem;
+  line-height: 4.5rem;
+  letter-spacing: 0%;
+  color: var(--color-black);
 `
-
+//  width:100%;
+//height:100%;
 const LedgerListWapper = styled.div`
 display: flex;
+ width:100%;
+height:100%;
 flex-direction: column;
-border-top: 0.1rem solid var(--color-gray-03);
-background-color: var(--color-white);
+justify-content:center;
+align-items: center;
 `
     
     
@@ -135,7 +123,6 @@ height: 10rem;
 align-items: center;
 
 `
-
 
 const OutcomeDiv = styled.div`
    display: flex;
@@ -164,12 +151,10 @@ background-color: #fbfbfa;
 `
 const LeftDiv = styled.div`
    display: flex;
-
-   font-size: 2.4rem;
-   font-weight: bold;
-   line-height: 2.8rem;
+   font-size: 2.8rem;
+   line-height: 4.2rem;
    letter-spacing: 0%;
-   color: var(--color-gray-07);
+   color: var(--color-black);
 
 `
 
@@ -181,24 +166,17 @@ const LedgerSummayWapper = styled.div`
     height: 15.6rem;
     //background-color: var(--color-gray-02);
     background-color: #fbfbfa;
+    border-top: 0.1rem solid var(--color-gray-03);
+    border-bottom: 0.1rem solid var(--color-gray-03);
 `
 
 const SummayDiv = styled.div`
     display: flex;  
     flex-direction: row;
-    align-items: center;
-    justify-content:space-between;
+    align-items: center;    
+    justify-content:center;
     width : 90%;
 `
-
-// const MonthlyMove = styled.div`
-// display: flex;
-// flex-direction: row;
-
-// height: 6rem;
-
-// `
-
 const MonthlyMove = styled.a`
    display: flex;
    align-items: center;
