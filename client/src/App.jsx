@@ -15,9 +15,11 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/weatherWidget" element={<TestWidget />} />
-        <Route path="*" element={<ErrorPage />} />
         <Route path="/todo/:groupId" element={<TodoPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/ledger/:groupId" element={<LedgerPage />} />
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );

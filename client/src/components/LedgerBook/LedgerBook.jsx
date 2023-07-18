@@ -44,25 +44,31 @@ const LedgerBook = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
         />
       </ButtonWrapper>
       <LedgerBookList>
-        {isShowAll
-          ? ledgerList.map((bookInfo, index) => (
-              <LedgerBookItem
-                key={`ledger-book-item-${index}`}
-                bookInfo={bookInfo}
-              />
-            ))
-          : ledgerList
-              .slice(0, 3)
-              .map((bookInfo, index) => (
-                <LedgerBookItem
-                  key={`ledger-book-item-${index}`}
-                  bookInfo={bookInfo}
-                />
-              ))}
-        {!isShowAll && (
-          <MoreButton>
-            <span onClick={() => setIsShowAll(true)}>show all views</span>
-          </MoreButton>
+        {ledgerList?.length === 0 ? (
+          <div className="empty">아직 내역이 없습니다</div>
+        ) : (
+          <>
+            {isShowAll
+              ? ledgerList.map((bookInfo, index) => (
+                  <LedgerBookItem
+                    key={`ledger-book-item-${index}`}
+                    bookInfo={bookInfo}
+                  />
+                ))
+              : ledgerList
+                  .slice(0, 3)
+                  .map((bookInfo, index) => (
+                    <LedgerBookItem
+                      key={`ledger-book-item-${index}`}
+                      bookInfo={bookInfo}
+                    />
+                  ))}
+            {!isShowAll && (
+              <MoreButton>
+                <span onClick={() => setIsShowAll(true)}>show all views</span>
+              </MoreButton>
+            )}
+          </>
         )}
       </LedgerBookList>
     </StyledWrapper>
@@ -100,6 +106,16 @@ const LedgerBookList = styled.div`
   padding-right: 1.6rem;
   overflow-y: scroll;
   margin-bottom: 4.8rem;
+  height: 100%;
+
+  .empty {
+    font-size: 2.4rem;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   .more-button {
     margin: 0 auto;
