@@ -8,10 +8,14 @@ import { useGroupInviteStore } from "../../store/store.groupInvite";
 import { useGroupEditStore } from "../../store/store.groupEdit";
 import { MemberListTag } from "./MemberListTag";
 
+import "./group.css"
+
 const GroupEdit = () => {
  	const { isEditMode, setIsEditMode,  groupTitle, setGroupTitle } = useGroupEditStore();
 	const [inputGroupTitle, setInputGroupTitle]=useState("");
-	
+	const [ validation, setValidation ] = useState("");
+	const [email, setEmail] = useState("");
+
 	//친구초대관련 스테이트추가	, 근데 친구는 배열임
 	//const [inputGroupMember, setInputGroupMembere] = useState('');
 	// const { groupTitle, setGroupTitle } = useGroupTitleStore();
@@ -45,15 +49,50 @@ const GroupEdit = () => {
 		//친구초대관련해서도 초기화하는 기능 추가 
 		setInvitedMembers([]);
 	};
+
+	const handleKeyUp = (event) => {
+		if(event.key === 'Enter'){
+			handleAddMember(event)
+		}	  };
+	
 	  
 	const handleAddMember = (event) => {
+		
+		//handleEmailValidation(event)
 		const inputMember = event.target.value
-		if(event.key === 'Enter'){
-			addInvitedMember(inputMember);
+
+		if (!isValidEmail(inputMember)){
 			event.target.value="";
+			setValidation("유효한 이메일 형식이 아닙니다.");
+			return 
 		}
+		addInvitedMember(event.target.value);
+			event.target.value="";
 		// (event.key === 'Enter' ? addInvitedMember(inputMember) event.target.value=""; : null)
 
+	  };
+	
+	  const isValidEmail = (email) => {
+		// 이메일 유효성 검사 로직 작성
+		// 유효한 이메일 형식인 경우 true 반환, 그렇지 않은 경우 false 반환
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+	  };
+	
+	  const handleEmailValidation = (e) => {
+		const email = e.target.value;
+		let emailValidationMSG = "";
+		setValidation(emailValidationMSG);
+
+		// 이메일 유효성 검사
+		if (!email) {
+		  emailValidationMSG = "이메일을 입력해주세요.";
+		} else if (!isValidEmail(email)) {
+		  emailValidationMSG = "유효한 이메일 형식이 아닙니다.";
+		}s
+	
+		// 유효성 검사 메세지 저장
+		setValidation(emailValidationMSG);
+		setEmail(email);
 	  };
 	
 
@@ -63,15 +102,22 @@ const GroupEdit = () => {
 			<div>
 		 	  <GroupTitle>현재 그룹명</GroupTitle>
 			  <EmptyBox style={{height:"3.3rem"}}/>
+				<GroupDivRow>
 				<Input
-					width={38.6}//"386px"
+					// width={38.6}//"386px"
+					width={30.6}//"386px"
 					height={3}//"30px"
 					size={38.6}//"386px"					
 					placeHolder={groupTitle}//추후 설정을누른 그룹의 이름을 받아오는 로직으로 변경필요
 					defaultValue=""
 					fontSize={2}
+					minLength={2}
+          			maxLength={7}
+					// eyebutton={"수정"}
 					onChange={(e) => setInputGroupTitle(e.target.value)}
 				/>
+				<EditBtn onClick={()=>setInputGroupTitle(e.target.value)}>수정      </EditBtn>
+				</GroupDivRow>
 			<GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
 			<EmptyBox style={{height:"3.8rem"}}/>
 			<GroupTitle>친구 초대</GroupTitle>
@@ -83,9 +129,10 @@ const GroupEdit = () => {
 				placeHolder="이메일을 입력해주세요"
 				defaultValue={input}
 				fontSize={1.6} //인풋에쓰여지는 텍스트싸이즈
-				// onChange={(event) => addInvitedMember(event.target.value)}
-				// onChange={handleMemberChange}
-				onKeyUp={handleAddMember}
+				onChange={handleEmailValidation}
+				onKeyUp={handleKeyUp}
+				info={validation}
+
 			/>
 			<EmptyBox style={{height:"0.6rem"}}/>
 			<MemberListTag></MemberListTag>
@@ -114,6 +161,20 @@ const GroupEdit = () => {
 		</GroupWapper>
 	);
 }
+
+
+const EditBtn = styled.div`
+  display: flex;
+  text-align: center;
+  color: var(--color-blue-03);
+  font-size: 1.6rem;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-black);
+  }
+`;
+
 
 const GroupInviteList=styled.div`
 	display:flex;
