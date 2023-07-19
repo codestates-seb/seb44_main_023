@@ -12,6 +12,7 @@ import LedgerCalendar from "../feature/Ledger/LedgerCalendar/LedgerCalendar";
 import LedgerGroup from "../feature/Ledger/LedgerGroup";
 import LedgerList from "../feature/Ledger/LedgerList/LedgerList";
 import Layout from "../Layout/PagesLayout";
+import ButtonFloating from "../components/Button/ButtonFloating";
 
 const LedgerPage = () => {
   const [pageType, setPageType] = useState("list");
@@ -75,18 +76,6 @@ const LedgerPage = () => {
     } catch (err) {}
   };
 
-  let unselectedColor = {
-    border: "1px solid var(--color-blue-03)",
-    color: "var(--color-blue-03)",
-    backgroundColor: "var(--color-white)",
-    fontSize: "1.6rem",
-  };
-
-  let selectedColor = {
-    backgroundColor: "var(--color-blue-03)",
-    fontSize: "1.6rem",
-  };
-
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const currentParams = searchParams.get("type");
@@ -123,6 +112,13 @@ const LedgerPage = () => {
                 handleSelectedMonth={handleSelectedMonth}
               />
             )}
+            <ButtonWrapper>
+              <ButtonFloating
+                icon="plus"
+                // onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
+              />
+              <ButtonFloating icon="setting" />
+            </ButtonWrapper>
           </>
         )}
       </StyledWrapper>
@@ -137,4 +133,13 @@ const StyledWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+`;
+
+const ButtonWrapper = styled.div`
+  position: fixed;
+  right: 1.6rem;
+  bottom: 1.6rem;
+  display: flex;
+  gap: 1.2rem;
 `;
