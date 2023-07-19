@@ -30,7 +30,7 @@ const TodoPage = () => {
 
   useEffect(() => {
     requestData();
-  }, []);
+  }, [groupId]);
 
   return (
     <Layout>

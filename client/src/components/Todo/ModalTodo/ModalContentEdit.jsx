@@ -81,6 +81,7 @@ const ModalContentEdit = ({
           fontSize={20}
           id="todo_title"
           defaultValue={todo_title}
+          style={{ width: "100%" }}
         />
         <TextArea>
           <textarea
