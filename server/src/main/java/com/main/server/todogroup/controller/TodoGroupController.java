@@ -4,6 +4,7 @@ import com.main.server.todogroup.domain.TodoGroup;
 //import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.domain.TodoGroup;
 // import com.main.server.todogroup.dto.InvitationTodoGroup;
+import com.main.server.todogroup.dto.InvitationTodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto.Response;
 import com.main.server.todogroup.service.TodoGroupService;
@@ -73,6 +74,13 @@ public class TodoGroupController {
         todoGroupService.deleteTodoGroup(todoGroupId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/todogroups/{todo-group-id}/invitation")
+    public ResponseEntity invite(@PathVariable("todo-group-id") @Positive Long todoGroupId,
+                                @Valid @RequestBody InvitationTodoGroupDto.Post invitationTodoGroupDto) {
+        TodoGroup todoGroup = todoGroupService.invite(todoGroupId, invitationTodoGroupDto);
+        return new ResponseEntity<>(new InvitationTodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
     }
 }
 
