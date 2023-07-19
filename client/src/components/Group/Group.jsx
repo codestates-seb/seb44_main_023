@@ -16,13 +16,14 @@ import Button  from "../Button/Button";
 import GroupEdit from "../../feature/Group/GroupEdit"
 import ButtonFloating from "../Button/ButtonFloating";
 import { useGroupEditStore } from "../../store/store.groupEdit";
-
+import { useGroupInviteStore , useGetGroupInvitedMembers} from "../../store/store.groupInvite";
 const Group=()=>{
 
 //const [groupTitle, setGroupTitle]=useState("Group 1")
 //const [isEditMode, setEditMode] = useState(true); 
 const { isEditMode,setIsEditMode,  groupTitle, setGroupTitle } = useGroupEditStore();
-
+const { inputMember,invitedMembers, setInvitedMembers,removeInvitedMember, addInvitedMember } = useGroupInviteStore();
+const list = useGetGroupInvitedMembers();
 
 const handleEditMode = () => {
 	setIsEditMode(!isEditMode)
@@ -37,7 +38,8 @@ return (
 	<ButtonWrapper>
           <ButtonFloating icon="setting" onClick={handleEditMode}/>
     </ButtonWrapper>
-	
+	<div>LIST</div>
+	<div>{list}</div>
 	<GroupEditModal
 		id="editGroup" // 모달 id값
 		open={isEditMode} // 모달 열림 / 닫힘 state값

@@ -4,51 +4,58 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/PageInput";
 import { FaTrashCan } from "react-icons/fa6";
 
-import { useGroupMemberStore } from "../../store/store.groupMember"; 
+import { useGroupInviteStore } from "../../store/store.groupInvite";
 import { useGroupEditStore } from "../../store/store.groupEdit";
+import { MemberListTag } from "./MemberListTag";
 
 const GroupEdit = () => {
  	const { isEditMode, setIsEditMode,  groupTitle, setGroupTitle } = useGroupEditStore();
 	const [inputGroupTitle, setInputGroupTitle]=useState("");
+	
 	//친구초대관련 스테이트추가	, 근데 친구는 배열임
 	//const [inputGroupMember, setInputGroupMembere] = useState('');
 	// const { groupTitle, setGroupTitle } = useGroupTitleStore();
-	//const { groupMembers, setGroupMembers, addGroupMember } = useGroupMemberStore();
-	
+	const { inputMember,invitedMembers, setInvitedMembers,removeInvitedMember, addInvitedMember } = useGroupInviteStore();
+	const [input,setInput]=useState("");
+
 	const handleSaveGroupEdit = async (event) => {
 		//api통신으로 그룹명변경요청
 		// try {
 		// event.preventDefault();
 		// await updateMemberNickname(profileInfo.memberId, nicknameInput);
 		setIsEditMode(false);
+		if(inputGroupTitle!==""){
 		setGroupTitle(inputGroupTitle);
+		}
+		setInvitedMembers(invitedMembers);
 		// setValidation("");
-	
+		console.log("멤버초대하자!",invitedMembers)
+
+		//초대된후 
+		setInvitedMembers([]);
 		// } catch (err) {
 		// setValidation(err.response.data);
 		// }
+	
 	};
 
 	const handleCancelGroupEdit = () => {
 		setIsEditMode(false);
 		setGroupTitle(groupTitle);
 		//친구초대관련해서도 초기화하는 기능 추가 
+		setInvitedMembers([]);
 	};
 	  
-	// const handleMemberChange = (event) => {
-	// 	if (event.key === 'Enter') {
-	// 		handleKeyDown(event);
-	// 	}else{
-	// 	  addGroupMember(event.target.value);
-	// 	}
-	//   };
-	// const handleKeyDown = (event) => {
-	// 	console.log("in handleKeyDown1 : ",event.target.value )
-	// 	if (event.key === 'Enter') {
-	// 	  setGroupTitle(event.target.value);
-	// 	}
-	//   };
+	const handleAddMember = (event) => {
+		const inputMember = event.target.value
+		if(event.key === 'Enter'){
+			addInvitedMember(inputMember);
+			event.target.value="";
+		}
+		// (event.key === 'Enter' ? addInvitedMember(inputMember) event.target.value=""; : null)
 
+	  };
+	
 
 	return(
 		<GroupWapper>
@@ -74,23 +81,15 @@ const GroupEdit = () => {
 				height={3}//"30px"//투명박스px
 				size={38.6}//"386px" //가로길이 px
 				placeHolder="이메일을 입력해주세요"
+				defaultValue={input}
 				fontSize={1.6} //인풋에쓰여지는 텍스트싸이즈
+				// onChange={(event) => addInvitedMember(event.target.value)}
 				// onChange={handleMemberChange}
+				onKeyUp={handleAddMember}
 			/>
-
-			{/* <div style={{border:"solid red 5px"}}>
-			<input
-					type="text"
-					value={groupTitle}
-					onChange={handleMemberChange}
-					onKeyDown={handleKeyDown}
-					/>
-			</div> */}
 			<EmptyBox style={{height:"0.6rem"}}/>
-
-			<GroupInviteList>초대될친구 리스트 보여줄 부분</GroupInviteList>
+			<MemberListTag></MemberListTag>
 		  </div>
-
 			<GroupDivRow>
 				<Button
 				label={<div><FaTrashCan/> 그룹삭제</div>} // 버튼 Text 지정 가능
@@ -156,7 +155,7 @@ const GroupWapper=styled.div`
 	width : 47rem;
 	height: 54.4rem;
 	justify-content : center;
-	background-color: var(--color-white);
+	background-color: var(--color-gray-02);
 	align-items: center;
 `	
 //
