@@ -65,7 +65,7 @@ const StyledWrapper = styled.div`
   padding: 6.4rem 6.4rem 0;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 3.6rem;
+  margin-bottom: 1rem;
 `;
 
 const GroupInfo = styled.div`
@@ -86,7 +86,7 @@ const Member = styled.div`
   font-size: 2.4rem;
   display: flex;
   align-items: center;
-  justif-content: center;
+  justify-content: center;
 
   .member-title {
     margin-right: 1.2rem;
@@ -98,7 +98,7 @@ const Member = styled.div`
     width: 100%;
     width: 4rem;
     height: 4rem;
-    object:fit: conver;
+    object-fit: conver;
   }
 `;
 

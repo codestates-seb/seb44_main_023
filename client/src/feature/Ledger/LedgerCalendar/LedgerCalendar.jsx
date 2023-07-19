@@ -1,30 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { styled } from "styled-components";
+import { styled, css } from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { readLedgerList } from "../../../api/ledgergroups.api";
 
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
+const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
+  const currentDate = new Date(selectedMonth.format("YYYY-MM-DD"));
 
-const LedgerCalendar = () => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  const currentDay = currentDate.getDate();
-
-  const [year, setYear] = useState(currentYear);
-  const [month, setMonth] = useState(currentMonth);
+  const [year, setYear] = useState(currentDate.getFullYear());
+  const [month, setMonth] = useState(currentDate.getMonth());
+  const [day, setDay] = useState(currentDate.getDate());
 
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const firstDayOfWeek = firstDayOfMonth.getDay();
   const lastDateOfMonth = lastDayOfMonth.getDate();
 
-  const [calendarData, setCalendarData] = useState([]);
 
   const dates = [];
   for (let i = 1; i <= lastDateOfMonth; i++) {
@@ -32,27 +21,6 @@ const LedgerCalendar = () => {
   }
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-
-  const handlePrevMonth = () => {
-    const updatedMonth = month - 1;
-    const updatedYear = updatedMonth < 0 ? year - 1 : year;
-    setMonth(updatedMonth < 0 ? 11 : updatedMonth);
-    setYear(updatedYear);
-  };
-
-  const handleNextMonth = () => {
-    const updatedMonth = month + 1;
-    const updatedYear = updatedMonth > 11 ? year + 1 : year;
-    setMonth(updatedMonth > 11 ? 0 : updatedMonth);
-    setYear(updatedYear);
-  };
-
-  const handleThisMonth = () => {
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth();
-    setYear(currentYear);
-    setMonth(currentMonth);
-  };
 
   const previousMonthDates = [];
   if (firstDayOfWeek !== 0) {
@@ -73,39 +41,30 @@ const LedgerCalendar = () => {
   const isSaturday = (day) => day % 7 === 6;
   const isSunday = (day) => day % 7 === 0;
 
-  const fetchLedgerData = async () => {
-    try {
-      const groupId = 1; // 예시로 그룹 ID는 1로 설정
-      const startDate = formatDate(new Date(year, month, 1));
-      const endDate = formatDate(new Date(year, month + 1, 0));
-      const response = await readLedgerList(groupId, startDate, endDate);
-      setCalendarData(response);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
-    // year 또는 month가 변경되었을 때만 fetchLedgerData 함수 호출
-    if (year !== currentYear || month !== currentMonth) {
-      fetchLedgerData();
-    }
-  }, [year, month, currentYear, currentMonth]);
+    const currentDate = new Date(selectedMonth.format("YYYY-MM-DD"));
+    setYear(currentDate.getFullYear());
+    setMonth(currentDate.getMonth());
+    setDay(currentDate.getDate());
+  }, [selectedMonth]);
+
 
   return (
     <CenteredContainer>
       <StyledWrapper>
         <CalendarHeader>
           <Movement>
-            <Button onClick={handlePrevMonth}>
+            <Button onClick={handleSelectedMonth("PREV")}>
               <AiOutlineLeft />
             </Button>
-            <Month>{month + 1}월</Month>
-            <Button onClick={handleNextMonth}>
+            <Month>{selectedMonth.format("M")}월</Month>
+            <Button onClick={handleSelectedMonth("NEXT")}>
               <AiOutlineRight />
             </Button>
           </Movement>
-          <ThisMonthButton onClick={handleThisMonth}>이번 달</ThisMonthButton>
+          <ThisMonthButton onClick={handleSelectedMonth("TODAY")}>
+            이번 달
+          </ThisMonthButton>
         </CalendarHeader>
         <CalendarWrapper>
           <CalendarGrid>
@@ -124,22 +83,30 @@ const LedgerCalendar = () => {
             ))}
 
             {dates.map((date) => {
-              const dateData = calendarData.find((item) => item.date === date);
-              const isToday =
-                year === currentYear &&
-                month === currentMonth &&
-                date === currentDay;
+              const dateData = ledgerList.find((item) => item.date === date);
 
               const dayOfWeek = new Date(year, month, date).getDay();
               const isSaturdayDate = isSaturday(dayOfWeek);
               const isSundayDate = isSunday(dayOfWeek);
 
+              const today = new Date();
+
+              const isToday =
+                year === today.getFullYear() &&
+                month === today.getMonth() &&
+                date === today.getDate();
+          
               return (
                 <DateCell key={date}>
                   <DateLabel
-                    data-testid={isToday ? "today" : "date"}
+                    $data-testid={isToday ? "date" : ""}
+                    $isToday={isToday}
                     $isSaturday={isSaturdayDate}
                     $isSunday={isSundayDate}
+                    $year={year}
+                    $month={month}
+                    $date={month}
+                    $currentDate={currentDate}
                   >
                     {date}
                   </DateLabel>
@@ -172,6 +139,7 @@ const LedgerCalendar = () => {
   );
 };
 
+
 const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -179,14 +147,14 @@ const CenteredContainer = styled.div`
 `;
 
 const StyledWrapper = styled.div`
-  width: 120rem
+  width: 120rem;
 `;
 
 const CalendarHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 1.6rem;
-  margin-left: 6.4rem;
+  margin-left: 3rem;
   justify-content: space-between;
 `;
 
@@ -195,7 +163,6 @@ const Movement = styled.div`
   gap: 1.2rem;
   color: var(--color-gray-07);
   align-items: center;
-
 `;
 
 const Button = styled.button`
@@ -213,14 +180,31 @@ const Month = styled.div`
 `;
 
 const CalendarWrapper = styled.div`
+  padding-right: 3rem;
+  padding-left: 3rem;
+  max-height: 60rem;
   overflow-y: auto;
-  padding-right: 6rem;
-  padding-left: 6rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-07) transparent; 
+
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-03); 
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent; 
+  }
 `;
 
 const ThisMonthButton = styled(Button)`
   margin-left: 0.8rem;
-  margin-right: 8rem;
+  margin-right: 5rem;
   font-size: 1.4rem;
   background-color: transparent;
   cursor: pointer;
@@ -269,14 +253,12 @@ const AnothDateLabel = styled.div`
   font-size: 1.4rem;
   width: 2.5rem;
   height: 2.5rem;
-  color: var(--color-gray-05);
-  background-color: ${(props) =>
-    props["data-testid"] === "today" ? "#cfcffa" : "transparent"};
   text-align: center;
   border-radius: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--color-gray-05);
 `;
 
 const DateCell = styled.div`
@@ -290,7 +272,7 @@ const DateCell = styled.div`
   border-bottom: 1px solid var(--color-gray-03);
 
   &:nth-child(7n + 1) {
-    border-left: none; // 첫 번째 요소에 대한 스타일
+    border-left: none; 
   }
 `;
 
@@ -301,8 +283,6 @@ const DateLabel = styled.div`
   font-size: 1.4rem;
   width: 2.5rem;
   height: 2.5rem;
-  background-color: ${(props) =>
-    props["data-testid"] === "today" ? "var(--color-blue-01)" : "transparent"};
   text-align: center;
   border-radius: 2rem;
   display: flex;
@@ -316,6 +296,17 @@ const DateLabel = styled.div`
       : props.$isSunday
       ? "var(--color-red-01)"
       : "var(--color-gray-07)"};
+
+  background-color: ${(props) =>
+    props["$data-testid"] === "date" &&
+    props.$isToday &&
+    css`
+      ${props.$year === props.$currentDate.getFullYear() &&
+      props.$month === props.$currentDate.getMonth() &&
+      props.$month === props.$currentDate.getMonth()
+        ? "var(--color-blue-01)"
+        : "transparent"}
+    `};
 `;
 
 const ContentWrapper = styled.div`
