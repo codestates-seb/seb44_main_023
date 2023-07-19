@@ -29,6 +29,7 @@ const ModalTodo = ({
     ) : modalType === "detail" ? (
       <ModalContentDetail
         todoId={todoId}
+        groupId={groupId}
         handleModalVisible={handleModalVisible}
         setModalType={setModalType}
         todoInfo={todoInfo}

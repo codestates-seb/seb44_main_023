@@ -56,9 +56,14 @@ const TodoList = ({ startDate }) => {
         setTodoList={setTodoList}
       />
       <StyledWrapper>
-        <TodoDate todoList={todoList} handleModalVisible={handleModalVisible} />
+        <TodoDate
+          todoList={todoList}
+          handleModalVisible={handleModalVisible}
+          groupId={groupId}
+        />
         {dateList.map((date) => (
           <TodoDate
+            groupId={groupId}
             key={`todo-item-${date}`}
             date={date}
             todoList={todoList}

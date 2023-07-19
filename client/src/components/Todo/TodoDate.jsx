@@ -11,6 +11,7 @@ const TodoDate = ({
   handleModalVisible,
   setTodoList,
   horizontal,
+  groupId,
 }) => {
   const [dataList, setDataList] = useState([]);
 
@@ -52,6 +53,7 @@ const TodoDate = ({
         <div className="todo-list">
           {dataList.map((item) => (
             <TodoItem
+              groupId={groupId}
               key={`todo-list-item-${item.todo_id}`}
               todoInfo={item}
               todoList={todoList}

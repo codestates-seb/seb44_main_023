@@ -102,7 +102,7 @@ const ModalContentEdit = ({
             onClick={handleCloseEditModal}
           />
           <Button
-            label="추가하기"
+            label="적용하기"
             size="medium"
             fontcolor="var(--color-white)"
             style={{
