@@ -5,6 +5,7 @@ import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
+import MainPage from "./pages/MainPage";
 import LedgerPage from "./pages/LedgerPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -20,7 +21,7 @@ function App() {
   return (
     <>
       <Routes>
-        {/* <Route path="/" element={<Main />} />    */}
+        <Route path="/" element={<MainPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/weatherWidget" element={<TestWidget />} />

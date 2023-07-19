@@ -19,8 +19,7 @@ const GraphBar = ({ ledgerList, selectedMonth }) => {
 
     const items = ledgerList.filter(
       (item) =>
-        item.ledger_schedule_date === date &&
-        item.in_outcome.in_outcome_id === 1
+        item.ledger_schedule_date === date && item.inoutcome.inoutcomeId === 1
     );
 
     if (items.length > 0) {
@@ -34,7 +33,10 @@ const GraphBar = ({ ledgerList, selectedMonth }) => {
 
   for (const date in groupedData) {
     const items = groupedData[date];
-    const totalAmount = items.reduce((sum, item) => sum + item.amount, 0);
+    const totalAmount = items.reduce(
+      (sum, item) => sum + item.ledger_amount,
+      0
+    );
     totalsByDate.push({ date, totalAmount });
   }
 

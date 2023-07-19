@@ -81,6 +81,7 @@ const ModalContentEdit = ({
           fontSize={20}
           id="todo_title"
           defaultValue={todo_title}
+          style={{ width: "100%" }}
         />
         <TextArea>
           <textarea
@@ -102,7 +103,7 @@ const ModalContentEdit = ({
             onClick={handleCloseEditModal}
           />
           <Button
-            label="추가하기"
+            label="적용하기"
             size="medium"
             fontcolor="var(--color-white)"
             style={{
