@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
-import { useParams } from "react-router-dom";
 import { updateTodoStatus } from "../../api/todogroups.api";
 import ModalTodo from ".//ModalTodo/ModalTodo";
 
@@ -77,7 +76,7 @@ const StyledWrapper = styled.div`
   align-items: center;
   font-size: 2.4rem;
   cursor: pointer;
-  height: 100%;
+  height: min-content;
 
   &.checked {
     background-color: var(--color-gray-03);

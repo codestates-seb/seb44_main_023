@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 
 const TodoDate = ({
-  date,
+  date = "null",
   todoList,
   handleModalVisible,
   setTodoList,
@@ -41,7 +41,9 @@ const TodoDate = ({
     <StyledWrapper horizontal={String(horizontal)}>
       <div className="title">
         <div className="date">
-          {date ? dayjs(date).locale("ko").format("MM/DD dd") : "NODATE"}
+          {date === "null"
+            ? "NODATE"
+            : dayjs(date).locale("ko").format("MM/DD dd")}
         </div>
         <div className="add-button" onClick={handleModalVisible(date)}>
           <AiOutlinePlus />

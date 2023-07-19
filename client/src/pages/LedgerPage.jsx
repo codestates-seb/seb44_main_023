@@ -84,11 +84,11 @@ const LedgerPage = () => {
 
   useEffect(() => {
     requestLedgerInfo();
-  }, [selectedMonth]);
+  }, [groupId, selectedMonth]);
 
   useEffect(() => {
     if (groupInfo) requestLedgerList();
-  }, [groupInfo]);
+  }, [groupId, groupInfo]);
 
   return (
     <Layout>
