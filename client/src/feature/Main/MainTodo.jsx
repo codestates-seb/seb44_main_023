@@ -26,8 +26,6 @@ const MainTodo = ({ groupId }) => {
     requestData();
   }, []);
 
-  console.log("todo", groupId);
-
   return (
     <StyledWrapper>
       {!isLoading && (

@@ -57,8 +57,6 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    const res = generateFakeData(100);
-    return res;
     const response = await API.get(`/ledgergroups/${groupId}/ledgers`);
     return response.data;
   } catch (err) {
