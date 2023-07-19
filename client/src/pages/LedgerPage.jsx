@@ -7,8 +7,9 @@ import {
   readLedgerGroupMember,
   readLedgerList,
 } from "../api/ledgergroups.api";
-import Button from "../components/Button/Button";
+import Loading from "../components/Loading/Loading";
 import LedgerCalendar from "../feature/Ledger/LedgerCalendar/LedgerCalendar";
+import LedgerGroup from "../feature/Ledger/LedgerGroup";
 import LedgerList from "../feature/Ledger/LedgerList/LedgerList";
 import Layout from "../Layout/PagesLayout";
 
@@ -16,6 +17,7 @@ const LedgerPage = () => {
   const [pageType, setPageType] = useState("list");
   const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
   const [groupInfo, setGroupInfo] = useState();
+  const [members, setMembers] = useState();
   const [ledgerList, setLedgerList] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -55,9 +57,9 @@ const LedgerPage = () => {
   const requestLedgerInfo = async () => {
     try {
       const groupInfo = await readLedgerGroup(groupId);
-      // const members = await readLedgerGroupMember(groupId);
-      // console.log(members);
+      const members = await readLedgerGroupMember(groupId);
       setGroupInfo(groupInfo);
+      setMembers(members);
     } catch (err) {}
   };
 
@@ -65,8 +67,8 @@ const LedgerPage = () => {
     try {
       const ledgerList = await readLedgerList(
         groupId,
-        "2023-07-21",
-        "2023-07-21"
+        selectedMonth.clone().startOf("month").format("YYYY-MM-DD"),
+        selectedMonth.clone().endOf("month").format("YYYY-MM-DD")
       );
       setLedgerList(ledgerList);
       setIsLoading(false);
@@ -96,38 +98,32 @@ const LedgerPage = () => {
     requestLedgerList();
   }, [selectedMonth]);
 
-  if (isLoading) return null;
   return (
     <Layout>
       <StyledWrapper>
-        <GroupTitle>
-          <Title>{groupInfo?.ledger_group_title}</Title>
-          <ButtonWrapper>
-            <Button
-              size="medium"
-              style={pageType === "calendar" ? selectedColor : unselectedColor}
-              label="달력형"
-              onClick={handleChangeParameter("calendar")}
-            />
-            <Button
-              size="medium"
-              label="리스트형"
-              style={pageType === "list" ? selectedColor : unselectedColor}
-              onClick={handleChangeParameter("list")}
-            />
-          </ButtonWrapper>
-        </GroupTitle>
-        {pageType === "calendar" ? (
-          <LedgerCalendar
-            selectedMonth={selectedMonth}
-            handleSelectedMonth={handleSelectedMonth}
-          />
+        {isLoading ? (
+          <Loading />
         ) : (
-          <LedgerList
-            ledgerList={ledgerList}
-            selectedMonth={selectedMonth}
-            handleSelectedMonth={handleSelectedMonth}
-          />
+          <>
+            <LedgerGroup
+              groupInfo={groupInfo}
+              members={members}
+              pageType={pageType}
+              handleChangeParameter={handleChangeParameter}
+            />
+            {pageType === "calendar" ? (
+              <LedgerCalendar
+                selectedMonth={selectedMonth}
+                handleSelectedMonth={handleSelectedMonth}
+              />
+            ) : (
+              <LedgerList
+                ledgerList={ledgerList}
+                selectedMonth={selectedMonth}
+                handleSelectedMonth={handleSelectedMonth}
+              />
+            )}
+          </>
         )}
       </StyledWrapper>
     </Layout>
@@ -141,20 +137,4 @@ const StyledWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-`;
-
-const GroupTitle = styled.div`
-  padding: 6.4rem 6.4rem 0;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2.4rem;
-`;
-
-const Title = styled.div`
-  font-size: 3.2rem;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  gap: 1.2rem;
 `;
