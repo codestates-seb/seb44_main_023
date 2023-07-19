@@ -28,7 +28,8 @@ public enum ExceptionCode {
     INVALID_NICKNAME(401, "유효하지 않은 닉네임입니다."),
     CATEGORY_NOT_FOUND(404, "Category not found"),
     PAYMENT_NOT_FOUND(404, "Payment not found"),
-    INOUTCOME_NOT_FOUND(404, "Inoutcome not found");
+    INOUTCOME_NOT_FOUND(404, "Inoutcome not found"),
+    IS_NOT_OWNER(403, "TodoGroup 생성자가 아닙니다.");
 
 
 
