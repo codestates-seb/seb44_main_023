@@ -1,17 +1,36 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Popup from "./SidbarPoup";
 import { useNavigate } from "react-router-dom";
+import { readAllTodoGroups } from "../../api/todogroups.api";
+import { readAllLedgerGroups } from "../../api/ledgergroups.api";
 
 const Sidebar = () => {
   const [currentPopup, setCurrentPopup] = useState(null);
   const [buttonPosition, setButtonPosition] = useState({});
   const todoButtonRef = useRef(null);
   const accountButtonRef = useRef(null);
-  const [todoButtons, setTodoButtons] = useState([]);
-  const [accountButtons, setAccountButtons] = useState([]);
   const navigate = useNavigate();
+
+  const [todoGroups, setTodoGroups] = useState([]);
+  const [ledgerGroups, setLedgerGroups] = useState([]);
+
+  useEffect(() => {
+    const readGroups = async () => {
+      try {
+        const todoGroupsData = await readAllTodoGroups();
+        setTodoGroups(todoGroupsData);
+
+        const ledgerGroupsData = await readAllLedgerGroups();
+        setLedgerGroups(ledgerGroupsData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    readGroups();
+  }, []);
 
   const handleAddButtonClick = (title, buttonRef) => {
     setButtonPosition(buttonRef.current.getBoundingClientRect());
@@ -29,21 +48,17 @@ const Sidebar = () => {
 
   const handleAddButton = (text) => {
     if (currentPopup === "Todo") {
-      setTodoButtons((prevButtons) => [
-        ...prevButtons,
-        {
-          id: Date.now(),
-          text,
-        },
-      ]);
+      const newTodoGroup = {
+        todo_group_id: Date.now(),
+        todo_group_title: text,
+      };
+      setTodoGroups((prevGroups) => [...prevGroups, newTodoGroup]);
     } else if (currentPopup === "가계부") {
-      setAccountButtons((prevButtons) => [
-        ...prevButtons,
-        {
-          id: Date.now(),
-          text,
-        },
-      ]);
+      const newLedgerGroup = {
+        ledger_group_id: Date.now(),
+        ledger_group_title: text,
+      };
+      setLedgerGroups((prevGroups) => [...prevGroups, newLedgerGroup]);
     }
     setCurrentPopup(null);
   };
@@ -60,12 +75,12 @@ const Sidebar = () => {
     <SidebarContainer>
       <SidebarSection>
         <SidebarTitle>Todo</SidebarTitle>
-        {todoButtons.map((button) => (
+        {todoGroups.map((group) => (
           <AddedButton
-            key={button.id}
-            onClick={() => handleButtonClick(button.id, "Todo")}
+            key={group.todo_group_id}
+            onClick={() => handleButtonClick(group.todo_group_id, "Todo")}
           >
-            {button.text}
+            {group.todo_group_title}
           </AddedButton>
         ))}
         <AddButton
@@ -86,12 +101,12 @@ const Sidebar = () => {
 
       <SidebarSection>
         <SidebarTitle>가계부</SidebarTitle>
-        {accountButtons.map((button) => (
+        {ledgerGroups.map((group) => (
           <AddedButton
-            key={button.id}
-            onClick={() => handleButtonClick(button.id, "가계부")}
+            key={group.ledger_group_id}
+            onClick={() => handleButtonClick(group.ledger_group_id, "가계부")}
           >
-            {button.text}
+            {group.ledger_group_title}
           </AddedButton>
         ))}
         <AddButton
@@ -119,11 +134,13 @@ const SidebarContainer = styled.div`
   left: 0;
   width: 8rem;
   height: 100vh;
+  padding-bottom: 8rem;
   background-color: transparent;
   display: flex;
   flex-direction: column;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
+  z-index: 99;
 `;
 
 const SidebarSection = styled.div`
@@ -142,6 +159,7 @@ const SidebarSection = styled.div`
 const SidebarTitle = styled.div`
   font-weight: bold;
   font-size: 1.6rem;
+  color: var(--color-gray-07);
 `;
 
 const AddButton = styled.button`
@@ -153,13 +171,13 @@ const AddButton = styled.button`
   justify-content: center;
   align-items: center;
   margin-top: 0.8rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   border: none;
-  cursor: pointer;
   box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
-
+  transition: background-color 0.3s ease; 
   &:hover {
     background-color: var(--color-blue-03);
+    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.3);
   }
 `;
 
@@ -172,12 +190,18 @@ const AddedButton = styled.button`
   justify-content: center;
   align-items: center;
   margin-top: 0.8rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  color: var(--color-gray-07);
+  font-weight: bolder;
   border: none;
   cursor: pointer;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease; 
+
 
   &:hover {
     background-color: var(--color-blue-03);
+    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.3);
   }
 `;
 

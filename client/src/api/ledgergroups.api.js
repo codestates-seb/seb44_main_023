@@ -35,3 +35,15 @@ export const readLedgerList = async (groupId, startDate, endDate) => {
     throw err;
   }
 };
+
+export const createLedgerGroup = async (memberId, ledgerGroupTitle) => {
+  try {
+    const res = await API.post("/ledgergroups", {
+      member_id: 1,
+      ledger_group_title: ledgerGroupTitle,
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
