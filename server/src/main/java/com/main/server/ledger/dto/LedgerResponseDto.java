@@ -2,6 +2,8 @@ package com.main.server.ledger.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.labels.entity.Category;
+import com.main.server.labels.entity.Inoutcome;
+import com.main.server.labels.entity.Payment;
 import com.main.server.ledger.entity.Ledger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +35,11 @@ public class LedgerResponseDto {
 
     private CategoryDto category;
 
-    public LedgerResponseDto(Ledger ledger, boolean includeCategory) {
+    private InoutcomeDto inoutcome;
+
+    private PaymentDto payment;
+
+    public LedgerResponseDto(Ledger ledger, boolean includeCategory, boolean includeInoutcome, boolean includePayment) {
         this.memberId = ledger.getMember().getMemberId();
         this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
         this.ledgerId = ledger.getLedgerId();
@@ -43,7 +49,12 @@ public class LedgerResponseDto {
         this.ledgerDate = String.valueOf(ledger.getLedgerDate());
         if (includeCategory) {
             this.category = new CategoryDto(ledger.getCategory());
-            //this.category = new CategoryDto(ledger.getCategory());
+        }
+        if (includeInoutcome) {
+            this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
+        }
+        if (includePayment) {
+            this.payment = new PaymentDto(ledger.getPayment());
         }
     }
 
@@ -56,6 +67,32 @@ public class LedgerResponseDto {
                 if (category != null) {
                     this.categoryId = category.getCategoryId();
                     this.categoryName = category.getCategoryName();
+                }
+            }
+        }
+
+        @Getter
+        public static class InoutcomeDto {
+            private Long inoutcomeId;
+            private String inoutcomeName;
+
+            public InoutcomeDto(Inoutcome inoutcome) {
+                if (inoutcome != null) {
+                    this.inoutcomeId = inoutcome.getInoutcomeId();
+                    this.inoutcomeName = inoutcome.getInoutcomeName();
+                }
+            }
+        }
+
+        @Getter
+        public static class PaymentDto {
+            private Long paymentId;
+            private String paymentName;
+
+            public PaymentDto(Payment payment) {
+                if (payment != null) {
+                    this.paymentId = payment.getPaymentId();
+                    this.paymentName = payment.getPaymentName();
                 }
             }
         }

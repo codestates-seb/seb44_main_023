@@ -1,6 +1,8 @@
 package com.main.server.ledger.entity;
 
 import com.main.server.labels.entity.Category;
+import com.main.server.labels.entity.Inoutcome;
+import com.main.server.labels.entity.Payment;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.member.Member;
 import lombok.Getter;
@@ -57,8 +59,24 @@ public class Ledger {
         this.category = category;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "in_outcome_id")
+    private Inoutcome inoutcome;
+
+    public void addInoutcome(Inoutcome inoutcome) {
+        this.inoutcome = inoutcome;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
+    public void addPayment(Payment payment) {
+        this.payment = payment;
+    }
+
     public Ledger(Member member, LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent,
-                  Long ledgerAmount, LocalDate ledgerDate, Category category) {
+                  Long ledgerAmount, LocalDate ledgerDate, Category category, Inoutcome inoutcome, Payment payment) {
         this.member = member;
         this.ledgerGroup = ledgerGroup;
         this.ledgerTitle = ledgerTitle;
@@ -66,6 +84,8 @@ public class Ledger {
         this.ledgerAmount = ledgerAmount;
         this.ledgerDate = ledgerDate;
         this.category = category;
+        this.inoutcome = inoutcome;
+        this.payment = payment;
     }
 
 
@@ -102,6 +122,18 @@ public class Ledger {
     public void changeCategory(Category category) {
         if(category != null) {
             this.category = category;
+        }
+    }
+
+    public void changeInoutcome(Inoutcome inoutcome) {
+        if(inoutcome != null) {
+            this.inoutcome = inoutcome;
+        }
+    }
+
+    public void changePayment(Payment payment) {
+        if(payment != null) {
+            this.payment = payment;
         }
     }
 }
