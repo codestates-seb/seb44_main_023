@@ -87,6 +87,7 @@ const StyledWrapper = styled.div`
           }
         `
       : css`
+          padding: 0 0 1.2rem;
           min-width: 25.2rem;
           height: 100%;
           overflow: hidden;
@@ -118,10 +119,12 @@ const StyledWrapper = styled.div`
   }
 
   .todo-list {
-    max-height: calc(100% - 64px);
+    max-height: calc(400px - 64px);
+    height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    padding-bottom: 1.2rem;
   }
 `;

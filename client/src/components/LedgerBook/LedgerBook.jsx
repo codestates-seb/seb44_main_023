@@ -5,11 +5,16 @@ import LedgerBookSummary from "./LedgerBookSummary";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
 
-const LedgerBook = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
+const LedgerBook = ({
+  ledgerList,
+  selectedMonth,
+  handleSelectedMonth,
+  isMain = false,
+}) => {
   const [isShowAll, setIsShowAll] = useState(false);
 
   return (
-    <StyledWrapper>
+    <StyledWrapper isMain={String(isMain)}>
       <LedgerBookSummary
         ledgerList={ledgerList}
         selectedMonth={selectedMonth}
@@ -78,7 +83,7 @@ const LedgerBook = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
 export default LedgerBook;
 
 const StyledWrapper = styled.div`
-  width: 50%;
+  width: ${({ isMain }) => (isMain === "true" ? "100%" : "50%")};
   display: flex;
   flex-direction: column;
   gap: 3.6rem;

@@ -3,18 +3,15 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { readTodoGroup, readTodoGroupMember } from "../../api/todogroups.api";
 import GroupInfo from "../../components/Group/GroupInfo";
-import Loading from "../../components/Loading/Loading";
-import TodoList from "../Todo/TodoList";
 import MainTodoList from "./MainTodoList";
 
-const MainTodo = ({}) => {
+const MainTodo = ({ groupId }) => {
   const [groupInfo, setGroupInfo] = useState();
   const [members, setMembers] = useState();
   const [isLoading, setIsLoading] = useState(true);
 
   const requestData = async () => {
     try {
-      console.log("asdf");
       const groupInfo = await readTodoGroup(1);
       const members = await readTodoGroupMember(1);
       setGroupInfo(groupInfo);
@@ -34,7 +31,7 @@ const MainTodo = ({}) => {
       {!isLoading && (
         <>
           <GroupInfo title={groupInfo.todo_group_title} members={members} />
-          <MainTodoList startDate={dayjs()} groupId={1} />
+          <MainTodoList startDate={dayjs()} groupId={groupId} />
         </>
       )}
     </StyledWrapper>
@@ -45,7 +42,10 @@ export default MainTodo;
 
 const StyledWrapper = styled.div`
   width: 50%;
-  padding: 6.4rem;
+  height: 100%;
+  padding: 6.4rem 2.4rem 0 6.4rem;
+  position: relative;
+  overflow: show;
 
   .group-info {
     margin-bottom: 4rem;

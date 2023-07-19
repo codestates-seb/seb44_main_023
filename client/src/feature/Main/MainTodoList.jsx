@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { readTodoList } from "../../api/todogroups.api";
 import TodoDate from "../../components/Todo/TodoDate";
-import ButtonFloating from "../../components/Button/ButtonFloating";
-import dayjs from "dayjs";
 import ModalTodo from "../../components/Todo/ModalTodo/ModalTodo";
 
 const MainTodoList = ({ startDate, groupId }) => {
@@ -69,13 +67,6 @@ const MainTodoList = ({ startDate, groupId }) => {
             horizontal
           />
         ))}
-        <ButtonWrapper>
-          <ButtonFloating
-            icon="plus"
-            onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
-          />
-          <ButtonFloating icon="setting" />
-        </ButtonWrapper>
       </StyledWrapper>
     </>
   );
@@ -85,17 +76,11 @@ export default MainTodoList;
 
 const StyledWrapper = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
   gap: 2.4rem;
-`;
-
-const ButtonWrapper = styled.div`
-  position: fixed;
-  right: 1.6rem;
-  bottom: 1.6rem;
-  display: flex;
-  gap: 1.2rem;
+  padding-right: 1.2rem;
+  max-height: calc(100% - 11.8rem);
+  padding-bottom: 4rem;
 `;
