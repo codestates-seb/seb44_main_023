@@ -86,6 +86,19 @@ export const createTodo = async (groupId, data) => {
   }
 };
 
+export const createTodoGroup = async (memberId, todoGroupTitle) => {
+  try {
+    const res = await API.post("/todogroups", {
+      member_id: 1,
+      todo_group_title: todoGroupTitle,
+    });
+    return res.data;
+  } catch (err) {
+    console.error(err);
+    throw err; // 오류를 상위 호출자에게 다시 던집니다.
+  }
+};
+
 export const updateTodo = async (groupId, todoId, data) => {
   try {
     const res = await API.patch(`/todogroups/${groupId}/todos/${todoId}`, {

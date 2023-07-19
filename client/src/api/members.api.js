@@ -1,4 +1,5 @@
 import { API } from "./api";
+import Avatar from "../assets/userAvarta.png";
 
 export const readMemberInfo = async (memberId) => {
   try {
@@ -66,7 +67,7 @@ export const readProfileImage = async (memberId) => {
     const url = URL.createObjectURL(res.data);
     return url;
   } catch (err) {
-    throw err;
+    return Avatar;
   }
 };
 

@@ -7,22 +7,13 @@ import ProfileBottom from "../feature/Profile/ProfileBottom";
 import Loading from "../components/Loading/Loading";
 import { readMemberInfo } from "../api/members.api";
 import Layout from "../Layout/PagesLayout";
+import useUserInfoStore, { useGetUserInfo } from "../store/store.userInfo";
 
 const ProfilePage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [profileInfo, setProfileInfo] = useState({});
-
   const { id } = useParams();
 
-  const requestProfileInfo = async () => {
-    const profileInfo = await readMemberInfo(id);
-    setProfileInfo(profileInfo);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    requestProfileInfo();
-  }, []);
+  const userInfo = useGetUserInfo();
+  const { isLoading } = userInfo;
 
   return (
     <Layout>
@@ -32,8 +23,8 @@ const ProfilePage = () => {
             <Loading />
           ) : (
             <>
-              <ProfileTop profileInfo={profileInfo} />
-              <ProfileBottom profileInfo={profileInfo} />
+              <ProfileTop profileInfo={userInfo} />
+              <ProfileBottom profileInfo={userInfo} />
             </>
           )}
         </ProfileBox>
