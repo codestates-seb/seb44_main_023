@@ -7,30 +7,30 @@ import TodoGroup from '../Todo/TodoGroup';
 
 const TodoSummary=()=>{
     const todoGroupName="Group 1";
+    const content = "투두있음 "
     const isTodoNull = useGetIsTodoNull();
     console.log("TodoSummary isLegderNull:",isTodoNull)
 
+    //투두의 경우 빈경우를 어떻게 처리할지 고민중
+    //전체가 빈것이아니라 한날짜나 일부만 빈날짜이기때문 
     return (
         <>
-            {isTodoNull ? (
-              <div>???</div>
-            ) : (
-            <TodoWrapper>
-              <TodoTitle>{todoGroupName}</TodoTitle>
-                <TodoContentWrapper>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-
-                </TodoContentWrapper>
+          <TodoWrapper>
+            <TodoTitle>{todoGroupName}</TodoTitle>
+              <TodoContentWrapper>
+              {isTodoNull ? (
+              <>
+              <ContentEmptyText>
+              일정 없음
+              </ContentEmptyText>
+              </>
+                ) : (
+              <ContentText>
+                {content}
+              </ContentText>                
+               )}
+              </TodoContentWrapper>
             </TodoWrapper>
-            )}
         </>
         
       );
@@ -38,57 +38,41 @@ const TodoSummary=()=>{
     
     export default TodoSummary;
         
-const NullComponent =(date)=>{
-  return(
-    <>
-  <TodoTitle>{date}</TodoTitle>
-                <TodoContentWrapper>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
-                <NullComponent> 투두다</NullComponent>
 
-                </TodoContentWrapper>
-
-
-    </>
-  );
-}
-const Content = styled.div`
-display: flex;
-height: 16rem;
-border:5px solid red;
+const ContentEmptyText = styled.div`
+  display: flex;
+  justify-content:center;
+  align-items:center;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  letter-spacing: 0%;
+  color: var(--color-gray-07);
 `
+
+const ContentText = styled.div`
+  display: flex;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  letter-spacing: 0%;
+  color: var(--color-gray-07);
+`
+
 const TodoContentWrapper = styled.div`
-display: flex;
-flex-direction : column;
-border:5px solid red;
-overflow-y: auto;
+  display: flex;
+  flex-direction : column;
+  overflow-y: auto;
 `
 
 const TodoTitle = styled.div`
-border:5px solid red;
-
-margin-top:3.2rem;
-margin-bottom:1.6rem;
-
-font-size: 3.2rem;
-font-weight: bold;
-line-height: 4.4rem;
-letter-spacing: 0%;
-color: var(--color-gray-08);
+  margin-top:3.2rem;
+  margin-bottom:1.6rem;
+  font-size: 3.2rem;
+  font-weight: bold;
+  line-height: 4.4rem;
+  letter-spacing: 0%;
+  color: var(--color-gray-08);
 `
 
-const Line = styled.div`
-    width: 2px;
-    height: 90%;
-    background-color: var(--color-gray-03);
-    `
 const TodoWrapper = styled.div`
   width : 100%;
   display: flex;

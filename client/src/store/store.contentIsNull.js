@@ -6,7 +6,7 @@ import { devtools } from "zustand/middleware";
 
 const store = (set) => ({
   //default location seoul.
-  isTodoNull: false,
+  isTodoNull: true,
   isLedgerNull: true,
   setIsTodoNull: (isNull) => set({ isTodoNull: isNull }),
   setIsLedgerNull: (isNull) => set({ isLedgerNull: isNull }),

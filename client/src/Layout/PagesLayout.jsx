@@ -40,7 +40,7 @@ const LayoutContent = styled.div`
 `;
 
 const Content = styled.div`
-  flex: 1;
+  height: 100%;
   padding-top: 6rem;
   padding-left: 8rem;
   width: 100%;

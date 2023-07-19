@@ -12,15 +12,13 @@ import { useContentIsNullStore } from '../store/store.contentIsNull';
 
 
 const Main = () => {
-  // const [isLoading, setIsLoading] = useState(false);
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
   const [isHide, setIsHide] =useState(false)
   const weather = useGetWeatherInfo();
   const weatherType = weather.type;
-  // const { setIsTodoNull,setIsLedgerNull } = useContentIsNullStore();
-  // setIsTodoNull();
-  // setIsLedgerNull();
-  // console.log("Main isLegderNull:",isTodoNull,isLedgerNull)
+ const {setIsTodoNull,setIsLedgerNull } = useContentIsNullStore();
+  //
+  // 
 
   const handleHideClick = () => {
    console.log("hide",isHide); 
@@ -28,14 +26,20 @@ const Main = () => {
   };
 
   // try {
-    //가계부정보불러오기
-    //투두정보불러오기참고
+     //투두정보불러오기
+    
     //   const groupInfo = await readTodoGroup(groupId);
     //   const members = await readTodoGroupMember(groupId);
     //   setGroupInfo(groupInfo);
     //   setMembers(members);
-     
-    //   setIsLoading(false);
+    //가계부정보불러오기 
+    //...
+    //  받아와서 안비어있으면~, 
+    //그런데 투두는 일자별 관리일거같아서 구조를 변경해야할것같다/
+    // setIsTodoNull(false); <-
+    // 받아와서 안비어있으면~
+    // setIsLedgerNull(false); 
+    // setIsLoading(false);
     // } catch (err) {}
   // };
 
@@ -46,6 +50,8 @@ const Main = () => {
     <>
       <WeatherImage weatherType={weatherType}/>
       <FloatingButtonContainer>
+        {/* 임시로 보이기라는 버튼을 만들어서
+        다시 메인페이지로 돌아가게 작성, 아직 안정한것으로암 */}
         <button onClick={handleHideClick} >보이기</button>
         </FloatingButtonContainer>
     </>
