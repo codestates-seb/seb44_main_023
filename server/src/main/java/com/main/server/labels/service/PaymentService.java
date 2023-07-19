@@ -37,9 +37,11 @@ public class PaymentService {
     public Payment getPayment(Long paymentId){
         return existingPayment(paymentId);
     }
-    public List<Payment> getPayment() {
+
+    public List<Payment> getPayments() {
         return paymentRepository.findAll();
     }
+
     public void deletePayment(Long paymentId) {
         Payment deletedPayment = existingPayment(paymentId);
         paymentRepository.delete(deletedPayment);

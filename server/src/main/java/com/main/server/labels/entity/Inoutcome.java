@@ -31,10 +31,10 @@ public class Inoutcome {
         this.member = member;
     }
 
-    @OneToMany(mappedBy = "in_outcome")
+    @OneToMany(mappedBy = "inoutcome")
     private List<Ledger> ledgers = new ArrayList<>();
 
-    public Inoutcome(Member member, String in_outcomeName) {
+    public Inoutcome(Member member, String inoutcomeName) {
         this.member = member;
         this.inoutcomeName = inoutcomeName;
     }
