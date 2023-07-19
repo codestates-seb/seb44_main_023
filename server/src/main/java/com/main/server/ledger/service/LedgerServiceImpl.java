@@ -61,53 +61,55 @@ public class LedgerServiceImpl implements LedgerService {
         if (inoutcomeId != null) {
             inoutcome = inoutcomeRepository.findById(inoutcomeId)
                     .orElseThrow(() -> new BusinessLogicException(ExceptionCode.INOUTCOME_NOT_FOUND));
-        }
-
-        Payment payment = null;
-        Long paymentId = postDto.getPaymentId();
-        if (paymentId != null) {
-            payment = paymentRepository.findById(paymentId)
-                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PAYMENT_NOT_FOUND));
-        }
-
-        Ledger ledger;
-        if (category != null) {
-            if (inoutcome != null) {
-                if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, payment); // aaa
-                } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, null); // aab
-                }
-            } else {
-                if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, null, payment); // aba
-                } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, null, null); // abb
-                }
-            }
         } else {
-            if (inoutcome != null) {
-                if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, payment); // baa
-                } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, null); // bab
-                }
-            } else {
-                if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, null, payment); // bba
-                } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, null, null); // bbb
-                }
-            }
+            throw new BusinessLogicException(ExceptionCode.INOUTCOME_REQUIRED);
         }
 
-        Ledger savedLedger = ledgerRepository.save(ledger);
+            Payment payment = null;
+            Long paymentId = postDto.getPaymentId();
+            if (paymentId != null) {
+                payment = paymentRepository.findById(paymentId)
+                        .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PAYMENT_NOT_FOUND));
+            }
 
-        return savedLedger;
-    }
+            Ledger ledger;
+            if (category != null) {
+                if (inoutcome != null) {
+                    if (payment != null) {
+                        ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, payment); // aaa
+                    } else {
+                        ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, null); // aab
+                    }
+                } else {
+                    if (payment != null) {
+                        ledger = postDto.toEntity(member, ledgerGroup, category, null, payment); // aba
+                    } else {
+                        ledger = postDto.toEntity(member, ledgerGroup, category, null, null); // abb
+                    }
+                }
+            } else {
+                if (inoutcome != null) {
+                    if (payment != null) {
+                        ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, payment); // baa
+                    } else {
+                        ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, null); // bab
+                    }
+                } else {
+                    if (payment != null) {
+                        ledger = postDto.toEntity(member, ledgerGroup, null, null, payment); // bba
+                    } else {
+                        ledger = postDto.toEntity(member, ledgerGroup, null, null, null); // bbb
+                    }
+                }
+            }
+
+            Ledger savedLedger = ledgerRepository.save(ledger);
+
+            return savedLedger;
+        }
 
 
-    @Override
+        @Override
         public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);

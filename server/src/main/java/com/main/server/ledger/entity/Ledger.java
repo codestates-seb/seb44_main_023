@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -61,7 +62,9 @@ public class Ledger {
 
     @ManyToOne
     @JoinColumn(name = "in_outcome_id")
+    @NotNull(message = "Inoutcome is required.")
     private Inoutcome inoutcome;
+
 
     public void addInoutcome(Inoutcome inoutcome) {
         this.inoutcome = inoutcome;

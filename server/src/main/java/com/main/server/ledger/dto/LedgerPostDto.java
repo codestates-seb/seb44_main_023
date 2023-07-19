@@ -50,7 +50,4 @@ public class LedgerPostDto {
         return categoryId != null ? categoryId : null;
     }
 
-    public Long getInoutcomeId() {
-        return inoutcomeId != null ? inoutcomeId : null;
-    }
 }
