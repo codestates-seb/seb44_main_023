@@ -16,11 +16,10 @@ const ModalContentDetail = ({
   todoInfo,
   setTodoInfo,
   setTodoList,
+  groupId,
 }) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
-  const { groupId } = useParams();
 
   const requestTodoInfo = async () => {
     try {

@@ -21,7 +21,9 @@ export default LedgerGraph;
 
 const StyledWrapper = styled.div`
   width: 50%;
-  padding-top: 4.8rem;
+  padding: 4.8rem 0;
+  overflow-y: scroll;
+  padding-right: 1.2rem;
 
   .empty {
     font-size: 2.4rem;

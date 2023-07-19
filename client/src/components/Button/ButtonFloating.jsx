@@ -18,6 +18,7 @@ export default function FloatingButton(props) {
       break;
     case "hide":
       selectedIcon = <FaEyeSlash size={25} style={{ color: "var(--color-gray-07)" }}/>;
+      
       break;
     default:
       selectedIcon = null;
