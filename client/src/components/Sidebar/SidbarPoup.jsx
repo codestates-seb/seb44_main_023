@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import Input from "../Input/PageInput";
-import axios from "axios";
+import { createTodoGroup } from "../../api/todogroups.api";
+import { createLedgerGroup } from "../../api/ledgergroups.api";
 
 const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
   const [inputValue, setInputValue] = useState("");
@@ -21,18 +22,10 @@ const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
     if (inputValue.trim() !== "") {
       try {
         if (title === "Todo") {
-            const response = await axios.post("/api/todogroups", {
-              member_id: 1,
-              todo_group_title: inputValue,
-          });
-          const todoGroup = response.data;
+          const todoGroup = await createTodoGroup(1, inputValue);
           onAddButtonClick(todoGroup.todo_group_title);
         } else if (title === "가계부") {
-            const response = await axios.post("/api/ledgergroups", {
-              member_id: 1,
-              ledger_group_title: inputValue,
-            });
-          const ledgerGroup = response.data;
+          const ledgerGroup = await createLedgerGroup(1, inputValue);
           onAddButtonClick(ledgerGroup.ledger_group_title);
         }
         setInputValue("");

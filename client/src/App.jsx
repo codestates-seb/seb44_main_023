@@ -1,22 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home"
+import Home from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import TestWidget from "./pages/TestWidget";
 import TestGroup from "./pages/TestGroup";
 import ErrorPage from "./pages/ErrorPage";
+import TodoPage from "./pages/TodoPage";
+import LedgerPage from "./pages/LedgerPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import useUserInfoStore from "./store/store.userInfo";
 
 function App() {
+  const { setUserInfo } = useUserInfoStore();
+
+  useEffect(() => {
+    setUserInfo(1);
+  }, []);
+
   return (
     <>
       <Routes>
         {/* <Route path="/" element={<Main />} />    */}
-        <Route path="/home" element={<Home />} />   
+        <Route path="/home" element={<Home />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/weatherWidget" element={<TestWidget />} />
+        <Route path="/todo/:groupId" element={<TodoPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/ledger/:groupId" element={<LedgerPage />} />
         <Route path="/group" element={<TestGroup />} />
-        <Route path="*" element={<ErrorPage />} />   
-
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );

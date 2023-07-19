@@ -5,42 +5,50 @@ import Input from "../../components/Input/PageInput";
 import { FaTrashCan } from "react-icons/fa6";
 
 import { useGroupMemberStore } from "../../store/store.groupMember"; 
-import { useGroupTitleStore ,useGetGroupTitle} from "../../store/store.grouptitle"; 
+import { useGroupEditStore } from "../../store/store.groupEdit";
 
 const GroupEdit = () => {
-	//const [inputGroupTitle, setInpuGroupTitle] = useState('');
+ 	const { isEditMode, setIsEditMode,  groupTitle, setGroupTitle } = useGroupEditStore();
+	const [inputGroupTitle, setInputGroupTitle]=useState("");
+	//친구초대관련 스테이트추가	, 근데 친구는 배열임
 	//const [inputGroupMember, setInputGroupMembere] = useState('');
-
-	const { groupTitle, setGroupTitle } = useGroupTitleStore();
-	const { groupMembers, setGroupMembers, addGroupMember } = useGroupMemberStore();
+	// const { groupTitle, setGroupTitle } = useGroupTitleStore();
+	//const { groupMembers, setGroupMembers, addGroupMember } = useGroupMemberStore();
 	
-	const newtitle = useGetGroupTitle();
-	console.log("in useGetGroupTitle : ",newtitle )
+	const handleSaveGroupEdit = async (event) => {
+		//api통신으로 그룹명변경요청
+		// try {
+		// event.preventDefault();
+		// await updateMemberNickname(profileInfo.memberId, nicknameInput);
+		setIsEditMode(false);
+		setGroupTitle(inputGroupTitle);
+		// setValidation("");
+	
+		// } catch (err) {
+		// setValidation(err.response.data);
+		// }
+	};
 
-	const handleKeyDown = (event) => {
-		console.log("in handleKeyDown1 : ",event.target.value )
-		if (event.key === 'Enter') {
-		  setGroupTitle(event.target.value);
-		}
-	  };
+	const handleCancelGroupEdit = () => {
+		setIsEditMode(false);
+		setGroupTitle(groupTitle);
+		//친구초대관련해서도 초기화하는 기능 추가 
+	};
 	  
-	  const handleGroupTitleChange = (event) => {
-		if (event.key === 'Enter') {
-			setGroupTitle(event.target.value);
-		  }
-		setGroupTitle(event.target.value);
-	  };
-	
-	const handleMemberChange =()=>{}
+	// const handleMemberChange = (event) => {
+	// 	if (event.key === 'Enter') {
+	// 		handleKeyDown(event);
+	// 	}else{
+	// 	  addGroupMember(event.target.value);
+	// 	}
+	//   };
+	// const handleKeyDown = (event) => {
+	// 	console.log("in handleKeyDown1 : ",event.target.value )
+	// 	if (event.key === 'Enter') {
+	// 	  setGroupTitle(event.target.value);
+	// 	}
+	//   };
 
-	const handleSubmitSave =()=>{
-		console.log("작은 버튼 handleSubmitSave")
-		setGroupTitle(groupTitle)
-	}
-	const handleSubmitCancle =()=>{
-		console.log("그룹삭제")
-		setGroupTitle("")
-	}
 
 	return(
 		<GroupWapper>
@@ -52,11 +60,11 @@ const GroupEdit = () => {
 					width={38.6}//"386px"
 					height={3}//"30px"
 					size={38.6}//"386px"					
-					placeHolder=" Group1"//추후 설정을누른 그룹의 이름을 받아오는 로직으로 변경필요
+					placeHolder={groupTitle}//추후 설정을누른 그룹의 이름을 받아오는 로직으로 변경필요
+					defaultValue=""
 					fontSize={2}
-					value={groupTitle}
-				/>					
-			
+					onChange={(e) => setInputGroupTitle(e.target.value)}
+				/>
 			<GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
 			<EmptyBox style={{height:"3.8rem"}}/>
 			<GroupTitle>친구 초대</GroupTitle>
@@ -65,10 +73,11 @@ const GroupEdit = () => {
 				width={38.6}//"300px"//투명박스 px
 				height={3}//"30px"//투명박스px
 				size={38.6}//"386px" //가로길이 px
-				placeHolder=" 이메일을 입력해주세요"
+				placeHolder="이메일을 입력해주세요"
 				fontSize={1.6} //인풋에쓰여지는 텍스트싸이즈
-				onChange={handleMemberChange}
+				// onChange={handleMemberChange}
 			/>
+
 			{/* <div style={{border:"solid red 5px"}}>
 			<input
 					type="text"
@@ -86,7 +95,7 @@ const GroupEdit = () => {
 				<Button
 				label={<div><FaTrashCan/> 그룹삭제</div>} // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
-				onClick={ handleSubmitCancle} // onClick
+				onClick={ handleCancelGroupEdit} // onClick
 				fontcolor={"var(--color-white)"} // 폰트 색 변경
 				backgroundColor={"var(--color-red-01)"} // 배경색 변경
 				bordercolor={"var(--color-red-01)"} // 배경색 변경
@@ -95,7 +104,7 @@ const GroupEdit = () => {
 				<Button
 				label="저장하기" // 버튼 Text 지정 가능
 				size="small" // 버튼 사이즈
-				onClick={handleSubmitSave} // onClick				
+				onClick={handleSaveGroupEdit} // onClick				
 				fontcolor={"var(--color-white)"} // 폰트 색 변경
 				backgroundColor={"var(--color-blue-03)"} // 배경색 변경
 				bordercolor={"var(--color-blue-03)"} // 배경색 변경

@@ -14,7 +14,7 @@ const ProfileTop = ({ profileInfo }) => {
   const [isEditMode, setEditMode] = useState(false);
   const [nickname, setNickname] = useState(profileInfo.nickname);
   const [nicknameInput, setNicknameInput] = useState(profileInfo.nickname);
-  const [imageUrl, setImageUrl] = useState(Avatar);
+  const [imageUrl, setImageUrl] = useState(profileInfo.profileImage);
   const [validation, setValidation] = useState("");
 
   const handleEditMode = () => setEditMode(!isEditMode);
@@ -72,15 +72,6 @@ const ProfileTop = ({ profileInfo }) => {
     console.log("error");
     e.target.src = Avatar;
   };
-
-  const requestProfileImage = async () => {
-    const url = await readProfileImage(profileInfo.memberId);
-    setImageUrl(url);
-  };
-
-  useEffect(() => {
-    requestProfileImage();
-  }, []);
 
   return (
     <StyledWrapper>
