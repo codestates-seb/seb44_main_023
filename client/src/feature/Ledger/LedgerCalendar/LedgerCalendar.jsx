@@ -114,10 +114,12 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
                     <>
                       <ContentWrapper>
                         <ExpenseContent>
-                          -{dateData.content.expense}
+                          {dateData.inoutcome?.inoutcomeId === 1 &&
+                            `- ${dateData.ledger_amount}`}
                         </ExpenseContent>
                         <IncomeContent>
-                          +{dateData.content.income}
+                          {dateData.inoutcome?.inoutcomeId === 2 &&
+                            `+ ${dateData.ledger_amount}`}
                         </IncomeContent>
                       </ContentWrapper>
                     </>
