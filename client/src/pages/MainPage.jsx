@@ -16,7 +16,6 @@ const MainPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [group, setGroup] = useState({ todo: null, ledger: null });
 
-  console.log(isHidden);
   const requestGroup = () => {
     let defaultGroup = localStorage.getItem("planfinity-group");
     if (defaultGroup) {

@@ -19,25 +19,25 @@ export const generateFakeData = (count) => {
   while (generatedData.length < count) {
     const randomCategory =
       categories[Math.floor(Math.random() * categories.length)];
-    const amount = Math.floor(Math.random() * 49001) + 1000;
+    const ledger_amount = Math.floor(Math.random() * 49001) + 1000;
     const inOutcome = Math.random() < 0.5 ? "지출" : "수입";
 
     const newData = {
       ledger_id: generateUUID(),
       ledger_title: generateRandomWords(3),
       ledger_content: generateRandomSentence(),
-      amount: amount,
+      ledger_amount: ledger_amount,
       category: {
-        category_id: randomCategory.category_id,
-        category_name: randomCategory.category_name,
+        categoryId: randomCategory.category_id,
+        categoryName: randomCategory.category_name,
       },
       payment: {
         payment_id: Math.floor(Math.random() * 5) + 1,
         payment_name: generateTransactionType(),
       },
-      in_outcome: {
-        in_outcome_id: inOutcome === "지출" ? 1 : 2,
-        in_outcome_name: inOutcome,
+      inoutcome: {
+        inoutcomeId: inOutcome === "지출" ? 1 : 2,
+        inoutcomeName: inOutcome,
       },
       ledger_schedule_date: formatDate(startDate),
     };
