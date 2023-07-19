@@ -73,22 +73,25 @@ const Sidebar = () => {
 
   return (
     <SidebarContainer>
-      <SidebarSection>
+      <TodoSidebarSection>
         <SidebarTitle>Todo</SidebarTitle>
-        {todoGroups.map((group) => (
-          <AddedButton
-            key={group.todo_group_id}
-            onClick={() => handleButtonClick(group.todo_group_id, "Todo")}
+        <AddedButtonContainer>
+          {todoGroups.map((group) => (
+            <AddedButton
+              key={group.todo_group_id}
+              onClick={() => handleButtonClick(group.todo_group_id, "Todo")}
+            >
+              {group.todo_group_title}
+            </AddedButton>
+          ))}
+
+          <AddButton
+            onClick={() => handleAddButtonClick("Todo", todoButtonRef)}
+            ref={todoButtonRef}
           >
-            {group.todo_group_title}
-          </AddedButton>
-        ))}
-        <AddButton
-          onClick={() => handleAddButtonClick("Todo", todoButtonRef)}
-          ref={todoButtonRef}
-        >
-          <FaPlus />
-        </AddButton>
+            <FaPlus />
+          </AddButton>
+        </AddedButtonContainer>
         {currentPopup === "Todo" && (
           <Popup
             onClose={closePopup}
@@ -97,24 +100,27 @@ const Sidebar = () => {
             onAddButtonClick={handleAddButton}
           />
         )}
-      </SidebarSection>
+      </TodoSidebarSection>
 
-      <SidebarSection>
+      <LedgerSidebarSection>
         <SidebarTitle>가계부</SidebarTitle>
-        {ledgerGroups.map((group) => (
-          <AddedButton
-            key={group.ledger_group_id}
-            onClick={() => handleButtonClick(group.ledger_group_id, "가계부")}
+        <AddedButtonContainer>
+          {ledgerGroups.map((group) => (
+            <AddedButton
+              key={group.ledger_group_id}
+              onClick={() => handleButtonClick(group.ledger_group_id, "가계부")}
+            >
+              {group.ledger_group_title}
+            </AddedButton>
+          ))}
+
+          <AddButton
+            onClick={() => handleAddButtonClick("가계부", accountButtonRef)}
+            ref={accountButtonRef}
           >
-            {group.ledger_group_title}
-          </AddedButton>
-        ))}
-        <AddButton
-          onClick={() => handleAddButtonClick("가계부", accountButtonRef)}
-          ref={accountButtonRef}
-        >
-          <FaPlus />
-        </AddButton>
+            <FaPlus />
+          </AddButton>
+        </AddedButtonContainer>
         {currentPopup === "가계부" && (
           <Popup
             onClose={closePopup}
@@ -123,7 +129,7 @@ const Sidebar = () => {
             onAddButtonClick={handleAddButton}
           />
         )}
-      </SidebarSection>
+      </LedgerSidebarSection>
     </SidebarContainer>
   );
 };
@@ -143,16 +149,52 @@ const SidebarContainer = styled.div`
   z-index: 99;
 `;
 
-const SidebarSection = styled.div`
+const TodoSidebarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  padding-top: 1rem;
+  padding-bottom: 0.3rem;
+  max-height: 42rem;
+
+  &:first-child {
+    border-top: none;
+  }
+`;
+
+const LedgerSidebarSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding: 1rem;
+  max-height: 42rem;
 
   &:first-child {
     border-top: none;
+  }
+`;
+
+const AddedButtonContainer = styled.div`
+  overflow-y: auto;
+  padding-right: 1px; 
+  scrollbar-width: thin; 
+  scrollbar-color: transparent; 
+
+
+  &::-webkit-scrollbar {
+    width: 1px; 
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent; 
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent; 
   }
 `;
 
@@ -173,11 +215,11 @@ const AddButton = styled.button`
   margin-top: 0.8rem;
   font-size: 1.1rem;
   border: none;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease; 
+
+  transition: background-color 0.3s ease;
   &:hover {
     background-color: var(--color-blue-03);
-    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--color-blue-02);
   }
 `;
 
@@ -193,15 +235,14 @@ const AddedButton = styled.button`
   font-size: 1.1rem;
   color: var(--color-gray-07);
   font-weight: bolder;
-  border: none;
   cursor: pointer;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease; 
+  border: 2px solid #a8d6fc;
 
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: var(--color-blue-03);
-    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.3);
+    border: 2px solid var(--color-blue-02);
   }
 `;
 
