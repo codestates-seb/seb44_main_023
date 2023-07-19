@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logoSpare.png";
+import Logo from "../../assets/logoSpare1.png";
 import UserAvatar from "../../assets/userAvarta.png";
 import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
@@ -9,6 +9,7 @@ import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
 import { useGetUserInfo } from "../../store/store.userInfo";
+import WeatherWidget from "../WeatherWidget/HeaderWeatherWidget"
 
 const Header = () => {
   const navigate = useNavigate();
@@ -89,10 +90,10 @@ const Header = () => {
         <Button onClick={handleLogoutClick}>
           <LogoutIcon size={26} />
         </Button>
-        <Button>
-          <WeatherIcon size={24} />
-        </Button>
       </RightSectionWrapper>
+      <WeatherComponent>
+        <WeatherWidget />
+      </WeatherComponent>
       {isPopupVisible && (
         <PopupWrapper ref={popupRef} onClick={handlePopupClick}>
           <PopupContent>
@@ -141,6 +142,8 @@ const Button = styled.button`
   background: transparent;
   margin-left: 1rem;
 `;
+
+const WeatherComponent = styled.div``;
 
 const MoonIcon = styled(HiMiniMoon)`
   width: 2.4rem;
