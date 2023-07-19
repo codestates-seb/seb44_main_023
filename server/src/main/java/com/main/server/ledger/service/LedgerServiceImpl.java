@@ -37,7 +37,7 @@ public class LedgerServiceImpl implements LedgerService {
         this.ledgerGroupService = ledgerGroupService;
         this.categoryRepository = categoryRepository;
     }
-
+/*
         @Override
         public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
             Member member = memberService.findMember(postDto.getMemberId());
@@ -53,7 +53,31 @@ public class LedgerServiceImpl implements LedgerService {
             return savedLedger;
         }
 
-        @Override
+ */
+
+    @Override
+    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
+        Member member = memberService.findMember(postDto.getMemberId());
+        LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
+        Category category = null;  // 카테고리 초기값 설정
+        Long categoryId = postDto.getCategoryId();
+        if (categoryId != null) {  // 요청 바디로 받은 카테고리 ID가 null이 아닌 경우에만 카테고리 조회
+            category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
+        }
+        Ledger ledger;
+        if (category != null) {
+            ledger = postDto.toEntity(member, ledgerGroup, category);
+        } else {
+            ledger = postDto.toEntity(member, ledgerGroup, null);
+        }
+        Ledger savedLedger = ledgerRepository.save(ledger);
+
+        return savedLedger;
+    }
+
+
+    @Override
         public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);

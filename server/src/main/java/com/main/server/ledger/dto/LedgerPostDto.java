@@ -37,4 +37,8 @@ public class LedgerPostDto {
         LocalDate date = LocalDate.parse(ledgerDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return new Ledger(member, ledgerGroup, ledgerTitle, ledgerContent, ledgerAmount, date, category);
     }
+
+    public Long getCategoryId() {
+        return categoryId != null ? categoryId : null;
+    }
 }

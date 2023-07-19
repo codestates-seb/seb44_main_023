@@ -30,10 +30,10 @@ public class LedgerResponseDto {
 
     @JsonProperty(value = "ledger_schedule_date")
     private String ledgerDate;
-    @JsonProperty(value = "category")
+
     private CategoryDto category;
 
-    public LedgerResponseDto(Ledger ledger) {
+    public LedgerResponseDto(Ledger ledger, boolean includeCategory) {
         this.memberId = ledger.getMember().getMemberId();
         this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
         this.ledgerId = ledger.getLedgerId();
@@ -41,21 +41,23 @@ public class LedgerResponseDto {
         this.ledgerContent = ledger.getLedgerContent();
         this.ledgerAmount = ledger.getLedgerAmount();
         this.ledgerDate = String.valueOf(ledger.getLedgerDate());
-        this.category = new CategoryDto(ledger.getCategory());
-    }
-
-    @Getter
-    @AllArgsConstructor
-    private static class CategoryDto {
-        @JsonProperty(value = "category_id")
-        private Long categoryId;
-
-        @JsonProperty(value = "category_name")
-        private String categoryName;
-
-        public CategoryDto(Category category) {
-            this.categoryId = category.getCategoryId();
-            this.categoryName = category.getCategoryName();
+        if (includeCategory) {
+            this.category = new CategoryDto(ledger.getCategory());
+            //this.category = new CategoryDto(ledger.getCategory());
         }
     }
-}
+
+        @Getter
+        public static class CategoryDto {
+            private Long categoryId;
+            private String categoryName;
+
+            public CategoryDto(Category category) {
+                if (category != null) {
+                    this.categoryId = category.getCategoryId();
+                    this.categoryName = category.getCategoryName();
+                }
+            }
+        }
+    }
+

@@ -36,37 +36,35 @@ public class LedgerController {
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.CREATED);
     }
  */
-
     @PostMapping
     public ResponseEntity<LedgerResponseDto> createLedger(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
             @Validated @RequestBody LedgerPostDto postDto) {
         Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto);
 
-        return new ResponseEntity<>(new LedgerResponseDto(ledger), HttpStatus.OK);
+        return new ResponseEntity<>(new LedgerResponseDto(ledger, true), HttpStatus.CREATED);
     }
-
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
                                       @Valid @RequestBody LedgerPatchDto patchDto) {
         Ledger ledger = ledgerService.updateLedger(ledgerGroupId, ledgerId, patchDto);
 
-        return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
+        return new ResponseEntity(new LedgerResponseDto(ledger, true), HttpStatus.OK);
     }
 
     @GetMapping("/{ledger-id}")
     public ResponseEntity getLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                     @PathVariable("ledger-id") @Positive Long ledgerId) {
         Ledger ledger = ledgerService.getLedger(ledgerGroupId, ledgerId);
-        return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
+        return new ResponseEntity(new LedgerResponseDto(ledger, true), HttpStatus.OK);
     }
 
     @GetMapping()
     public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId) {
         List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
         List<LedgerResponseDto> responses = ledgers.stream()
-                .map((ledger -> new LedgerResponseDto(ledger)))
+                .map((ledger -> new LedgerResponseDto(ledger, true)))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
