@@ -10,6 +10,7 @@ import com.main.server.todogroup.Repository.TodoGroupRepository;
 import com.main.server.todogroup.domain.TodoGroup;
 //import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
 // import com.main.server.todogroup.dto.InvitationTodoGroup.Post;
+import com.main.server.todogroup.dto.InvitationTodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,27 @@ public class TodoGroupService {
                 new BusinessLogicException(ExceptionCode.TODO_GROUP_NOT_FOUND));
         return findTodoGroup;
 
+    }
+
+    @Transactional
+    public TodoGroup invite(Long todoGroupId, InvitationTodoGroupDto.Post invitationTodoGroupDto) {
+        TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
+        Member owner = memberRepository.findById(invitationTodoGroupDto.getMemberId())
+            .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if (!findTodoGroup.isOwner(owner)) {
+            throw new BusinessLogicException(ExceptionCode.IS_NOT_OWNER);
+        }
+
+        // 초대하려는 Email이 실제 DB에 존재하는지 확인
+        List<String> emails = invitationTodoGroupDto.extractEmails();
+        List<Member> membersByEmail = memberRepository.findByEmailIn(emails);
+
+        if (emails.size() != membersByEmail.size()) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+        findTodoGroup.invites(membersByEmail);
+        return findTodoGroup;
     }
 }
