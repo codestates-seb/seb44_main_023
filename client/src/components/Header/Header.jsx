@@ -8,6 +8,7 @@ import { MdOutlineLogout } from "react-icons/md";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
+import { useGetUserInfo } from "../../store/store.userInfo";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ const Header = () => {
   const popupRef = useRef(null);
   const setAccessToken = useAccessTokenStore((state) => state.setAccessToken);
   const accessToken = useAccessTokenStore((state) => state.accessToken);
+
+  const { isLoading, memberId, profileImage } = useGetUserInfo();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -35,7 +38,7 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigate("/profile/:id");
+    navigate(`/profile/${memberId}`);
   };
 
   const handleLogoutClick = (event) => {
@@ -81,7 +84,7 @@ const Header = () => {
           <MoonIcon size={24} />
         </Button>
         <Button onClick={handleProfileClick}>
-          <UserAvatarImage src={UserAvatar} alt="User Avatar" />
+          <UserAvatarImage src={profileImage} alt="User Avatar" />
         </Button>
         <Button onClick={handleLogoutClick}>
           <LogoutIcon size={26} />
@@ -147,6 +150,7 @@ const MoonIcon = styled(HiMiniMoon)`
 const UserAvatarImage = styled.img`
   width: 2.8rem;
   height: 2.8rem;
+  border-radius: 100%;
 `;
 
 const LogoutIcon = styled(MdOutlineLogout)`
