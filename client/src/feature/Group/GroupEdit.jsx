@@ -22,6 +22,7 @@ const GroupEdit = () => {
 	const { inputMember,invitedMembers, setInvitedMembers,removeInvitedMember, addInvitedMember } = useGroupInviteStore();
 	const [input,setInput]=useState("");
 
+	const [newTitle, setNewTitle]=useState("");
 	const handleSaveGroupEdit = async (event) => {
 		//api통신으로 그룹명변경요청
 		// try {
@@ -43,7 +44,15 @@ const GroupEdit = () => {
 	
 	};
 
+	const handleEditTitleClick =() => {
+		console.log("꺄륵꺄를",inputGroupTitle)
+		setInputGroupTitle(inputGroupTitle)
+		setGroupTitle(inputGroupTitle);
+
+	};
+
 	const handleCancelGroupEdit = () => {
+
 		setIsEditMode(false);
 		setGroupTitle(groupTitle);
 		//친구초대관련해서도 초기화하는 기능 추가 
@@ -78,8 +87,8 @@ const GroupEdit = () => {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 	  };
 	
-	  const handleEmailValidation = (e) => {
-		const email = e.target.value;
+	  const handleEmailValidation = (event) => {
+		const email = event.target.value;
 		let emailValidationMSG = "";
 		setValidation(emailValidationMSG);
 
@@ -114,9 +123,9 @@ const GroupEdit = () => {
 					minLength={2}
           			maxLength={7}
 					// eyebutton={"수정"}
-					onChange={(e) => setInputGroupTitle(e.target.value)}
+					onChange={(e)=>setInputGroupTitle(e.target.value)}
 				/>
-				<EditBtn onClick={()=>setInputGroupTitle(e.target.value)}>수정      </EditBtn>
+				<EditBtn onClick={handleEditTitleClick}>수정      </EditBtn>
 				</GroupDivRow>
 			<GroupDescription>그룹명을 변경 하시려면 수정을 클릭해주세요. </GroupDescription>
 			<EmptyBox style={{height:"3.8rem"}}/>
@@ -163,13 +172,13 @@ const GroupEdit = () => {
 }
 
 
-const EditBtn = styled.div`
+const EditBtn = styled.a`
   display: flex;
   text-align: center;
   color: var(--color-blue-03);
   font-size: 1.6rem;
   cursor: pointer;
-
+	z-index :999;
   &:hover {
     color: var(--color-black);
   }
