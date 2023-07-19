@@ -34,10 +34,6 @@ const HeaderWeatherWidget = () => {
           ) : (
             <NoWeatherIcon />
           )}
-          {/* <BottomText>
-            <WeatherBottomText>{weather.weather}</WeatherBottomText>
-            <WeatherBottomText>{weather.country}</WeatherBottomText>
-          </BottomText> */}
         </StyledContain>
       </WeatherWrapper>
     </>
@@ -80,18 +76,6 @@ const WeatherLargeText = styled.div`
 
 const WeatherText = styled.div`
   font-size: 1.1rem;
-`;
-
-const BottomText = styled.div`
-  display: flex;
-  font-size: 1.1rem;
-  justify-content: center;
-  /* border: 1px solid violet; */
-`;
-
-const WeatherBottomText = styled.div`
-  /* border: 1px solid pink; */
-  padding-left: 15px;
 `;
 
 const NoWeatherIcon = styled(LuMapPinOff)`
