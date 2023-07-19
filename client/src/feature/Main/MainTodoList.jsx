@@ -46,6 +46,7 @@ const MainTodoList = ({ startDate, groupId }) => {
   return (
     <>
       <ModalTodo
+        groupId={groupId}
         defaultDate={date}
         isModalVisible={isCreateModalVisible}
         setIsModalVisible={setIsCreateModalVisible}

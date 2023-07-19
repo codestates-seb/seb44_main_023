@@ -63,20 +63,25 @@ const MainLedger = ({ groupId }) => {
 
   useEffect(() => {
     requestLedgerInfo();
-    requestLedgerList();
   }, [selectedMonth]);
+
+  useEffect(() => {
+    if (groupInfo) requestLedgerList();
+  }, [groupInfo]);
 
   return (
     <StyledWrapper>
       {!isLoading && (
         <>
-          <GroupInfo title={groupInfo.ledger_group_title} members={members} />
-          <LedgerBook
-            ledgerList={ledgerList}
-            handleSelectedMonth={handleSelectedMonth}
-            selectedMonth={selectedMonth}
-            isMain={true}
-          />
+          <GroupInfo title={groupInfo?.ledger_group_title} members={members} />
+          <LedgerBookWrapper>
+            <LedgerBook
+              ledgerList={ledgerList}
+              handleSelectedMonth={handleSelectedMonth}
+              selectedMonth={selectedMonth}
+              isMain={true}
+            />
+          </LedgerBookWrapper>
         </>
       )}
     </StyledWrapper>
@@ -87,9 +92,15 @@ export default MainLedger;
 
 const StyledWrapper = styled.div`
   width: 50%;
+  height: 100%;
   padding: 6.4rem 6.4rem 0 2.4rem;
 
   .group-info {
     margin-bottom: 4rem;
   }
+`;
+
+const LedgerBookWrapper = styled.div`
+  max-height: calc(100% - 11.8rem);
+  height: 100%;
 `;

@@ -110,8 +110,8 @@ const ButtonLabel = styled.div`
 const LedgerBookList = styled.div`
   padding-right: 1.6rem;
   overflow-y: scroll;
-  margin-bottom: 4.8rem;
   height: 100%;
+  padding-bottom: 40px;
 
   .empty {
     font-size: 2.4rem;

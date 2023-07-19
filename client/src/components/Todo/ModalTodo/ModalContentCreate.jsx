@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { createTodo } from "../../../api/todogroups.api";
 
 const ModalContentCreate = ({
+  groupId,
   defaultDate,
   handleModalVisible,
   setTodoList,
@@ -21,7 +22,7 @@ const ModalContentCreate = ({
         ...formData,
       };
 
-      const res = await createTodo(data);
+      const res = await createTodo(groupId, data);
       setTodoList((todoList) => [...todoList, res]);
       handleModalVisible();
     } catch (err) {

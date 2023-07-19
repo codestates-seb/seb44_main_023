@@ -21,5 +21,5 @@ const StyledWrapper = styled.div`
   display: flex;
   gap: 4rem;
   padding: 0 6.4rem;
-  height: calc(100% - 12.6rem);
+  height: calc(100% - 17.8rem);
 `;

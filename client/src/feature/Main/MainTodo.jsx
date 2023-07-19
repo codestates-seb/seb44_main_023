@@ -12,8 +12,8 @@ const MainTodo = ({ groupId }) => {
 
   const requestData = async () => {
     try {
-      const groupInfo = await readTodoGroup(1);
-      const members = await readTodoGroupMember(1);
+      const groupInfo = await readTodoGroup(groupId);
+      const members = await readTodoGroupMember(groupId);
       setGroupInfo(groupInfo);
       setMembers(members);
       setIsLoading(false);
@@ -25,6 +25,8 @@ const MainTodo = ({ groupId }) => {
   useEffect(() => {
     requestData();
   }, []);
+
+  console.log("todo", groupId);
 
   return (
     <StyledWrapper>
