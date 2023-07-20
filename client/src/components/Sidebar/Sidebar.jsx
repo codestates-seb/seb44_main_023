@@ -156,8 +156,7 @@ const TodoSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding-top: 1rem;
-  padding-bottom: 0.3rem;
-  max-height: 42rem;
+  max-height: 48.5rem;
 
   &:first-child {
     border-top: none;
@@ -171,7 +170,7 @@ const LedgerSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding: 1rem;
-  max-height: 42rem;
+  max-height: 50rem;
 
   &:first-child {
     border-top: none;
