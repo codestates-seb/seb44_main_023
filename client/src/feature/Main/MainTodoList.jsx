@@ -1,33 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "styled-components";
-import { readTodoList } from "../../api/todogroups.api";
 import TodoDate from "../../components/Todo/TodoDate";
 import ModalTodo from "../../components/Todo/ModalTodo/ModalTodo";
+import useQueryTodoList from "../../query/todoList.query";
 
 const MainTodoList = ({ startDate, groupId }) => {
-  const [todoList, setTodoList] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const { isLoading, data } = useQueryTodoList({
+    groupId,
+    startDate: startDate.format("YYYY-MM-DD"),
+    endDate: startDate.clone().subtract(3, "day").format("YYYY-MM-DD"),
+  });
+
+  if (isLoading) return null;
+  return <List data={data} groupId={groupId} startDate={startDate} />;
+};
+
+const List = ({ groupId, data, startDate }) => {
   const [date, setDate] = useState();
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [todoList, setTodoList] = useState(data);
 
   const handleModalVisible = (date) => async () => {
     await setDate(date);
     setIsCreateModalVisible(!isCreateModalVisible);
-  };
-
-  const requestTodoList = async () => {
-    try {
-      setIsLoading(true);
-      const todoList = await readTodoList(
-        groupId,
-        startDate.format("YYYY-MM-DD"),
-        startDate.clone().subtract(3, "day").format("YYYY-MM-DD")
-      );
-      setTodoList(todoList);
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const dateList = [];
@@ -38,11 +33,6 @@ const MainTodoList = ({ startDate, groupId }) => {
     );
   }
 
-  useEffect(() => {
-    requestTodoList();
-  }, []);
-
-  if (isLoading) return null;
   return (
     <>
       <ModalTodo

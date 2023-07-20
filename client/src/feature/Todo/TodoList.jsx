@@ -1,38 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
-import { readTodoList } from "../../api/todogroups.api";
 import TodoDate from "../../components/Todo/TodoDate";
 import ButtonFloating from "../../components/Button/ButtonFloating";
 import dayjs from "dayjs";
 import ModalTodo from "../../components/Todo/ModalTodo/ModalTodo";
+import useQueryTodoList from "../../query/todoList.query";
 
 const TodoList = ({ startDate }) => {
-  const [todoList, setTodoList] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const { groupId } = useParams();
+  const { isLoading, data } = useQueryTodoList({
+    groupId,
+    startDate: startDate.format("YYYY-MM-DD"),
+    endDate: startDate.clone().subtract(3, "day").format("YYYY-MM-DD"),
+  });
+
+  if (isLoading) return null;
+  return <List data={data} groupId={groupId} startDate={startDate} />;
+};
+
+const List = ({ groupId, data, startDate }) => {
   const [date, setDate] = useState();
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
+  const [todoList, setTodoList] = useState(data);
 
   const handleModalVisible = (date) => async () => {
     await setDate(date);
     setIsCreateModalVisible(!isCreateModalVisible);
-  };
-
-  const { groupId } = useParams();
-
-  const requestTodoList = async () => {
-    try {
-      setIsLoading(true);
-      const todoList = await readTodoList(
-        groupId,
-        startDate.format("YYYY-MM-DD"),
-        startDate.clone().add(7, "day").format("YYYY-MM-DD")
-      );
-      setTodoList(todoList);
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const dateList = [];
@@ -41,11 +35,6 @@ const TodoList = ({ startDate }) => {
     dateList.push(startDate.clone().add(offset, "day").format("YYYY-MM-DD"));
   }
 
-  useEffect(() => {
-    requestTodoList();
-  }, [groupId]);
-
-  if (isLoading) return null;
   return (
     <>
       <ModalTodo
