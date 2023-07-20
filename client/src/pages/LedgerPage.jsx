@@ -85,7 +85,6 @@ const LedgerPage = () => {
   useEffect(() => {
     requestLedgerInfo();
     requestLedgerList();
-    requestLedgerList();
   }, [selectedMonth]);
 
   return (

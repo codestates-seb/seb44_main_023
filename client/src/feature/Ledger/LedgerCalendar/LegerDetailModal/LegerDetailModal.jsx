@@ -64,12 +64,14 @@ const ModalTitle = styled.div`
   text-align: center;
   width: 1200px;
 `;
+
 const Empty = styled.div`
   text-align: center;
   font-size: 2rem;
   padding: 100px;
   color: var(--color-gray-04);
 `;
+
 const ModalRow = styled.div`
   display: grid;
   grid-template-columns: 0.5fr 1fr 1fr 1fr 2fr 1fr;
