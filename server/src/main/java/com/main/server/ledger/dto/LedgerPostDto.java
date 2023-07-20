@@ -1,6 +1,8 @@
 package com.main.server.ledger.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.main.server.exception.BusinessLogicException;
+import com.main.server.exception.ExceptionCode;
 import com.main.server.labels.entity.Inoutcome;
 import com.main.server.labels.entity.Payment;
 import com.main.server.ledger.entity.Ledger;
@@ -10,6 +12,7 @@ import com.main.server.labels.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -36,6 +39,7 @@ public class LedgerPostDto {
     private Long categoryId;
 
     @JsonProperty(value = "in_outcome_id")
+    @NotNull(message = "Inoutcome required")
     private Long inoutcomeId;
 
     @JsonProperty(value = "payment_id")
@@ -50,7 +54,13 @@ public class LedgerPostDto {
         return categoryId != null ? categoryId : null;
     }
 
-    public Long getInoutcomeId() {
-        return inoutcomeId != null ? inoutcomeId : null;
+//    public Long getInoutcomeId() {
+//        return inoutcomeId != null ? inoutcomeId : null;
+//    }
+public Long getInoutcomeId() {
+    if (inoutcomeId == null) {
+        throw new BusinessLogicException(ExceptionCode.INOUTCOME_REQUIRED);
     }
+    return inoutcomeId;
+}
 }
