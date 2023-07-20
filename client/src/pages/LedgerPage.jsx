@@ -84,11 +84,9 @@ const LedgerPage = () => {
 
   useEffect(() => {
     requestLedgerInfo();
-  }, [groupId, selectedMonth]);
-
-  useEffect(() => {
-    if (groupInfo) requestLedgerList();
-  }, [groupId, groupInfo]);
+    requestLedgerList();
+    requestLedgerList();
+  }, [selectedMonth]);
 
   return (
     <Layout>
@@ -105,6 +103,7 @@ const LedgerPage = () => {
             />
             {pageType === "calendar" ? (
               <LedgerCalendar
+                ledgerList={ledgerList}
                 selectedMonth={selectedMonth}
                 handleSelectedMonth={handleSelectedMonth}
               />
