@@ -83,9 +83,11 @@ const LedgerPage = () => {
 
   useEffect(() => {
     requestLedgerInfo();
-    requestLedgerList();
-    requestLedgerList();
-  }, [selectedMonth]);
+  }, [groupId, selectedMonth]);
+
+  useEffect(() => {
+    if (groupInfo) requestLedgerList();
+  }, [groupInfo]);
 
   return (
     <StyledWrapper>
