@@ -93,6 +93,8 @@ const StyledWrapper = styled.div`
 
 const CommentInput = styled(Input)`
   padding: 0;
+  width: 100%;
+  height: 100%;
 `;
 
 const AddButton = styled(FiSend)`
