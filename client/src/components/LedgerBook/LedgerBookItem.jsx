@@ -5,21 +5,21 @@ const LedgerBookItem = ({ bookInfo }) => {
   const {
     ledger_schedule_date,
     ledger_title,
-    amount,
-    in_outcome: { in_outcome_id },
+    ledger_amount,
+    inoutcome: { inoutcomeId },
   } = bookInfo;
 
   return (
     <StyledWrapper>
       <Date>{dayjs(ledger_schedule_date).get("date")}일</Date>
       <InOutcomeIcon
-        className={`inout ${in_outcome_id === 1 ? "plus" : "minus"}`}
+        className={`inout ${inoutcomeId === 1 ? "plus" : "minus"}`}
       >
-        {in_outcome_id === 1 ? "+" : "-"}
+        {inoutcomeId === 1 ? "+" : "-"}
       </InOutcomeIcon>
-      <Detail className={`detail ${in_outcome_id === 1 ? "plus" : "minus"}`}>
+      <Detail className={`detail ${inoutcomeId === 1 ? "plus" : "minus"}`}>
         <div className="ledger-title">{ledger_title}</div>
-        <div className="ledger-amount">{amount.toLocaleString()}원</div>
+        <div className="ledger-amount">{ledger_amount?.toLocaleString()}원</div>
       </Detail>
     </StyledWrapper>
   );

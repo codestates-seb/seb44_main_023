@@ -7,8 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target:
-          "http://ec2-3-35-11-50.ap-northeast-2.compute.amazonaws.com:8080/",
+        target: "https://api.planfinity.co.kr/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         secure: false,

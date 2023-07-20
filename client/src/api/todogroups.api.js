@@ -75,9 +75,9 @@ export const readTodoGroupMember = async (groupId) => {
   }
 };
 
-export const createTodo = async (data) => {
+export const createTodo = async (groupId, data) => {
   try {
-    const res = await API.post(`/todogroups/1/todos`, {
+    const res = await API.post(`/todogroups/${groupId}/todos`, {
       ...data,
     });
     return res.data;

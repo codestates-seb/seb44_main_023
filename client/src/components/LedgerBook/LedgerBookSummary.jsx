@@ -7,24 +7,24 @@ const LedgerBookSummary = ({
   handleSelectedMonth,
 }) => {
   const balance = ledgerList.reduce((acc, curr) => {
-    if (curr.in_outcome.in_outcome_name === "지출") {
-      acc -= curr.amount;
+    if (curr.inoutcome.inoutcomeId === 1) {
+      acc -= curr.ledger_amount;
     } else {
-      acc += curr.amount;
+      acc += curr.ledger_amount;
     }
     return acc;
   }, 0);
 
   const totalExpense = ledgerList.reduce((acc, curr) => {
-    if (curr.in_outcome.in_outcome_name === "지출") {
-      acc += curr.amount;
+    if (curr.inoutcome.inoutcomeId === 1) {
+      acc += curr.ledger_amount;
     }
     return acc;
   }, 0);
 
   const totalIncome = ledgerList.reduce((acc, curr) => {
-    if (curr.in_outcome.in_outcome_name === "수입") {
-      acc += curr.amount;
+    if (curr.inoutcome.inoutcomeId === 2) {
+      acc += curr.ledger_amount;
     }
     return acc;
   }, 0);

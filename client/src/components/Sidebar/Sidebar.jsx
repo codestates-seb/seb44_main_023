@@ -65,9 +65,9 @@ const Sidebar = () => {
 
   const handleButtonClick = (groupId, groupType) => {
     if (groupType === "Todo") {
-      navigate(`/todogroups/${groupId}`);
+      navigate(`/todo/${groupId}`);
     } else if (groupType === "가계부") {
-      navigate(`/ledgergroups/${groupId}`);
+      navigate(`/ledger/${groupId}?type=list`);
     }
   };
 
@@ -180,21 +180,20 @@ const LedgerSidebarSection = styled.div`
 
 const AddedButtonContainer = styled.div`
   overflow-y: auto;
-  padding-right: 1px; 
-  scrollbar-width: thin; 
-  scrollbar-color: transparent; 
-
+  padding-right: 1px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent;
 
   &::-webkit-scrollbar {
-    width: 1px; 
+    width: 1px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: transparent; 
+    background-color: transparent;
   }
 
   &::-webkit-scrollbar-track {
-    background-color: transparent; 
+    background-color: transparent;
   }
 `;
 
