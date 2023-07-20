@@ -11,7 +11,6 @@ import Loading from "../components/Loading/Loading";
 import LedgerCalendar from "../feature/Ledger/LedgerCalendar/LedgerCalendar";
 import LedgerGroup from "../feature/Ledger/LedgerGroup";
 import LedgerList from "../feature/Ledger/LedgerList/LedgerList";
-import Layout from "../Layout/PagesLayout";
 import ButtonFloating from "../components/Button/ButtonFloating";
 
 const LedgerPage = () => {
@@ -89,42 +88,40 @@ const LedgerPage = () => {
   }, [selectedMonth]);
 
   return (
-    <Layout>
-      <StyledWrapper>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <LedgerGroup
-              groupInfo={groupInfo}
-              members={members}
-              pageType={pageType}
-              handleChangeParameter={handleChangeParameter}
+    <StyledWrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <LedgerGroup
+            groupInfo={groupInfo}
+            members={members}
+            pageType={pageType}
+            handleChangeParameter={handleChangeParameter}
+          />
+          {pageType === "calendar" ? (
+            <LedgerCalendar
+              ledgerList={ledgerList}
+              selectedMonth={selectedMonth}
+              handleSelectedMonth={handleSelectedMonth}
             />
-            {pageType === "calendar" ? (
-              <LedgerCalendar
-                ledgerList={ledgerList}
-                selectedMonth={selectedMonth}
-                handleSelectedMonth={handleSelectedMonth}
-              />
-            ) : (
-              <LedgerList
-                ledgerList={ledgerList}
-                selectedMonth={selectedMonth}
-                handleSelectedMonth={handleSelectedMonth}
-              />
-            )}
-            <ButtonWrapper>
-              <ButtonFloating
-                icon="plus"
-                // onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
-              />
-              <ButtonFloating icon="setting" />
-            </ButtonWrapper>
-          </>
-        )}
-      </StyledWrapper>
-    </Layout>
+          ) : (
+            <LedgerList
+              ledgerList={ledgerList}
+              selectedMonth={selectedMonth}
+              handleSelectedMonth={handleSelectedMonth}
+            />
+          )}
+          <ButtonWrapper>
+            <ButtonFloating
+              icon="plus"
+              // onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
+            />
+            <ButtonFloating icon="setting" />
+          </ButtonWrapper>
+        </>
+      )}
+    </StyledWrapper>
   );
 };
 

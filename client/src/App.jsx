@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
-import TestWidget from "./pages/TestWidget";
 import ErrorPage from "./pages/ErrorPage";
 import TodoPage from "./pages/TodoPage";
 import MainPage from "./pages/MainPage";
@@ -10,27 +9,37 @@ import LedgerPage from "./pages/LedgerPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import useUserInfoStore from "./store/store.userInfo";
+import Layout from "./Layout/PagesLayout";
 
 function App() {
-  const { setUserInfo } = useUserInfoStore();
+  const { userInfo, setUserInfo } = useUserInfoStore();
+  const { isLoading, memberId } = userInfo;
 
   useEffect(() => {
     setUserInfo(1);
   }, []);
 
+  if (isLoading) return null;
   return (
     <>
-      <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profile/:id" element={<ProfilePage />} />
-        <Route path="/weatherWidget" element={<TestWidget />} />
-        <Route path="/todo/:groupId" element={<TodoPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/ledger/:groupId" element={<LedgerPage />} />
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+      {memberId ? (
+        <Layout>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/todo/:groupId" element={<TodoPage />} />
+            <Route path="/ledger/:groupId" element={<LedgerPage />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </Layout>
+      ) : (
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      )}
     </>
   );
 }

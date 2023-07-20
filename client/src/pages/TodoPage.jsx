@@ -33,22 +33,20 @@ const TodoPage = () => {
   }, [groupId]);
 
   return (
-    <Layout>
-      <StyledWrapper>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <TodoGroup
-              groupInfo={groupInfo}
-              members={members}
-              setStartDate={setStartDate}
-            />
-            <TodoList startDate={startDate} />
-          </>
-        )}
-      </StyledWrapper>
-    </Layout>
+    <StyledWrapper>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <TodoGroup
+            groupInfo={groupInfo}
+            members={members}
+            setStartDate={setStartDate}
+          />
+          <TodoList startDate={startDate} />
+        </>
+      )}
+    </StyledWrapper>
   );
 };
 
