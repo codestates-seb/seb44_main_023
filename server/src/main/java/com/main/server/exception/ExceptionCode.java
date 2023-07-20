@@ -29,7 +29,8 @@ public enum ExceptionCode {
     CATEGORY_NOT_FOUND(404, "Category not found"),
     PAYMENT_NOT_FOUND(404, "Payment not found"),
     INOUTCOME_NOT_FOUND(404, "Inoutcome not found"),
-    IS_NOT_OWNER(403, "TodoGroup 생성자가 아닙니다.");
+    IS_NOT_OWNER(403, "TodoGroup 생성자가 아닙니다."),
+    INOUTCOME_REQUIRED(400, "수입/지출은 필수값입니다.");
 
 
 
