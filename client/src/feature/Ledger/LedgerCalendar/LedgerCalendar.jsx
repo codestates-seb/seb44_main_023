@@ -179,7 +179,7 @@ const CenteredContainer = styled.div`
 `;
 
 const StyledWrapper = styled.div`
-  width: 120rem
+  width: 120rem;
 `;
 
 const CalendarHeader = styled.div`

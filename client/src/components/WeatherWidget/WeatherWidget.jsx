@@ -62,7 +62,7 @@ const WeatherIcon = styled.div`
 
 const WeatherLargeText = styled.span`
   position: relative;
-  color: var(--color-gray-07);
+  color: var(--color-gray-09);
   font-size: ${(props) => 4 * props.scale}rem;
   justify-self: center;
   
@@ -70,7 +70,7 @@ const WeatherLargeText = styled.span`
 
 const WeatherText = styled.span`
   position: relative;
-  color: var(--color-gray-07);
+  color: var(--color-gray-09);
   font-size: ${(props) => 1.4 * props.scale}rem;
   justify-self: center;
 `;
