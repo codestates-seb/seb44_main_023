@@ -43,7 +43,7 @@ const TodoList = ({ startDate }) => {
 
   useEffect(() => {
     requestTodoList();
-  }, []);
+  }, [groupId]);
 
   if (isLoading) return null;
   return (
