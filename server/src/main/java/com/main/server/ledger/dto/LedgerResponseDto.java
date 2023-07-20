@@ -7,9 +7,11 @@ import com.main.server.labels.entity.Payment;
 import com.main.server.ledger.entity.Ledger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LedgerResponseDto {
 
     @JsonProperty(value = "member_id")
@@ -39,7 +41,8 @@ public class LedgerResponseDto {
 
     private PaymentDto payment;
 
-    public LedgerResponseDto(Ledger ledger, boolean includeCategory, boolean includeInoutcome, boolean includePayment) {
+//boolean includeCategory, boolean includeInoutcome, boolean includePayment
+    public LedgerResponseDto(Ledger ledger) {
         this.memberId = ledger.getMember().getMemberId();
         this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
         this.ledgerId = ledger.getLedgerId();
@@ -47,15 +50,18 @@ public class LedgerResponseDto {
         this.ledgerContent = ledger.getLedgerContent();
         this.ledgerAmount = ledger.getLedgerAmount();
         this.ledgerDate = String.valueOf(ledger.getLedgerDate());
-        if (includeCategory) {
-            this.category = new CategoryDto(ledger.getCategory());
-        }
-        if (includeInoutcome) {
-            this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
-        }
-        if (includePayment) {
-            this.payment = new PaymentDto(ledger.getPayment());
-        }
+        this.category = new CategoryDto(ledger.getCategory());
+        this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
+        this.payment = new PaymentDto(ledger.getPayment());
+//        if (includeCategory) {
+//            this.category = new CategoryDto(ledger.getCategory());
+//        }
+//        if (includeInoutcome) {
+//            this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
+//        }
+//        if (includePayment) {
+//            this.payment = new PaymentDto(ledger.getPayment());
+//        }
     }
 
         @Getter
