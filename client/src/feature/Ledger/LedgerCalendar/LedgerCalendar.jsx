@@ -146,6 +146,7 @@ const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
 `;
 
 const StyledWrapper = styled.div`
@@ -185,23 +186,6 @@ const CalendarWrapper = styled.div`
   padding-right: 3rem;
   padding-left: 3rem;
   max-height: 60rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-07) transparent; 
-
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-gray-03); 
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent; 
-  }
 `;
 
 const ThisMonthButton = styled(Button)`
@@ -244,7 +228,7 @@ const AnothDateCell = styled.div`
   border-left: 1px solid #c9c9c9;
 
   &:nth-child(7n + 1) {
-    border-left: none; // 첫 번째 요소에 대한 스타일
+    border-left: none; 
   }
 `;
 
