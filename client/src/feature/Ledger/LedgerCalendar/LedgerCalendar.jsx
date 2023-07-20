@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { styled, css } from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+import dayjs from "dayjs";
 
 const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
   const currentDate = new Date(selectedMonth.format("YYYY-MM-DD"));
@@ -13,7 +14,6 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const firstDayOfWeek = firstDayOfMonth.getDay();
   const lastDateOfMonth = lastDayOfMonth.getDate();
-
 
   const dates = [];
   for (let i = 1; i <= lastDateOfMonth; i++) {
@@ -47,7 +47,6 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
     setMonth(currentDate.getMonth());
     setDay(currentDate.getDate());
   }, [selectedMonth]);
-
 
   return (
     <CenteredContainer>
@@ -83,7 +82,11 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
             ))}
 
             {dates.map((date) => {
-              const dateData = ledgerList.find((item) => item.date === date);
+              const dateData = ledgerList.find(
+                (item) =>
+                  item.ledger_schedule_date ===
+                  dayjs(new Date(year, month, date)).format("YYYY-MM-DD")
+              );
 
               const dayOfWeek = new Date(year, month, date).getDay();
               const isSaturdayDate = isSaturday(dayOfWeek);
@@ -95,7 +98,11 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
                 year === today.getFullYear() &&
                 month === today.getMonth() &&
                 date === today.getDate();
-          
+
+              const addCommasToNumber = (number) => {
+                return number.toLocaleString();
+              };
+              
               return (
                 <DateCell key={date}>
                   <DateLabel
@@ -113,14 +120,16 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
                   {dateData && (
                     <>
                       <ContentWrapper>
-                        <ExpenseContent>
-                          {dateData.inoutcome?.inoutcomeId === 1 &&
-                            `- ${dateData.ledger_amount}`}
-                        </ExpenseContent>
-                        <IncomeContent>
-                          {dateData.inoutcome?.inoutcomeId === 2 &&
-                            `+ ${dateData.ledger_amount}`}
-                        </IncomeContent>
+                        {dateData.inoutcome?.inoutcomeId === 1 && (
+                          <ExpenseContent>
+                            - {addCommasToNumber(dateData.ledger_amount)}원
+                          </ExpenseContent>
+                        )}
+                        {dateData.inoutcome?.inoutcomeId === 2 && (
+                          <IncomeContent>
+                            + {addCommasToNumber(dateData.ledger_amount)}원
+                          </IncomeContent>
+                        )}
                       </ContentWrapper>
                     </>
                   )}
@@ -140,7 +149,6 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
     </CenteredContainer>
   );
 };
-
 
 const CenteredContainer = styled.div`
   display: flex;
@@ -187,20 +195,19 @@ const CalendarWrapper = styled.div`
   max-height: 60rem;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-07) transparent; 
-
+  scrollbar-color: var(--color-gray-07) transparent;
 
   &::-webkit-scrollbar {
     width: 6px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--color-gray-03); 
+    background-color: var(--color-gray-03);
     border-radius: 3px;
   }
 
   &::-webkit-scrollbar-track {
-    background-color: transparent; 
+    background-color: transparent;
   }
 `;
 
@@ -274,7 +281,7 @@ const DateCell = styled.div`
   border-bottom: 1px solid var(--color-gray-03);
 
   &:nth-child(7n + 1) {
-    border-left: none; 
+    border-left: none;
   }
 `;
 
