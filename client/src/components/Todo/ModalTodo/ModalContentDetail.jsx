@@ -55,7 +55,9 @@ const ModalContentDetail = ({
     <StyledWrapper>
       <div className="modal-title">
         <div className="modal-title-text">Todo</div>
-        <div className="modal-title-date">{todo_schedule_date}</div>
+        <div className="modal-title-date">
+          {todo_schedule_date !== "null" && todo_schedule_date}
+        </div>
       </div>
       <div className="todo-title">{todo_title}</div>
       <div className="todo-content">{todo_content}</div>
