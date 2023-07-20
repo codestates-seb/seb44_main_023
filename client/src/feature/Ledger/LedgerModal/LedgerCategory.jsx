@@ -11,10 +11,11 @@ import { MdEdit, MdDelete, MdClose } from "react-icons/md";
 const LedgerCategory = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allCategories, setAllCategories] = useState([]);
-  const [editingCategoryId, setEditingCategoryId] = useState(null); // 수정 중인 카테고리의 ID를 추적하는 상태
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCategorySelect, setIsCategorySelect] = useState(false);
   const listRef = useRef();
+  const MAX_TEXT_LENGTH = 8;
 
   useEffect(() => {
     // 모든 카테고리 데이터 가져오기
@@ -32,9 +33,9 @@ const LedgerCategory = () => {
   // 카테고리 추가 함수
   const handleAddCategory = async () => {
     try {
-      const newCategory = await addCategories(1, searchQuery); // memberId에 해당하는 값 사용
+      const newCategory = await addCategories(1, searchQuery);
       setAllCategories([...allCategories, newCategory]);
-      setSearchQuery(""); // 추가 후 검색어 초기화
+      setSearchQuery("");
     } catch (error) {
       console.error(error);
     }
@@ -94,25 +95,15 @@ const LedgerCategory = () => {
     setIsCategorySelect(false); // isCategorySelect를 false로 변경
   };
 
-  const handleOutsideClick = (event) => {
-    if (listRef.current && !listRef.current.contains(event.target)) {
-      setIsCategoryOpen(false);
-    }
-  };
-
   return (
     <CategoryContainer>
       {/* 카테고리 검색 창 */}
       {isCategorySelect && (
         <>
-          <button
-            type="text"
-            value={searchQuery}
-          >
-            {searchQuery}
+          <SelectBtn type="text" value={searchQuery}>
+            <SelectBtnText>{searchQuery}</SelectBtnText>
             <CloseIcon onClick={() => handleClearSearch()} />
-          </button>
-          <p>true일때</p>
+          </SelectBtn>
         </>
       )}
       {!isCategorySelect && (
@@ -125,12 +116,9 @@ const LedgerCategory = () => {
             onKeyPress={handleSearchQueryEnter}
             placeholder="카테고리를 입력하세요"
           />
-          <p>false일때</p>
         </>
       )}
-
       {/* 검색 결과 카테고리 목록 */}
-
       {isCategoryOpen && (
         <CategoryList ref={listRef}>
           {filteredCategories.map((category) => (
@@ -192,40 +180,46 @@ const LedgerCategory = () => {
           ))}
         </CategoryList>
       )}
-      {/* 새로운 카테고리 추가 */}
-      {/* 엔터 키 처리는 위에서 handleSearchQueryEnter 함수를 사용 */}
     </CategoryContainer>
   );
 };
 
 export default LedgerCategory;
 
-const CloseIcon = styled(MdClose)`
-  cursor: pointer;
-  margin-left: 8px;
-  font-size: 1.2rem;
-  color: #888;
+const CategoryContainer = styled.div`
+  background-color: transparent;
+  width: 15rem;
 `;
 
-const CategoryContainer = styled.div`
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  width: 30rem;
-  margin: 10rem;
+const SearchInput = styled.input`
+  width: 100%;
+  background-color: transparent;
+  margin-bottom: 0.5rem;
 `;
 
 const CategoryList = styled.ul`
   list-style-type: none;
   padding: 0;
   width: 100%;
+  border-radius: 1rem;
+  width: 13rem;
 `;
 
-const CategoryItem = styled.button`
+const CategoryItem = styled.div`
+  background-color: var(--color-blue-01);
+  border-radius: 1rem;
   display: flex;
-  align-items: center;
   margin-bottom: 5px;
   flex: 1;
-  width: 100%;
+  font-size: 1.5rem;
+  width: 14.5rem;
+  span {
+    text-align: left;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-gray-9);
+  }
 `;
 
 const CategoryEditSpan = styled.span`
@@ -236,15 +230,16 @@ const CategoryEditSpan = styled.span`
 const CategoryEditInput = styled.input`
   flex: 1;
   width: 100%;
+  background-color: var(--color-blue-01);
+  border-radius: 0.5rem;
+  text-align: left;
+  margin: 0rem 1.2rem;
 `;
-
-const SearchInput = styled.input`
-    width: 100%;
-`
 
 const CategoryEditButton = styled.button`
   background-color: transparent;
   border: none;
+  padding: 0.5rem 0rem 0rem 0rem;
   cursor: pointer;
   font-size: 1rem;
 `;
@@ -252,7 +247,29 @@ const CategoryEditButton = styled.button`
 const CategoryDeleteButton = styled.button`
   background-color: transparent;
   border: none;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 0rem 0rem 0.5rem; */
+  margin: 0.5rem 0.5rem 0rem 0.3rem;
   cursor: pointer;
   font-size: 1rem;
+`;
+
+const SelectBtn = styled.button`
+  border-radius: 2rem;
+  background-color: var(--color-blue-01);
+  justify-content: center;
+  align-items: center;
+  width: 15rem;
+  height: 3rem;
+`;
+
+const CloseIcon = styled(MdClose)`
+  cursor: pointer;
+  margin-left: 1rem;
+  font-size: 1.4rem;
+  color: #888;
+`;
+
+const SelectBtnText = styled.span`
+  font-size: 1.5rem;
+  color: var(--color-gray-9);
 `;
