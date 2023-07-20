@@ -56,6 +56,7 @@ const MainTodoList = ({ startDate, groupId }) => {
         <TodoDate
           groupId={groupId}
           todoList={todoList}
+          setTodoList={setTodoList}
           handleModalVisible={handleModalVisible}
           horizontal
         />

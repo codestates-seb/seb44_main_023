@@ -58,6 +58,7 @@ const TodoList = ({ startDate }) => {
       <StyledWrapper>
         <TodoDate
           todoList={todoList}
+          setTodoList={setTodoList}
           handleModalVisible={handleModalVisible}
           groupId={groupId}
         />
