@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import smallLogo from "../../assets/home/smallLogo.svg";
 import bigLogo from "../../assets/home/BigLogo.svg";
-// import moveTo from "../../assets/home/moveTo.svg";
 import Button from "../../components/Button/Button";
 import WeatherWidget from "../../components/WeatherWidget/WeatherWidget";
 import { IoIosArrowDown } from "react-icons/io";
@@ -72,7 +71,7 @@ const MoveTo = styled(IoIosArrowDown)`
   &:hover {
     transform: translateY(
       -5px
-    ); /* hover시 아이콘을 위로 이동시키는 애니메이션 */
+    ); 
   }
 `;
 const SmallLogo = styled.img`
