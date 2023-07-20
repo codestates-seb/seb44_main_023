@@ -40,24 +40,19 @@ function App() {
         {import.meta.env.MODE === "development" && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
-        {memberId ? (
-          <Layout>
-            <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/profile/:id" element={<ProfilePage />} />
-              <Route path="/todo/:groupId" element={<TodoPage />} />
-              <Route path="/ledger/:groupId" element={<LedgerPage />} />
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
-          </Layout>
-        ) : (
+        <Layout>
           <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/profile/:id" element={<ProfilePage />} />
+            <Route path="/todo/:groupId" element={<TodoPage />} />
+            <Route path="/ledger/:groupId" element={<LedgerPage />} />
+            <Route path="*" element={<ErrorPage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
-        )}
+        </Layout>
       </QueryClientProvider>
     </>
   );
