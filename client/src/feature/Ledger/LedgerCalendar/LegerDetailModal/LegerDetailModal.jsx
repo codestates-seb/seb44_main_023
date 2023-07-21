@@ -4,10 +4,7 @@ import dayjs from "dayjs";
 import useQueryLedgerList from "../../../../query/ledgerList.query";
 
 const LegerDetailModal = ({ selectedDate, groupId }) => {
-  const {
-    isLoading,
-    data: ledgerList,
-  } = useQueryLedgerList({
+  const { isLoading, data: ledgerList } = useQueryLedgerList({
     groupId,
     startDate: selectedDate,
     endDate: selectedDate,
@@ -24,7 +21,7 @@ const LegerDetailModal = ({ selectedDate, groupId }) => {
   const addCommasToNumber = (number) => {
     return number.toLocaleString();
   };
-  // 가계부 데이터가 없을 때
+
   if (!ledgerList || ledgerList.length === 0) {
     return (
       <>
@@ -41,7 +38,6 @@ const LegerDetailModal = ({ selectedDate, groupId }) => {
     );
   }
 
-  // 가계부 데이터가 있을 때
   return (
     <>
       <ModalTitle>
