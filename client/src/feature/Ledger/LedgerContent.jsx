@@ -74,7 +74,10 @@ const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
 };
 export default LedgerContent;
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  height: 100%;
+  max-height: calc(100% - 15.2rem);
+`;
 
 const ButtonWrapper = styled.div`
   position: fixed;

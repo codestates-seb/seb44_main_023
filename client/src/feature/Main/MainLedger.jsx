@@ -6,12 +6,15 @@ import useQueryLedgerGroup from "../../query/ledgergroup.query";
 const MainLedger = ({ groupId }) => {
   const { isLoading, data } = useQueryLedgerGroup({ groupId });
 
-  if (isLoading) return <StyledWrapper />;
+  if (isLoading || !data?.groupInfo) return <StyledWrapper />;
 
   const { groupInfo, members } = data;
   return (
     <StyledWrapper>
-      <GroupInfo title={groupInfo?.ledger_group_title} members={members} />
+      <GroupInfo
+        title={groupInfo?.ledger_group_title}
+        members={members.members}
+      />
       <MainLedgerList groupId={groupId} />
     </StyledWrapper>
   );
@@ -27,9 +30,4 @@ const StyledWrapper = styled.div`
   .group-info {
     margin-bottom: 4rem;
   }
-`;
-
-const LedgerBookWrapper = styled.div`
-  max-height: calc(100% - 11.8rem);
-  height: 100%;
 `;
