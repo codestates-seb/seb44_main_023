@@ -169,7 +169,7 @@ const OptionList = styled.ul`
     transition: 100ms;
     background-color: var(--color-gray-01);
 
-    &: hover {
+    &:hover {
       background: var(--color-blue-01);
     }
 
