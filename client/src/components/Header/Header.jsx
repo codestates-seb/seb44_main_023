@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logoSpare.png";
-import UserAvatar from "../../assets/userAvarta.png";
-import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
-import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
 import { useGetUserInfo } from "../../store/store.userInfo";
@@ -110,7 +107,7 @@ const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 99;
   display: flex;
   width: 100%;
   height: 6rem;
@@ -141,11 +138,6 @@ const Button = styled.button`
 `;
 
 const WeatherComponent = styled.div``;
-
-const MoonIcon = styled(HiMiniMoon)`
-  width: 2.4rem;
-  height: 2.4rem;
-`;
 
 const UserAvatarImage = styled.img`
   width: 2.8rem;
