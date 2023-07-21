@@ -5,13 +5,15 @@ import com.main.server.labels.entity.Category;
 import com.main.server.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CategoryPostDto {
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+//    @JsonProperty(value = "member_id")
+//    private Long memberId;
 
     @JsonProperty(value = "category_name")
     private String categoryName;

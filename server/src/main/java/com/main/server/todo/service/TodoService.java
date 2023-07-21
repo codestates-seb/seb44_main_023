@@ -4,6 +4,7 @@ import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.domain.TodoStatus;
 import com.main.server.todo.dto.TodoDto;
@@ -24,16 +25,28 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final MemberService memberService;
     private final TodoGroupService todoGroupService;
+    private JwtTokenizer jwtTokenizer;
 
     public TodoService(TodoRepository todoRepository, MemberService memberService,
-        TodoGroupService todoGroupService) {
+        TodoGroupService todoGroupService, JwtTokenizer jwtTokenizer) {
         this.todoRepository = todoRepository;
         this.memberService = memberService;
         this.todoGroupService = todoGroupService;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
-    public Todo createTodo(Long todoGroupId, TodoDto.Post postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public Todo createTodo(Long todoGroupId, TodoDto.Post postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
         Todo savedTodo = todoRepository.save(postDto.toEntity(member, todoGroup));
 

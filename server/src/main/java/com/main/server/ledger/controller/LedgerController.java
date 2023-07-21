@@ -5,13 +5,18 @@ import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.dto.LedgerResponseDto;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledger.service.LedgerService;
+import com.main.server.member.Member;
+import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.dto.TodoDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
@@ -23,50 +28,237 @@ import java.util.stream.Collectors;
 public class LedgerController {
 
     private final LedgerService ledgerService;
+    private JwtTokenizer jwtTokenizer;
+    private MemberService memberService;
 
-    public LedgerController(LedgerService ledgerService) {
+    public LedgerController(LedgerService ledgerService, JwtTokenizer jwtTokenizer, MemberService memberService) {
         this.ledgerService = ledgerService;
+        this.jwtTokenizer = jwtTokenizer;
+        this.memberService = memberService;
     }
 
     @PostMapping
     public ResponseEntity<LedgerResponseDto> createLedger(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
-            @Validated @RequestBody LedgerPostDto postDto) {
-        Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto);
+            @Validated @RequestBody LedgerPostDto postDto,
+            HttpServletRequest request) {
 
-        return new ResponseEntity<>(new LedgerResponseDto(ledger, true, true, true), HttpStatus.CREATED);
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto, token);
+
+            return new ResponseEntity<>(new LedgerResponseDto(ledger, true, true, true), HttpStatus.CREATED);
+        } else if (refreshToken != null) {
+            // Refresh Token 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            Ledger ledger = ledgerService.createLedger(ledgerGroupId, postDto, token);
+
+            return new ResponseEntity<>(new LedgerResponseDto(ledger, true, true, true), HttpStatus.CREATED);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
     }
+
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
-                                      @Valid @RequestBody LedgerPatchDto patchDto) {
-        Ledger ledger = ledgerService.updateLedger(ledgerGroupId, ledgerId, patchDto);
+                                      @Valid @RequestBody LedgerPatchDto patchDto,
+                                      HttpServletRequest request) {
 
-        return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            Ledger ledger = ledgerService.updateLedger(ledgerGroupId, ledgerId, patchDto);
+
+            return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+        } else if (refreshToken != null) {
+            // Refresh Token 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            Ledger ledger = ledgerService.updateLedger(ledgerGroupId, ledgerId, patchDto);
+
+            return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
     }
 
     @GetMapping("/{ledger-id}")
     public ResponseEntity getLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
-                                    @PathVariable("ledger-id") @Positive Long ledgerId) {
-        Ledger ledger = ledgerService.getLedger(ledgerGroupId, ledgerId);
-        return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+                                    @PathVariable("ledger-id") @Positive Long ledgerId,
+                                    HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            Ledger ledger = ledgerService.getLedger(ledgerGroupId, ledgerId);
+            return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+        } else if (refreshToken != null) {
+            // Refresh Token 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            Ledger ledger = ledgerService.getLedger(ledgerGroupId, ledgerId);
+            return new ResponseEntity(new LedgerResponseDto(ledger, true, true, true), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
     }
 
     @GetMapping()
-    public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId) {
-        List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
-        List<LedgerResponseDto> responses = ledgers.stream()
-                .map((ledger -> new LedgerResponseDto(ledger, true, true, true)))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+                                                              HttpServletRequest request) {
 
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
+            List<LedgerResponseDto> responses = ledgers.stream()
+                    .map((ledger -> new LedgerResponseDto(ledger, true, true, true)))
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        } else if (refreshToken != null) {
+            // Refresh Token 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
+            List<LedgerResponseDto> responses = ledgers.stream()
+                    .map((ledger -> new LedgerResponseDto(ledger, true, true, true)))
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(responses, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
     }
 
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
-                                       @PathVariable("ledger-id") @Positive Long ledgerId) {
-        ledgerService.deleteLedger(ledgerGroupId, ledgerId);
+                                       @PathVariable("ledger-id") @Positive Long ledgerId,
+                                       HttpServletRequest request) {
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            ledgerService.deleteLedger(ledgerGroupId, ledgerId);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        } else if (refreshToken != null) {
+            // Refresh Token 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            // 회원 정보 확인 후 작업 수행
+            ledgerService.deleteLedger(ledgerGroupId, ledgerId);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
     }
 }
+
+
+

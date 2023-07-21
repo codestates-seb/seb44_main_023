@@ -9,16 +9,18 @@ import com.main.server.member.Member;
 import com.main.server.labels.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LedgerPostDto {
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+//    @JsonProperty(value = "member_id")
+//    private Long memberId;
 
     @JsonProperty(value = "ledger_title")
     private String ledgerTitle;

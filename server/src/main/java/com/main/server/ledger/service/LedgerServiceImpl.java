@@ -17,6 +17,7 @@ import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,20 +36,31 @@ public class LedgerServiceImpl implements LedgerService {
     private final CategoryRepository categoryRepository;
     private final InoutcomeRepository inoutcomeRepository;
     private final PaymentRepository paymentRepository;
+    private JwtTokenizer jwtTokenizer;
 
     public LedgerServiceImpl(LedgerRepository ledgerRepository, MemberService memberService, LedgerGroupService ledgerGroupService,
-                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository) {
+                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository, JwtTokenizer jwtTokenizer) {
         this.ledgerRepository = ledgerRepository;
         this.memberService = memberService;
         this.ledgerGroupService = ledgerGroupService;
         this.categoryRepository = categoryRepository;
         this.inoutcomeRepository = inoutcomeRepository;
         this.paymentRepository = paymentRepository;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Override
-    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
         Category category = null;  // 카테고리 초기값 설정
         Long categoryId = postDto.getCategoryId();

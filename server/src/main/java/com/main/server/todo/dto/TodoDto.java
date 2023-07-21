@@ -10,15 +10,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class TodoDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
 
-        @JsonProperty(value = "member_id")
-        private Long memberId;
+//        @JsonProperty(value = "member_id")
+//        private Long memberId;
 
         @JsonProperty(value = "todo_title")
         private String todoTitle;
@@ -43,10 +45,11 @@ public class TodoDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Patch {
 
-        @JsonProperty(value = "member_id")
-        private Long memberId;
+//        @JsonProperty(value = "member_id")
+//        private Long memberId;
 
         @JsonProperty(value = "todo_id")
         private Long todoId;

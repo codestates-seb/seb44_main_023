@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LedgerService {
 
-    Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto);
+    Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto, String token);
 
     Ledger updateLedger(Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto);
 

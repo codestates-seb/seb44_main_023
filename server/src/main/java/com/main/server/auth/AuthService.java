@@ -51,7 +51,7 @@ public class AuthService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.EMAIL_NOT_REGISTERED));
 
         // AccessToken 발급
-        String accessToken = jwtTokenizer.generateAccessToken(email);
+        String accessToken = jwtTokenizer.generateAccessToken(email, member.getMemberId());
 
         // AccessToken 유효성 검사
         if (!jwtTokenizer.validateToken(accessToken)) {
@@ -62,7 +62,7 @@ public class AuthService {
         String existingRefreshToken = member.getRefreshToken();
         String refreshToken;
         if (existingRefreshToken == null || !jwtTokenizer.validateToken(existingRefreshToken)) {
-            refreshToken = jwtTokenizer.generateRefreshToken(email);
+            refreshToken = jwtTokenizer.generateRefreshToken(email, member.getMemberId());
             member.setRefreshToken(refreshToken); // 회원 정보에 Refresh 토큰 저장
             memberRepository.save(member);
         } else {

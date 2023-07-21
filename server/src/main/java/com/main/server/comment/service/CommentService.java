@@ -7,6 +7,7 @@ import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.repository.TodoRepository;
 import com.main.server.todo.service.TodoService;
@@ -25,18 +26,29 @@ public class CommentService {
     private final TodoGroupService todoGroupService;
     private final TodoService todoService;
     private final CommentRepository commentRepository;
+    private JwtTokenizer jwtTokenizer;
 
     public CommentService(MemberService memberService, TodoGroupService todoGroupService,
-        TodoService todoService, CommentRepository commentRepository) {
+        TodoService todoService, CommentRepository commentRepository, JwtTokenizer jwtTokenizer) {
         this.memberService = memberService;
         this.todoGroupService = todoGroupService;
         this.todoService = todoService;
         this.commentRepository = commentRepository;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Transactional
-    public Comment createComment(Long todoGroupId, Long todoId, CommentDto.Post postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public Comment createComment(Long todoGroupId, Long todoId, CommentDto.Post postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
         todoGroupService.findById(todoGroupId);
         Todo todo = todoService.findById(todoId);
         Comment savedComment = commentRepository.save(postDto.toEntity(member, todo));
