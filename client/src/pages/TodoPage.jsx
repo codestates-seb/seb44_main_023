@@ -33,7 +33,7 @@ const TodoPage = () => {
           justifyContent: "center",
         }}
       >
-        <div className="empty">존재하지 않는 TODO 그룹입니다</div>
+        <div className="todo-empty-text">존재하지 않는 TODO 그룹입니다</div>
         <Button
           onClick={() => navigate("/")}
           label="Main으로 돌아가기"
@@ -69,7 +69,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   position: relative;
 
-  .empty {
+  .todo-empty-text {
     font-size: 2.4rem;
     margin-bottom: 4rem;
   }
