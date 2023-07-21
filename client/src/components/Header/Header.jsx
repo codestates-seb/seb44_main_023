@@ -81,9 +81,6 @@ const Header = () => {
         <LogoImage src={Logo} alt="Logo" />
       </LogoWrapper>
       <RightSectionWrapper>
-        <Button>
-          <MoonIcon size={24} />
-        </Button>
         <Button onClick={handleProfileClick}>
           <UserAvatarImage src={profileImage} alt="User Avatar" />
         </Button>
@@ -161,11 +158,6 @@ const LogoutIcon = styled(MdOutlineLogout)`
   height: 2.6rem;
 `;
 
-const WeatherIcon = styled(TiWeatherPartlySunny)`
-  width: 2.4rem;
-  height: 2.4rem;
-`;
-
 const PopupWrapper = styled.div`
   background-color: var(--color-gray-01);
   box-shadow: 0.5rem 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.25);
@@ -174,7 +166,7 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: -8.5rem;
+  right: -2rem;
   transform: translateX(-50%);
   &::before {
     content: "";
