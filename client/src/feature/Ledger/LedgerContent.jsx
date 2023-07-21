@@ -58,13 +58,13 @@ const Content = ({
     <StyledWrapper>
       {pageType === "calendar" ? (
         <LedgerCalendar
+          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />
       ) : (
         <LedgerList
-          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
