@@ -14,7 +14,7 @@ const WeatherImage = ({ weatherType }) => {
   const weatherImage = getWeatherImage(weatherName);
 
   return (
-    <ImageWrapper background={weatherImage}  className="brighten" />
+    <ImageWrapper background={weatherImage} />
   );
 };
 
