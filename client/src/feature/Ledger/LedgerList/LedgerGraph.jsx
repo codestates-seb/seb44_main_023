@@ -8,10 +8,10 @@ const LedgerGraph = ({ ledgerList, selectedMonth }) => {
       {ledgerList.length === 0 ? (
         <div className="empty">아직 내역이 없습니다</div>
       ) : (
-        <>
+        <div className="graph-wrapper">
           <GraphPie ledgerList={ledgerList} />
           <GraphBar ledgerList={ledgerList} selectedMonth={selectedMonth} />
-        </>
+        </div>
       )}
     </StyledWrapper>
   );
@@ -32,5 +32,9 @@ const StyledWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .graph-wrapper {
+    height: 100%;
   }
 `;

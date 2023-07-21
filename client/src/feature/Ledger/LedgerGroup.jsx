@@ -1,8 +1,7 @@
 import { styled } from "styled-components";
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import Button from "../../components/Button/Button";
+import GroupInfo from "../../components/Group/GroupInfo";
 
 const LedgerGroup = ({
   groupInfo,
@@ -26,21 +25,7 @@ const LedgerGroup = ({
 
   return (
     <StyledWrapper>
-      <GroupInfo>
-        <Title>{ledger_group_title}</Title>
-        <MemberWrapper>
-          <Member>
-            <div className="member-title">member</div>
-            {members.members.map((member) => (
-              <img
-                key={`member-${member.member_id}`}
-                id={member.member_id}
-                src={member.profile_image}
-              />
-            ))}
-          </Member>
-        </MemberWrapper>
-      </GroupInfo>
+      <GroupInfo title={ledger_group_title} members={members.members} />
       <ButtonWrapper>
         <Button
           size="medium"
@@ -66,40 +51,6 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-`;
-
-const GroupInfo = styled.div`
-  display: block;
-`;
-
-const Title = styled.div`
-  font-size: 3.2rem;
-`;
-
-const MemberWrapper = styled.div`
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-`;
-
-const Member = styled.div`
-  font-size: 2.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .member-title {
-    margin-right: 1.2rem;
-  }
-
-  img {
-    margin-right: -1rem;
-    border-radius: 100%;
-    width: 100%;
-    width: 4rem;
-    height: 4rem;
-    object-fit: conver;
-  }
 `;
 
 const ButtonWrapper = styled.div`

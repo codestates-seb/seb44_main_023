@@ -1,18 +1,26 @@
 import { styled } from "styled-components";
 import "dayjs/locale/ko";
+import Avatar from "../../assets/avatar.svg";
 
 const GroupInfo = ({ title, members }) => {
+  const handleErrorImage = (e) => {
+    const randomHue = Math.floor(Math.random() * 360);
+    e.target.src = Avatar;
+    e.target.style.filter = `invert(16%) sepia(89%) saturate(6054%) hue-rotate(${randomHue}deg) brightness(97%) contrast(113%)`;
+  };
+
   return (
     <StyledWrapper className="group-info">
       <Title>{title}</Title>
       <MemberWrapper>
         <Member>
           <div className="member-title">member</div>
-          {members.members.map((member) => (
+          {members.map((member) => (
             <img
               key={`member-${member.member_id}`}
               id={member.member_id}
               src={member.profile_image}
+              onError={handleErrorImage}
             />
           ))}
         </Member>
@@ -27,6 +35,7 @@ const StyledWrapper = styled.div``;
 
 const Title = styled.div`
   font-size: 3.2rem;
+  font-weight: bold;
 `;
 
 const MemberWrapper = styled.div`

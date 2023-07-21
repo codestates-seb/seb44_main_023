@@ -74,7 +74,7 @@ export default GraphBar;
 
 const StyledWrapper = styled.div`
   width: 100%;
-  height: 20rem;
+  height: 100%;
   overflow-x: scroll;
   overflow-y: hidden;
 `;

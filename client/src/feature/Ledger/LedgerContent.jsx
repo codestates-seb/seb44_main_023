@@ -58,13 +58,13 @@ const Content = ({
     <StyledWrapper>
       {pageType === "calendar" ? (
         <LedgerCalendar
+          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />
       ) : (
         <LedgerList
-          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
@@ -82,7 +82,10 @@ const Content = ({
 };
 export default LedgerContent;
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  height: 100%;
+  max-height: calc(100% - 15.2rem);
+`;
 
 const ButtonWrapper = styled.div`
   position: fixed;
