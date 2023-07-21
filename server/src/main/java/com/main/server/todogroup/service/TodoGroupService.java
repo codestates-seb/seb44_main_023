@@ -105,4 +105,9 @@ public class TodoGroupService {
         findTodoGroup.invites(membersByEmail);
         return findTodoGroup;
     }
+
+    @Transactional
+    public TodoGroup getInviteMember(Long todoGroupId) {
+        return findVerifiedTodoGroup(todoGroupId);
+    }
 }

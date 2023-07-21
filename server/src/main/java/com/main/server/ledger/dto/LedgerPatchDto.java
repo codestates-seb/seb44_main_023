@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,6 +34,7 @@ public class LedgerPatchDto {
     private Long categoryId;
 
     @JsonProperty(value = "in_outcome_id")
+    @NotNull(message = "Inoutcome_required")
     private Long inoutcomeId;
 
     @JsonProperty(value = "payment_id")

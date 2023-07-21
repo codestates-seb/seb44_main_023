@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Transactional
@@ -184,6 +185,16 @@ public class LedgerServiceImpl implements LedgerService {
             }
             return ledgerGroup.getLedgers();
         }
+    @Override
+    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate) {
+        LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
+
+        List<Ledger> ledgers = this.ledgerRepository.findByLedgerGroupAndLedgerDateBetween(ledgerGroup ,startDate, endDate);
+        ledgers.sort(Comparator.comparing(Ledger::getLedgerDate));
+
+        return ledgers;
+
+    }
 
         @Override
         public void deleteLedger (Long ledgerGroupId, Long ledgerId){

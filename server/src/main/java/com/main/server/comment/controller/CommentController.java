@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +32,9 @@ import org.springframework.web.server.ResponseStatusException;
 @Validated
 @RestController
 public class CommentController {
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
 
     private final CommentService commentService;
     private JwtTokenizer jwtTokenizer;
@@ -66,7 +70,7 @@ public class CommentController {
             // 회원 정보 확인 후 작업 수행
             Comment comment = commentService.createComment(todoGroupId, todoId, postDto, token);
 
-            return new ResponseEntity(new Response(comment), HttpStatus.CREATED);
+            return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.CREATED);
         }
 
         else if (refreshToken != null) {
@@ -82,12 +86,11 @@ public class CommentController {
 
             Comment comment = commentService.createComment(todoGroupId, todoId, postDto, token);
 
-            return new ResponseEntity(new Response(comment), HttpStatus.CREATED);
+            return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.CREATED);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
     @PatchMapping("/todogroups/{todo-group-id}/todos/{todo-id}/comments/{comment-id}")
     public ResponseEntity updateComment(@PathVariable("todo-group-id") @Positive Long todoGroupId,
                                         @PathVariable("todo-id") @Positive Long todoId,
@@ -113,7 +116,7 @@ public class CommentController {
             // 회원 정보 확인 후 작업 수행
             Comment comment = commentService.upDateComment(todoGroupId, todoId, commentId, patchDto);
 
-            return new ResponseEntity(new Response(comment), HttpStatus.OK);
+            return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.OK);
         }
 
         else if (refreshToken != null) {
@@ -129,7 +132,7 @@ public class CommentController {
 
             Comment comment = commentService.upDateComment(todoGroupId, todoId, commentId, patchDto);
 
-            return new ResponseEntity(new Response(comment), HttpStatus.OK);
+            return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
@@ -137,7 +140,7 @@ public class CommentController {
 
     @GetMapping("/todogroups/{todo-group-id}/todos/{todo-id}/comments")
     public ResponseEntity<List<Response>> getComments(@PathVariable("todo-group-id") @Positive Long todoGroupId,
-                                                    @PathVariable("todo-id") @Positive Long todoId,
+                                                      @PathVariable("todo-id") @Positive Long todoId,
                                                       HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
@@ -158,7 +161,7 @@ public class CommentController {
             // 회원 정보 확인 후 작업 수행
             List<Comment> comments = this.commentService.getComments(todoGroupId, todoId);
             List<Response> responses = comments.stream()
-                    .map((comment -> new Response(comment)))
+                    .map((comment -> new Response(comment, fileUploadPath)))
                     .collect(Collectors.toList());
 
             return new ResponseEntity<>(responses, HttpStatus.OK);
@@ -177,7 +180,7 @@ public class CommentController {
 
             List<Comment> comments = this.commentService.getComments(todoGroupId, todoId);
             List<Response> responses = comments.stream()
-                    .map((comment -> new Response(comment)))
+                    .map((comment -> new Response(comment, fileUploadPath)))
                     .collect(Collectors.toList());
 
             return new ResponseEntity<>(responses, HttpStatus.OK);

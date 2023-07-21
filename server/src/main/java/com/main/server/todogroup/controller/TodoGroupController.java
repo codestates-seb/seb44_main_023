@@ -7,6 +7,7 @@ import com.main.server.todogroup.domain.TodoGroup;
 //import com.main.server.todogroup.dto.InvitationTodoGroup;
 import com.main.server.todogroup.domain.TodoGroup;
 // import com.main.server.todogroup.dto.InvitationTodoGroup;
+import com.main.server.todogroup.dto.InvitationMemberDto;
 import com.main.server.todogroup.dto.InvitationTodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto;
 import com.main.server.todogroup.dto.TodoGroupDto.Response;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +36,9 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @Validated
 public class TodoGroupController {
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
 
     private final TodoGroupService todoGroupService;
     private JwtTokenizer jwtTokenizer;
@@ -310,6 +315,12 @@ public class TodoGroupController {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
+    }
+
+    @GetMapping("/todogroups/{todo-group-id}/members")
+    public ResponseEntity inviteMember(@PathVariable("todo-group-id") @Positive Long todoGroupId) {
+        TodoGroup todoGroup = todoGroupService.getInviteMember(todoGroupId);
+        return new ResponseEntity(new InvitationMemberDto.Response(todoGroup, fileUploadPath), HttpStatus.OK);
     }
 }
 
