@@ -1,39 +1,19 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { readTodoGroup, readTodoGroupMember } from "../../api/todogroups.api";
 import GroupInfo from "../../components/Group/GroupInfo";
+import useQueryTodoGroup from "../../query/todogroup.query";
 import MainTodoList from "./MainTodoList";
 
 const MainTodo = ({ groupId }) => {
-  const [groupInfo, setGroupInfo] = useState();
-  const [members, setMembers] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, data } = useQueryTodoGroup({ groupId });
 
-  const requestData = async () => {
-    try {
-      const groupInfo = await readTodoGroup(groupId);
-      const members = await readTodoGroupMember(groupId);
-      setGroupInfo(groupInfo);
-      setMembers(members);
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  if (isLoading) return <StyledWrapper />;
 
-  useEffect(() => {
-    requestData();
-  }, []);
-
+  const { groupInfo, members } = data;
   return (
     <StyledWrapper>
-      {!isLoading && (
-        <>
-          <GroupInfo title={groupInfo.todo_group_title} members={members} />
-          <MainTodoList startDate={dayjs()} groupId={groupId} />
-        </>
-      )}
+      <GroupInfo title={groupInfo.todo_group_title} members={members} />
+      <MainTodoList startDate={dayjs()} groupId={groupId} />
     </StyledWrapper>
   );
 };

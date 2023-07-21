@@ -11,7 +11,7 @@ const ModalContentCreate = ({
   setTodoList,
 }) => {
   const [formData, setFormData] = useState({
-    todo_schedule_date: defaultDate,
+    ...(defaultDate !== "null" ? { todo_schedule_date: defaultDate } : {}),
   });
 
   const handleCreateTodo = async (event) => {
@@ -40,7 +40,7 @@ const ModalContentCreate = ({
   useEffect(() => {
     setFormData({
       ...formData,
-      todo_schedule_date: defaultDate,
+      ...(defaultDate !== "null" ? { todo_schedule_date: defaultDate } : {}),
     });
   }, [defaultDate]);
 

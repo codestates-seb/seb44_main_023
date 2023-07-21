@@ -1,47 +1,30 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import background from "../assets/background.png";
 import ProfileTop from "../feature/Profile/ProfileTop";
 import ProfileBottom from "../feature/Profile/ProfileBottom";
 import Loading from "../components/Loading/Loading";
-import { readMemberInfo } from "../api/members.api";
-import Layout from "../Layout/PagesLayout";
-import useUserInfoStore, { useGetUserInfo } from "../store/store.userInfo";
+import { useGetUserInfo } from "../store/store.userInfo";
 
 const ProfilePage = () => {
-  const { id } = useParams();
-
   const userInfo = useGetUserInfo();
   const { isLoading } = userInfo;
 
   return (
-    <Layout>
-      <StyledWrapper>
-        <ProfileBox>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <>
-              <ProfileTop profileInfo={userInfo} />
-              <ProfileBottom profileInfo={userInfo} />
-            </>
-          )}
-        </ProfileBox>
-      </StyledWrapper>
-    </Layout>
+    <StyledWrapper>
+      <ProfileBox>
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            <ProfileTop profileInfo={userInfo} />
+            <ProfileBottom profileInfo={userInfo} />
+          </>
+        )}
+      </ProfileBox>
+    </StyledWrapper>
   );
 };
 
 export default ProfilePage;
-
-const P = styled.div`
-  width: 100%;
-  height: 100vh;
-  background-image: url(${background});
-  background-repeat: no-repeat;
-  background-size: cover;
-`;
 
 const StyledWrapper = styled.div`
   padding: 6.4rem 6.4rem 0;
