@@ -7,14 +7,24 @@ import useQueryLedgerGroupList from "../../query/ledgergroupList.query";
 import useQueryTodoGroupList from "../../query/todogroupList.query";
 
 const Sidebar = () => {
+  const { data: ledgerData = [], isLoading: isLedgerGroupLoading } =
+    useQueryLedgerGroupList();
+  const { data: todoData = [], isLoading: isTodoGrouoplLoading } =
+    useQueryTodoGroupList();
+
+  if (isLedgerGroupLoading || isTodoGrouoplLoading) return null;
+  return <SidebarGroup todoData={todoData} ledgerData={ledgerData} />;
+};
+
+const SidebarGroup = ({ ledgerData, todoData }) => {
+  const [todoGroups, setTodoGroups] = useState(todoData);
+  const [ledgerGroups, setLedgerGroups] = useState(ledgerData);
+
   const [currentPopup, setCurrentPopup] = useState(null);
   const [buttonPosition, setButtonPosition] = useState({});
   const todoButtonRef = useRef(null);
   const accountButtonRef = useRef(null);
   const navigate = useNavigate();
-
-  const { data: ledgerGroups = [], isLoading } = useQueryLedgerGroupList();
-  const { data: todoGroups = [] } = useQueryTodoGroupList();
 
   const handleAddButtonClick = (title, buttonRef) => {
     setButtonPosition(buttonRef.current.getBoundingClientRect());
@@ -30,16 +40,16 @@ const Sidebar = () => {
     setCurrentPopup(null);
   };
 
-  const handleAddButton = (text) => {
+  const handleAddButton = (text, id) => {
     if (currentPopup === "Todo") {
       const newTodoGroup = {
-        todo_group_id: Date.now(),
+        todo_group_id: id,
         todo_group_title: text,
       };
       setTodoGroups((prevGroups) => [...prevGroups, newTodoGroup]);
     } else if (currentPopup === "가계부") {
       const newLedgerGroup = {
-        ledger_group_id: Date.now(),
+        ledger_group_id: id,
         ledger_group_title: text,
       };
       setLedgerGroups((prevGroups) => [...prevGroups, newLedgerGroup]);

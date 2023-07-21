@@ -5,6 +5,7 @@ import LedgerGroup from "../feature/Ledger/LedgerGroup";
 import useQueryLedgerGroup from "../query/ledgergroup.query";
 import LedgerContent from "../feature/Ledger/LedgerContent";
 import Button from "../components/Button/Button";
+import Loading from "../components/Loading/Loading";
 
 const LedgerPage = () => {
   const [pageType, setPageType] = useState("list");
@@ -30,7 +31,12 @@ const LedgerPage = () => {
 
   const { isLoading, data } = useQueryLedgerGroup({ groupId });
 
-  if (isLoading) return <StyledWrapper />;
+  if (isLoading)
+    return (
+      <StyledWrapper>
+        <Loading />
+      </StyledWrapper>
+    );
   else if (!data?.groupInfo)
     return (
       <StyledWrapper

@@ -12,6 +12,7 @@ import useUserInfoStore from "./store/store.userInfo";
 import Layout from "./Layout/PagesLayout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import useMainGroupStore from "./store/store.mainGroup";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,9 +29,11 @@ const queryClient = new QueryClient({
 function App() {
   const { userInfo, setUserInfo } = useUserInfoStore();
   const { isLoading, memberId } = userInfo;
+  const { setMainGroup } = useMainGroupStore();
 
   useEffect(() => {
     setUserInfo(1);
+    setMainGroup();
   }, []);
 
   if (isLoading) return null;

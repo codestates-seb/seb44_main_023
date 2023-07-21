@@ -32,7 +32,15 @@ const useUserInfoStore = create((set) => ({
     }
   },
 
-  updateUserInfo: (data) => set((userInfo) => ({ ...userInfo, ...data })),
+  updateUserInfo: (data) => {
+    set((prev) => ({
+      ...prev,
+      userInfo: {
+        ...prev.userInfo,
+        ...data,
+      },
+    }));
+  },
 }));
 
 export default useUserInfoStore;

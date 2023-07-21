@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import TodoDate from "../../components/Todo/TodoDate";
@@ -11,8 +11,12 @@ const TodoList = ({ startDate }) => {
   const { groupId } = useParams();
   const { isLoading, data } = useQueryTodoList({
     groupId,
-    startDate: startDate.format("YYYY-MM-DD"),
-    endDate: startDate.clone().subtract(3, "day").format("YYYY-MM-DD"),
+    startDate: startDate
+      .clone()
+      .startOf("week")
+      .add(1, "day")
+      .format("YYYY-MM-DD"),
+    endDate: startDate.clone().endOf("week").add(1, "day").format("YYYY-MM-DD"),
   });
 
   if (isLoading) return null;
@@ -22,7 +26,7 @@ const TodoList = ({ startDate }) => {
 const List = ({ groupId, data, startDate }) => {
   const [date, setDate] = useState();
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
-  const [todoList, setTodoList] = useState(data);
+  const [todoList, setTodoList] = useState();
 
   const handleModalVisible = (date) => async () => {
     await setDate(date);
@@ -34,6 +38,10 @@ const List = ({ groupId, data, startDate }) => {
   for (let offset = 0; offset < 7; offset++) {
     dateList.push(startDate.clone().add(offset, "day").format("YYYY-MM-DD"));
   }
+
+  useEffect(() => {
+    setTodoList(data);
+  }, [data]);
 
   return (
     <>
