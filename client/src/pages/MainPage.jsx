@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import Layout from "../Layout/PagesLayout";
 import FloatingButton from "../components/Button/ButtonFloating";
 import MainTodo from "../feature/Main/MainTodo";
 import MainLedger from "../feature/Main/MainLedger";
@@ -34,22 +33,29 @@ const MainPage = () => {
 
   return (
     <>
-      <HideScreen style={{ opacity: isHidden ? 1 : 0, transition: "200ms" }}>
+      <HideScreen
+        style={{
+          opacity: isHidden ? 1 : 0,
+          pointerEvents: isHidden ? "initial" : "none",
+          transition: "200ms",
+        }}
+      >
         <WeatherImage weahterType={weatherType} />
+        <ButtonWrapper>
+          <FloatingButton icon="hide" onClick={changeVisibility} />
+        </ButtonWrapper>
       </HideScreen>
       <div style={{ opacity: isHidden ? 0 : 1, transition: "200ms" }}>
-        <Layout>
-          <StyledWrapper>
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <>
-                <MainTodo groupId={group.todo} />
-                <MainLedger groupId={group.ledger} />
-              </>
-            )}
-          </StyledWrapper>
-        </Layout>
+        <StyledWrapper>
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <>
+              <MainTodo groupId={group.todo} />
+              <MainLedger groupId={group.ledger} />
+            </>
+          )}
+        </StyledWrapper>
       </div>
       <ButtonWrapper>
         <FloatingButton icon="hide" onClick={changeVisibility} />
@@ -75,6 +81,7 @@ const ButtonWrapper = styled.div`
 
 const HideScreen = styled.div`
   position: fixed;
+  z-index: 999;
   top: 0;
   left: 0;
   width: 100%;

@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Avatar from "../../assets/userAvarta.png";
 import {
   deleteProfileImage,
-  readProfileImage,
   updateMemberNickname,
   updateProfileImage,
 } from "../../api/members.api";

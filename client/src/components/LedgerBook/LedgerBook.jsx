@@ -14,7 +14,7 @@ const LedgerBook = ({
   const [isShowAll, setIsShowAll] = useState(false);
 
   return (
-    <StyledWrapper isMain={String(isMain)}>
+    <StyledWrapper ismain={String(isMain)}>
       <LedgerBookSummary
         ledgerList={ledgerList}
         selectedMonth={selectedMonth}
@@ -83,7 +83,7 @@ const LedgerBook = ({
 export default LedgerBook;
 
 const StyledWrapper = styled.div`
-  width: ${({ isMain }) => (isMain === "true" ? "100%" : "50%")};
+  width: ${({ ismain }) => (ismain === "true" ? "100%" : "50%")};
   display: flex;
   flex-direction: column;
   gap: 3.6rem;
