@@ -46,7 +46,13 @@ public class TodoService {
         Todo findTodo = findVerifiedTodo(todoId);
         findTodo.changeTitle(patchDto.getTodoTitle());
         findTodo.changeContent(patchDto.getTodoContent());
-        findTodo.changeScheduleDate(LocalDate.parse(patchDto.getTodoScheduleDate()));
+
+        LocalDate scheduleDate = null;
+        if (patchDto.getTodoScheduleDate() != null) {
+            scheduleDate = LocalDate.parse(patchDto.getTodoScheduleDate());
+        }
+//        findTodo.changeScheduleDate(LocalDate.parse(patchDto.getTodoScheduleDate()));
+        findTodo.changeScheduleDate(scheduleDate);
 
         return findTodo;
     }
