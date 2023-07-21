@@ -1,30 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import { readLedgerList } from "../../../../api/ledgergroups.api";
+import useQueryLedgerList from "../../../../query/ledgerList.query";
 
 const LegerDetailModal = ({ selectedDate, groupId }) => {
+  const {
+    isLoading,
+    data: ledgerList,
+  } = useQueryLedgerList({
+    groupId,
+    startDate: selectedDate,
+    endDate: selectedDate,
+  });
+
+  if (isLoading) {
+    return (
+      <>
+        <div>Loading...</div>
+      </>
+    );
+  }
+
   const addCommasToNumber = (number) => {
     return number.toLocaleString();
   };
-
-  const [ledgerList, setLedgerList] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const startDate = dayjs(selectedDate).format("YYYY-MM-DD");
-        const endDate = dayjs(selectedDate).format("YYYY-MM-DD");
-        const data = await readLedgerList(groupId, startDate, endDate);
-        setLedgerList(data);
-      } catch (err) {
-        console.error("Error fetching ledger data:", err);
-      }
-    };
-    fetchData();
-  }, [selectedDate, groupId]);
-
-
+  // 가계부 데이터가 없을 때
   if (!ledgerList || ledgerList.length === 0) {
     return (
       <>
@@ -41,6 +41,7 @@ const LegerDetailModal = ({ selectedDate, groupId }) => {
     );
   }
 
+  // 가계부 데이터가 있을 때
   return (
     <>
       <ModalTitle>
