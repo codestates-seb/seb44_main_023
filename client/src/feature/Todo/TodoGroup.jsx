@@ -2,6 +2,7 @@ import { styled } from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import Avatar from "../../assets/avatar.svg";
 
 const TodoGroup = ({ groupInfo, members, setStartDate }) => {
   const { todo_group_title } = groupInfo;
@@ -22,18 +23,27 @@ const TodoGroup = ({ groupInfo, members, setStartDate }) => {
     }
   };
 
+  const handleErrorImage = (e) => {
+    const randomHue = Math.floor(Math.random() * 360);
+    e.target.src = Avatar;
+    e.target.style.filter = `invert(16%) sepia(89%) saturate(6054%) hue-rotate(${randomHue}deg) brightness(97%) contrast(113%)`;
+  };
+
   return (
     <StyledWrapper>
       <Title>{todo_group_title}</Title>
       <div className="member-nav">
         <Member>
           <div className="member-title">member</div>
-          {members.members.map((member) => (
-            <img
-              key={`member-${member.member_id}`}
-              id={member.member_id}
-              src={member.profile_image}
-            />
+          {members.map((member) => (
+            <>
+              <img
+                key={`member-${member.member_id}`}
+                id={member.member_id}
+                src={member.profild_image}
+                onError={handleErrorImage}
+              />
+            </>
           ))}
         </Member>
         <DateNavigation>
