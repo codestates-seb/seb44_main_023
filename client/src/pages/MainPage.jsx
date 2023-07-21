@@ -78,7 +78,6 @@ const StyledWrapper = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
-  background-color: red;
   justify-content: space-around;
   position: relative;
   transition: 200ms;

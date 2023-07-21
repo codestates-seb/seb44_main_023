@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Popup from "./SidbarPoup";
 import { useNavigate } from "react-router-dom";
-import { readAllTodoGroups } from "../../api/todogroups.api";
-import { readAllLedgerGroups } from "../../api/ledgergroups.api";
+import useQueryLedgerGroupList from "../../query/ledgergroupList.query";
+import useQueryTodoGroupList from "../../query/todogroupList.query";
 
 const Sidebar = () => {
   const [currentPopup, setCurrentPopup] = useState(null);
@@ -13,24 +13,8 @@ const Sidebar = () => {
   const accountButtonRef = useRef(null);
   const navigate = useNavigate();
 
-  const [todoGroups, setTodoGroups] = useState([]);
-  const [ledgerGroups, setLedgerGroups] = useState([]);
-
-  useEffect(() => {
-    const readGroups = async () => {
-      try {
-        const todoGroupsData = await readAllTodoGroups();
-        setTodoGroups(todoGroupsData);
-
-        const ledgerGroupsData = await readAllLedgerGroups();
-        setLedgerGroups(ledgerGroupsData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    readGroups();
-  }, []);
+  const { data: ledgerGroups = [], isLoading } = useQueryLedgerGroupList();
+  const { data: todoGroups = [] } = useQueryTodoGroupList();
 
   const handleAddButtonClick = (title, buttonRef) => {
     setButtonPosition(buttonRef.current.getBoundingClientRect());
@@ -140,7 +124,7 @@ const SidebarContainer = styled.div`
   left: 0;
   width: 8rem;
   height: 100vh;
-  padding-bottom: 8rem;
+  max-height: calc(100vh - 60px);
   background-color: transparent;
   display: flex;
   flex-direction: column;
@@ -156,7 +140,7 @@ const TodoSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding-top: 1rem;
-  max-height: 48.5rem;
+  max-height: 50%;
 
   &:first-child {
     border-top: none;
@@ -170,7 +154,7 @@ const LedgerSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding: 1rem;
-  max-height: 50rem;
+  max-height: 50%;
 
   &:first-child {
     border-top: none;

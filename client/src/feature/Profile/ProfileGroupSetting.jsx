@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { styled } from "styled-components";
 import Dropdown from "../../components/Dropdown/Dropdown";
-import { readAllTodoGroups } from "../../api/todogroups.api";
-import { readAllLedgerGroups } from "../../api/ledgergroups.api";
+import useQueryTodoGroupList from "../../query/todogroupList.query";
+import useQueryLedgerGroupList from "../../query/ledgergroupList.query";
 
 const ProfileGroupSetting = () => {
-  const [groups, setGroups] = useState({ todoGroup: [], ledgerGroup: [] });
   const [mainGroup, setMainGroup] = useState({
     todoGroup: { key: "", label: "" },
     ledgerGroup: { key: "", label: "" },
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   const handleChangeGroup = (event) => {
     let newGroup = {
@@ -21,27 +19,12 @@ const ProfileGroupSetting = () => {
     localStorage.setItem("planfinity-group", JSON.stringify(newGroup));
   };
 
-  const requestGroup = async () => {
-    try {
-      const todoGroup = await readAllTodoGroups();
-      const ledgerGroup = await readAllLedgerGroups();
+  const { isLoading: isTodoListLoading, data: todoGroup } =
+    useQueryTodoGroupList();
+  const { isLoading: isGroupListLoading, data: ledgerGroup } =
+    useQueryLedgerGroupList();
 
-      setGroups({ todoGroup, ledgerGroup });
-      let defaultGroup = JSON.parse(localStorage.getItem("planfinity-group"));
-      if (defaultGroup) {
-        setMainGroup(defaultGroup);
-      }
-      setIsLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    requestGroup();
-  }, []);
-
-  if (isLoading) return null;
+  if (isTodoListLoading || isGroupListLoading) return null;
   return (
     <form onChange={handleChangeGroup}>
       <StyledWrapper>
@@ -50,8 +33,8 @@ const ProfileGroupSetting = () => {
           <Dropdown
             id="todoGroup"
             menu={
-              groups.todoGroup.length
-                ? groups.todoGroup.map((groupItem) => {
+              todoGroup.length
+                ? todoGroup.map((groupItem) => {
                     return {
                       label: groupItem.todo_group_title,
                       key: groupItem.todo_group_id,
@@ -67,8 +50,8 @@ const ProfileGroupSetting = () => {
           <Dropdown
             id="ledgerGroup"
             menu={
-              groups.ledgerGroup.length
-                ? groups.ledgerGroup.map((groupItem) => {
+              ledgerGroup.length
+                ? ledgerGroup.map((groupItem) => {
                     return {
                       label: groupItem.ledger_group_title,
                       key: groupItem.ledger_group_id,
