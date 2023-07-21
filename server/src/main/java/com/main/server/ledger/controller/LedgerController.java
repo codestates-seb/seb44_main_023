@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+
 @RestController
 @RequestMapping("/ledgergroups/{ledger-group-id}/ledgers")
 public class LedgerController {
@@ -30,6 +30,7 @@ public class LedgerController {
         this.ledgerService = ledgerService;
     }
 
+    @CrossOrigin(originPatterns = ["*"])
     @PostMapping
     public ResponseEntity<LedgerResponseDto> createLedger(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -38,6 +39,8 @@ public class LedgerController {
 
         return new ResponseEntity<>(new LedgerResponseDto(ledger), HttpStatus.CREATED);
     }
+    
+    @CrossOrigin(originPatterns = ["*"])
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -46,7 +49,8 @@ public class LedgerController {
 
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
     }
-
+    
+    @CrossOrigin(originPatterns = ["*"])
     @GetMapping("/{ledger-id}")
     public ResponseEntity getLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                     @PathVariable("ledger-id") @Positive Long ledgerId) {
@@ -54,6 +58,7 @@ public class LedgerController {
         return new ResponseEntity(new LedgerResponseDto(ledger), HttpStatus.OK);
     }//, true, true, true
 
+    @CrossOrigin(originPatterns = ["*"])
     @GetMapping()
     public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId) {
         List<Ledger> ledgers = this.ledgerService.getLedgers(ledgerGroupId);
@@ -64,6 +69,7 @@ public class LedgerController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @CrossOrigin(originPatterns = ["*"])
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -84,6 +90,7 @@ public class LedgerController {
         }
     }
 
+    @CrossOrigin(originPatterns = ["*"])
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @PathVariable("ledger-id") @Positive Long ledgerId) {
