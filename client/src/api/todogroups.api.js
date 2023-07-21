@@ -46,7 +46,7 @@ export const readTodoGroupMember = async (groupId) => {
     return [
       {
         member_id: resData.data.owner_id,
-        profild_image: resData.data.profile_image,
+        profile_image: resData.data.profile_image,
       },
       ...resData.data.invite_members,
     ];

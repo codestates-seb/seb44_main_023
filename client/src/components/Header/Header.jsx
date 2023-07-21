@@ -9,7 +9,7 @@ import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
 import { useGetUserInfo } from "../../store/store.userInfo";
-import WeatherWidget from "../WeatherWidget/HeaderWeatherWidget"
+import WeatherWidget from "../WeatherWidget/HeaderWeatherWidget";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -154,6 +154,7 @@ const UserAvatarImage = styled.img`
   width: 2.8rem;
   height: 2.8rem;
   border-radius: 100%;
+  object-fit: cover;
 `;
 
 const LogoutIcon = styled(MdOutlineLogout)`

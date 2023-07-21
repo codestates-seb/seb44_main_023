@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import Loading from "../components/Loading/Loading";
 import TodoGroup from "../feature/Todo/TodoGroup";
@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import useQueryTodoGroup from "../query/todogroup.query";
 import TodoList from "../feature/Todo/TodoList";
+import Button from "../components/Button/Button";
 
 const TodoPage = () => {
   const { groupId } = useParams();
@@ -14,12 +15,35 @@ const TodoPage = () => {
     dayjs().locale("ko").startOf("week").add(1, "day")
   );
 
+  const navigate = useNavigate();
+
   const { isLoading, data } = useQueryTodoGroup({ groupId });
 
   if (isLoading)
     return (
       <StyledWrapper>
         <Loading />
+      </StyledWrapper>
+    );
+  else if (!data?.groupInfo)
+    return (
+      <StyledWrapper
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="empty">존재하지 않는 TODO 그룹입니다</div>
+        <Button
+          onClick={() => navigate("/")}
+          label="Main으로 돌아가기"
+          size="medium"
+          style={{
+            backgroundColor: "var(--color-blue-03)",
+            width: "max-content",
+            padding: "0 2rem",
+          }}
+        />
       </StyledWrapper>
     );
 
@@ -44,4 +68,9 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+
+  .empty {
+    font-size: 2.4rem;
+    margin-bottom: 4rem;
+  }
 `;
