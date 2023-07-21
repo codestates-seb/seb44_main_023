@@ -1,19 +1,22 @@
 import { API } from "./api";
 import Avatar from "../assets/userAvarta.png";
 
-export const readMemberInfo = async (memberId) => {
+export const readMemberInfo = async (accessToken) => {
   try {
-    const response = await API.get(`/members/${memberId}`);
+    const response = await API.get(`/members`, {
+      headers: {
+        Authorization: accessToken,
+      },
+    });
     return response.data;
   } catch (err) {
     throw err;
   }
 };
 
-export const updateMemberNickname = async (memberId, nickname) => {
+export const updateMemberNickname = async (nickname) => {
   try {
-    await API.patch(`/members/${memberId}/nickname`, {
-      member_id: memberId,
+    await API.patch(`/members/nickname`, {
       nickname,
     });
   } catch (err) {
@@ -21,25 +24,21 @@ export const updateMemberNickname = async (memberId, nickname) => {
   }
 };
 
-export const updateProfileImage = async (memberId, formData) => {
+export const updateProfileImage = async (formData) => {
   try {
-    await API.patch(
-      `/members/${memberId}/profile-image?memberId=${memberId}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    await API.patch(`/members/profile-image`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   } catch (err) {
     throw err;
   }
 };
 
-export const updatePassword = async (memberId, password, newPassword) => {
+export const updatePassword = async (password, newPassword) => {
   try {
-    await API.patch(`/members/${memberId}/password`, {
+    await API.patch(`/members/password`, {
       password,
       newPassword: newPassword,
     });
@@ -48,10 +47,9 @@ export const updatePassword = async (memberId, password, newPassword) => {
   }
 };
 
-export const deleteMember = async (memberId, password) => {
+export const deleteMember = async (password) => {
   try {
-    await API.delete(`/members/${memberId}?password=${password}`, {
-      member_id: memberId,
+    await API.delete(`/members?password=${password}`, {
       password,
     });
   } catch (err) {
@@ -59,9 +57,9 @@ export const deleteMember = async (memberId, password) => {
   }
 };
 
-export const readProfileImage = async (memberId) => {
+export const readProfileImage = async () => {
   try {
-    const res = await API.get(`/members/${memberId}/profile-image`, {
+    const res = await API.get(`/members/profile-image`, {
       responseType: "blob",
     });
     const url = URL.createObjectURL(res.data);

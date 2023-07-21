@@ -27,7 +27,7 @@ const ProfileTop = ({ profileInfo }) => {
   const handleSaveNickName = async (event) => {
     try {
       event.preventDefault();
-      await updateMemberNickname(profileInfo.memberId, nicknameInput);
+      await updateMemberNickname(nicknameInput);
       setEditMode(!isEditMode);
       setValidation("");
       setNickname(nicknameInput);
@@ -49,7 +49,7 @@ const ProfileTop = ({ profileInfo }) => {
       const formData = new FormData();
       formData.append("file", fileBlob);
 
-      await updateProfileImage(profileInfo.memberId, formData);
+      await updateProfileImage(formData);
       setImageUrl(res);
     } catch (err) {
       console.log(err);

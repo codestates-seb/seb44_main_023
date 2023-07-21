@@ -68,6 +68,9 @@ export const readTodoGroupMember = async (groupId) => {
       },
     };
 
+    const resData = await API.get(`/todogroups/${groupId}/members`);
+    return res.data;
+
     return res.data;
   } catch (err) {
     console.log(err);
