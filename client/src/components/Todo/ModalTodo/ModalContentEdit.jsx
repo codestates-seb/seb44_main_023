@@ -56,9 +56,7 @@ const ModalContentEdit = ({
   useEffect(() => {
     setFormData({
       ...formData,
-      ...(todo_schedule_date !== "null"
-        ? { todo_schedule_date }
-        : { todo_schedule_date: null }),
+      ...(todo_schedule_date !== "null" ? { todo_schedule_date } : {}),
       todo_title,
       todo_content,
     });

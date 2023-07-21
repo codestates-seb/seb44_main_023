@@ -6,6 +6,7 @@ import {
   readTodo,
   readTodoComment,
 } from "../../../api/todogroups.api";
+import { useGetUserInfo } from "../../../store/store.userInfo";
 import Button from "../../Button/Button";
 import TodoComment from "./TodoComment";
 
@@ -20,6 +21,7 @@ const ModalContentDetail = ({
 }) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const userInfo = useGetUserInfo();
 
   const requestTodoInfo = async () => {
     try {
@@ -63,12 +65,12 @@ const ModalContentDetail = ({
       <div className="todo-content">{todo_content}</div>
       <TodoComment
         groupId={groupId}
-        member_id={1}
         todoId={todo_id}
         isEdit={true}
         setTodoComment={setTodoComment}
-        nickname="진아"
-        profile_image="https://i.pinimg.com/474x/df/2d/25/df2d253fbd0eb7d50193f1374128e9f0.jpg"
+        member_id={userInfo.memberId}
+        nickname={userInfo.nickname}
+        profile_image={userInfo.profileImage}
       />
       <CommentWrapper>
         {todoComment.map((item, index) => (

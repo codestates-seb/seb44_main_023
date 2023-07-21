@@ -9,6 +9,7 @@ import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
 import { useGetUserInfo } from "../../store/store.userInfo";
+import WeatherWidget from "../WeatherWidget/HeaderWeatherWidget";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -89,10 +90,10 @@ const Header = () => {
         <Button onClick={handleLogoutClick}>
           <LogoutIcon size={26} />
         </Button>
-        <Button>
-          <WeatherIcon size={24} />
-        </Button>
       </RightSectionWrapper>
+      <WeatherComponent>
+        <WeatherWidget />
+      </WeatherComponent>
       {isPopupVisible && (
         <PopupWrapper ref={popupRef} onClick={handlePopupClick}>
           <PopupContent>
@@ -142,6 +143,8 @@ const Button = styled.button`
   margin-left: 1rem;
 `;
 
+const WeatherComponent = styled.div``;
+
 const MoonIcon = styled(HiMiniMoon)`
   width: 2.4rem;
   height: 2.4rem;
@@ -151,6 +154,7 @@ const UserAvatarImage = styled.img`
   width: 2.8rem;
   height: 2.8rem;
   border-radius: 100%;
+  object-fit: cover;
 `;
 
 const LogoutIcon = styled(MdOutlineLogout)`

@@ -18,6 +18,7 @@ const LedgerContent = ({ pageType, groupId }) => {
   if (isLoading) return null;
   return (
     <Content
+      groupId={groupId}
       pageType={pageType}
       data={data}
       selectedMonth={selectedMonth}
@@ -26,7 +27,13 @@ const LedgerContent = ({ pageType, groupId }) => {
   );
 };
 
-const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
+const Content = ({
+  groupId,
+  pageType,
+  data,
+  selectedMonth,
+  setSelectedMonth,
+}) => {
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -51,6 +58,7 @@ const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
     <StyledWrapper>
       {pageType === "calendar" ? (
         <LedgerCalendar
+          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
@@ -74,7 +82,10 @@ const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
 };
 export default LedgerContent;
 
-const StyledWrapper = styled.div``;
+const StyledWrapper = styled.div`
+  height: 100%;
+  max-height: calc(100% - 15.2rem);
+`;
 
 const ButtonWrapper = styled.div`
   position: fixed;

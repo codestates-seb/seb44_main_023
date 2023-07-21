@@ -7,8 +7,8 @@ import useQueryTodoList from "../../query/todoList.query";
 const MainTodoList = ({ startDate, groupId }) => {
   const { isLoading, data } = useQueryTodoList({
     groupId,
-    startDate: startDate.format("YYYY-MM-DD"),
-    endDate: startDate.clone().subtract(3, "day").format("YYYY-MM-DD"),
+    startDate: startDate.clone().subtract(2, "day").format("YYYY-MM-DD"),
+    endDate: startDate.format("YYYY-MM-DD"),
   });
 
   if (isLoading) return null;

@@ -3,34 +3,28 @@ import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Popup from "./SidbarPoup";
 import { useNavigate } from "react-router-dom";
-import { readAllTodoGroups } from "../../api/todogroups.api";
-import { readAllLedgerGroups } from "../../api/ledgergroups.api";
+import useQueryLedgerGroupList from "../../query/ledgergroupList.query";
+import useQueryTodoGroupList from "../../query/todogroupList.query";
 
 const Sidebar = () => {
+  const { data: ledgerData = [], isLoading: isLedgerGroupLoading } =
+    useQueryLedgerGroupList();
+  const { data: todoData = [], isLoading: isTodoGrouoplLoading } =
+    useQueryTodoGroupList();
+
+  if (isLedgerGroupLoading || isTodoGrouoplLoading) return null;
+  return <SidebarGroup todoData={todoData} ledgerData={ledgerData} />;
+};
+
+const SidebarGroup = ({ ledgerData, todoData }) => {
+  const [todoGroups, setTodoGroups] = useState(todoData);
+  const [ledgerGroups, setLedgerGroups] = useState(ledgerData);
+
   const [currentPopup, setCurrentPopup] = useState(null);
   const [buttonPosition, setButtonPosition] = useState({});
   const todoButtonRef = useRef(null);
   const accountButtonRef = useRef(null);
   const navigate = useNavigate();
-
-  const [todoGroups, setTodoGroups] = useState([]);
-  const [ledgerGroups, setLedgerGroups] = useState([]);
-
-  useEffect(() => {
-    const readGroups = async () => {
-      try {
-        const todoGroupsData = await readAllTodoGroups();
-        setTodoGroups(todoGroupsData);
-
-        const ledgerGroupsData = await readAllLedgerGroups();
-        setLedgerGroups(ledgerGroupsData);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    readGroups();
-  }, []);
 
   const handleAddButtonClick = (title, buttonRef) => {
     setButtonPosition(buttonRef.current.getBoundingClientRect());
@@ -46,16 +40,16 @@ const Sidebar = () => {
     setCurrentPopup(null);
   };
 
-  const handleAddButton = (text) => {
+  const handleAddButton = (text, id) => {
     if (currentPopup === "Todo") {
       const newTodoGroup = {
-        todo_group_id: Date.now(),
+        todo_group_id: id,
         todo_group_title: text,
       };
       setTodoGroups((prevGroups) => [...prevGroups, newTodoGroup]);
     } else if (currentPopup === "가계부") {
       const newLedgerGroup = {
-        ledger_group_id: Date.now(),
+        ledger_group_id: id,
         ledger_group_title: text,
       };
       setLedgerGroups((prevGroups) => [...prevGroups, newLedgerGroup]);
@@ -140,7 +134,7 @@ const SidebarContainer = styled.div`
   left: 0;
   width: 8rem;
   height: 100vh;
-  padding-bottom: 8rem;
+  max-height: calc(100vh - 60px);
   background-color: transparent;
   display: flex;
   flex-direction: column;
@@ -156,8 +150,7 @@ const TodoSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding-top: 1rem;
-  padding-bottom: 0.3rem;
-  max-height: 42rem;
+  max-height: 50%;
 
   &:first-child {
     border-top: none;
@@ -171,7 +164,7 @@ const LedgerSidebarSection = styled.div`
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
   padding: 1rem;
-  max-height: 42rem;
+  max-height: 50%;
 
   &:first-child {
     border-top: none;
