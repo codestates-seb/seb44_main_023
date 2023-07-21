@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CommentController {
 
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
+
     private final CommentService commentService;
 
     public CommentController(CommentService commentService) {
@@ -39,7 +43,7 @@ public class CommentController {
                                     @Valid @RequestBody CommentDto.Post postDto) {
         Comment comment = commentService.createComment(todoGroupId, todoId, postDto);
 
-        return new ResponseEntity(new Response(comment), HttpStatus.CREATED);
+        return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.CREATED);
     }
 
     @PatchMapping("/todogroups/{todo-group-id}/todos/{todo-id}/comments/{comment-id}")
@@ -49,7 +53,7 @@ public class CommentController {
                                     @Valid @RequestBody CommentDto.Patch patchDto) {
         Comment comment = commentService.upDateComment(todoGroupId, todoId, commentId, patchDto);
 
-        return new ResponseEntity(new Response(comment), HttpStatus.OK);
+        return new ResponseEntity(new Response(comment, fileUploadPath), HttpStatus.OK);
     }
 
     @GetMapping("/todogroups/{todo-group-id}/todos/{todo-id}/comments")
@@ -57,7 +61,7 @@ public class CommentController {
                                                     @PathVariable("todo-id") @Positive Long todoId) {
         List<Comment> comments = this.commentService.getComments(todoGroupId, todoId);
         List<Response> responses = comments.stream()
-            .map((comment -> new Response(comment)))
+            .map((comment -> new Response(comment, fileUploadPath)))
             .collect(Collectors.toList());
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
