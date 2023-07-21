@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import Dropdown from "../../components/Dropdown/Dropdown";
 import useQueryTodoGroupList from "../../query/todogroupList.query";
@@ -9,6 +9,8 @@ const ProfileGroupSetting = () => {
     todoGroup: { key: "", label: "" },
     ledgerGroup: { key: "", label: "" },
   });
+
+  console.log(mainGroup);
 
   const handleChangeGroup = (event) => {
     let newGroup = {
@@ -23,6 +25,11 @@ const ProfileGroupSetting = () => {
     useQueryTodoGroupList();
   const { isLoading: isGroupListLoading, data: ledgerGroup } =
     useQueryLedgerGroupList();
+
+  useEffect(() => {
+    if (localStorage.getItem("planfinity-group"))
+      setMainGroup(JSON.parse(localStorage.getItem("planfinity-group")));
+  }, []);
 
   if (isTodoListLoading || isGroupListLoading) return null;
   return (
