@@ -6,22 +6,23 @@ const LedgerAmount = () => {
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
-    const reversedValue = inputValue.split("").reverse().join("");
-    setValue(reversedValue);
+    const filteredValue = inputValue.replace(/[^\d]/g, ""); // 한글, 영어, 숫자 이외의 문자 제거
+    setValue(filteredValue);
   };
 
   const handleInputBlur = () => {
-    const numberValue = parseInt(value.split("").reverse().join(""), 10);
+    const numberValue = parseInt(value, 10);
     if (isNaN(numberValue) || numberValue <= 0) {
       setValue("0");
     } else {
-      setValue(numberValue.toString().split("").reverse().join(""));
+      setValue(numberValue.toString());
     }
   };
+  
   return (
     <InputWrapper>
       <Input
-        type="number"
+        type="text" // 숫자 외에는 입력되지 않도록 타입을 text로 변경
         placeholder="금액"
         value={value}
         onChange={handleInputChange}
@@ -44,4 +45,8 @@ const WonSign = styled.span`
 `;
 const Input = styled.input`
   background-color: transparent;
+  text-align: center;
+  border: none; // 기본적인 input 스타일 초기화
+  outline: none; // 포커스 시 기본적인 외곽선 제거
+  font-size: 16px;
 `;
