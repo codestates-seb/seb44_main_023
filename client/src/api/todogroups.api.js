@@ -20,7 +20,6 @@ export const readTodoGroup = async (groupId) => {
 
 export const readTodoList = async (groupId, startDate, endDate) => {
   try {
-    console.log(startDate, endDate);
     const response = await API.get(
       `/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
     );

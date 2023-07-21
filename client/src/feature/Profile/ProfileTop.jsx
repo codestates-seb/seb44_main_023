@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
 import Avatar from "../../assets/userAvarta.png";
@@ -8,6 +8,7 @@ import {
   updateProfileImage,
 } from "../../api/members.api";
 import { imageCompress } from "../../utils/imageCompress";
+import useUserInfoStore from "../../store/store.userInfo";
 
 const ProfileTop = ({ profileInfo }) => {
   const [isEditMode, setEditMode] = useState(false);
@@ -15,6 +16,8 @@ const ProfileTop = ({ profileInfo }) => {
   const [nicknameInput, setNicknameInput] = useState(profileInfo.nickname);
   const [imageUrl, setImageUrl] = useState(profileInfo.profileImage);
   const [validation, setValidation] = useState("");
+
+  const { updateUserInfo } = useUserInfoStore();
 
   const handleEditMode = () => setEditMode(!isEditMode);
 
@@ -31,7 +34,11 @@ const ProfileTop = ({ profileInfo }) => {
       setEditMode(!isEditMode);
       setValidation("");
       setNickname(nicknameInput);
+      updateUserInfo({
+        nickname: nicknameInput,
+      });
     } catch (err) {
+      console.log(err);
       setValidation(err.response.data);
     }
   };
@@ -50,6 +57,7 @@ const ProfileTop = ({ profileInfo }) => {
       formData.append("file", fileBlob);
 
       await updateProfileImage(profileInfo.memberId, formData);
+      updateUserInfo({ profileImage: res });
       setImageUrl(res);
     } catch (err) {
       console.log(err);
@@ -61,6 +69,7 @@ const ProfileTop = ({ profileInfo }) => {
       event.preventDefault();
       if (Avatar === imageUrl) return;
       await deleteProfileImage(profileInfo.memberId);
+      updateUserInfo({ profileImage: Avatar });
       setImageUrl(Avatar);
     } catch (err) {
       console.log(err);
