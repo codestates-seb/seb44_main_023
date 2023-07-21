@@ -32,7 +32,7 @@ const MainPage = () => {
   }, []);
 
   return (
-    <>
+    <div style={{ height: "100%" }}>
       <HideScreen
         style={{
           opacity: isHidden ? 1 : 0,
@@ -45,22 +45,31 @@ const MainPage = () => {
           <FloatingButton icon="hide" onClick={changeVisibility} />
         </ButtonWrapper>
       </HideScreen>
-      <div style={{ opacity: isHidden ? 0 : 1, transition: "200ms" }}>
-        <StyledWrapper>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <>
-              <MainTodo groupId={group.todo} />
-              <MainLedger groupId={group.ledger} />
-            </>
-          )}
-        </StyledWrapper>
-      </div>
+      <StyledWrapper
+        style={{
+          opacity: isHidden ? 0 : 1,
+        }}
+      >
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              overflow: "hidden",
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            <MainTodo groupId={group.todo} />
+            <MainLedger groupId={group.ledger} />
+          </div>
+        )}
+      </StyledWrapper>
       <ButtonWrapper>
         <FloatingButton icon="hide" onClick={changeVisibility} />
       </ButtonWrapper>
-    </>
+    </div>
   );
 };
 export default MainPage;
@@ -71,6 +80,7 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   position: relative;
+  transition: 200ms;
 `;
 
 const ButtonWrapper = styled.div`

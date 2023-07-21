@@ -51,6 +51,7 @@ export default LedgerPage;
 const StyledWrapper = styled.div`
   height: 100%;
   width: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
