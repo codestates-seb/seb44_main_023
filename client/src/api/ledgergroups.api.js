@@ -1,5 +1,4 @@
 import { API } from "./api";
-import { generateFakeData } from "../feature/Ledger/LedgerList/generateFakeData";
 
 export const readAllLedgerGroups = async () => {
   try {
@@ -57,8 +56,6 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    return generateFakeData(100);
-
     const response = await API.get(`/ledgergroups/${groupId}/ledgers`);
     return response.data;
   } catch (err) {
