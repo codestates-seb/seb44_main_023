@@ -11,8 +11,12 @@ const TodoList = ({ startDate }) => {
   const { groupId } = useParams();
   const { isLoading, data } = useQueryTodoList({
     groupId,
-    startDate: startDate.format("YYYY-MM-DD"),
-    endDate: startDate.clone().subtract(3, "day").format("YYYY-MM-DD"),
+    startDate: startDate
+      .clone()
+      .startOf("week")
+      .add(1, "day")
+      .format("YYYY-MM-DD"),
+    endDate: startDate.clone().endOf("week").add(1, "day").format("YYYY-MM-DD"),
   });
 
   if (isLoading) return null;

@@ -56,12 +56,9 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    const res = await API.get(`/ledgergroups/${groupId}/ledgers/dates`, {
-      params: {
-        startDate,
-        endDate,
-      },
-    });
+    const res = await API.get(
+      `/ledgergroups/${groupId}/ledgers/dates?startDate=${startDate}&endDate=${endDate}`
+    );
     return res.data;
   } catch (err) {
     throw err;

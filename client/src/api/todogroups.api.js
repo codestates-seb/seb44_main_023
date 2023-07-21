@@ -20,10 +20,10 @@ export const readTodoGroup = async (groupId) => {
 
 export const readTodoList = async (groupId, startDate, endDate) => {
   try {
-    const response = await API.get(`/todogroups/${groupId}/todos`);
-    // const response = await API.get(
-    //   `/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
-    // );
+    console.log(startDate, endDate);
+    const response = await API.get(
+      `/todogroups/${groupId}/todos/dates?startDate=${startDate}&endDate=${endDate}`
+    );
     return response.data;
   } catch (err) {
     throw err;
