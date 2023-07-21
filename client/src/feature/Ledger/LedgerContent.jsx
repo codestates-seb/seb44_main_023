@@ -18,6 +18,7 @@ const LedgerContent = ({ pageType, groupId }) => {
   if (isLoading) return null;
   return (
     <Content
+      groupId={groupId}
       pageType={pageType}
       data={data}
       selectedMonth={selectedMonth}
@@ -26,7 +27,13 @@ const LedgerContent = ({ pageType, groupId }) => {
   );
 };
 
-const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
+const Content = ({
+  groupId,
+  pageType,
+  data,
+  selectedMonth,
+  setSelectedMonth,
+}) => {
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -57,6 +64,7 @@ const Content = ({ pageType, data, selectedMonth, setSelectedMonth }) => {
         />
       ) : (
         <LedgerList
+          groupId={groupId}
           ledgerList={data}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}

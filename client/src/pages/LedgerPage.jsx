@@ -33,7 +33,6 @@ const LedgerPage = () => {
 
   const { groupInfo, members } = data;
 
-  if (isLoading) return <StyledWrapper />;
   return (
     <StyledWrapper>
       <LedgerGroup
