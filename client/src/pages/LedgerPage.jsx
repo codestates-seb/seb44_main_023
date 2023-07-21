@@ -105,6 +105,7 @@ const LedgerPage = () => {
                 ledgerList={ledgerList}
                 selectedMonth={selectedMonth}
                 handleSelectedMonth={handleSelectedMonth}
+                groupId={groupId}
               />
             ) : (
               <LedgerList

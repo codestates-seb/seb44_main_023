@@ -2,8 +2,16 @@ import React, { useState, useEffect } from "react";
 import { styled, css } from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import dayjs from "dayjs";
+import Modal from "../../../components/Modal/Modal";
+import LegerDetailModal from "../LedgerCalendar/LegerDetailModal/LegerDetailModal";
 
-const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
+const LedgerCalendar = ({
+  ledgerList,
+  selectedMonth,
+  handleSelectedMonth,
+  groupId,
+  fetchData,
+}) => {
   const currentDate = new Date(selectedMonth.format("YYYY-MM-DD"));
 
   const [year, setYear] = useState(currentDate.getFullYear());
@@ -14,6 +22,21 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
   const lastDayOfMonth = new Date(year, month + 1, 0);
   const firstDayOfWeek = firstDayOfMonth.getDay();
   const lastDateOfMonth = lastDayOfMonth.getDate();
+
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = (date) => {
+    const formattedDate = dayjs(new Date(year, month, date)).format(
+      "YYYY-MM-DD"
+    );
+    setSelectedDate(formattedDate);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const dates = [];
   for (let i = 1; i <= lastDateOfMonth; i++) {
@@ -47,6 +70,27 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
     setMonth(currentDate.getMonth());
     setDay(currentDate.getDate());
   }, [selectedMonth]);
+
+  const calculateTotalIncomeAndExpense = (date) => {
+    const filteredData = ledgerList.filter(
+      (item) =>
+        item.ledger_schedule_date ===
+        dayjs(new Date(year, month, date)).format("YYYY-MM-DD")
+    );
+
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    filteredData.forEach((item) => {
+      if (item.inoutcome?.inoutcomeId === 1) {
+        totalExpense += item.ledger_amount;
+      } else if (item.inoutcome?.inoutcomeId === 2) {
+        totalIncome += item.ledger_amount;
+      }
+    });
+
+    return { totalIncome, totalExpense };
+  };
 
   return (
     <CenteredContainer>
@@ -102,9 +146,9 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
               const addCommasToNumber = (number) => {
                 return number.toLocaleString();
               };
-              
+
               return (
-                <DateCell key={date}>
+                <DateCell key={date} onClick={() => handleOpenModal(date)}>
                   <DateLabel
                     $data-testid={isToday ? "date" : ""}
                     $isToday={isToday}
@@ -112,7 +156,7 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
                     $isSunday={isSundayDate}
                     $year={year}
                     $month={month}
-                    $date={month}
+                    $date={date}
                     $currentDate={currentDate}
                   >
                     {date}
@@ -120,16 +164,20 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
                   {dateData && (
                     <>
                       <ContentWrapper>
-                        {dateData.inoutcome?.inoutcomeId === 1 && (
-                          <ExpenseContent>
-                            - {addCommasToNumber(dateData.ledger_amount)}원
-                          </ExpenseContent>
-                        )}
-                        {dateData.inoutcome?.inoutcomeId === 2 && (
-                          <IncomeContent>
-                            + {addCommasToNumber(dateData.ledger_amount)}원
-                          </IncomeContent>
-                        )}
+                        <TotalIncomeLabel>
+                          +
+                          {addCommasToNumber(
+                            calculateTotalIncomeAndExpense(date).totalIncome
+                          )}
+                          원
+                        </TotalIncomeLabel>
+                        <TotalExpenseLabel>
+                          -
+                          {addCommasToNumber(
+                            calculateTotalIncomeAndExpense(date).totalExpense
+                          )}
+                          원
+                        </TotalExpenseLabel>
                       </ContentWrapper>
                     </>
                   )}
@@ -146,6 +194,15 @@ const LedgerCalendar = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
           </CalendarGrid>
         </CalendarWrapper>
       </StyledWrapper>
+      {selectedDate && (
+        <Modal open={isModalOpen} onClose={handleCloseModal}>
+          <LegerDetailModal
+            selectedDate={selectedDate}
+            groupId={groupId}
+            fetchData={fetchData}
+          />
+        </Modal>
+      )}
     </CenteredContainer>
   );
 };
@@ -192,23 +249,7 @@ const Month = styled.div`
 const CalendarWrapper = styled.div`
   padding-right: 3rem;
   padding-left: 3rem;
-  max-height: 60rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-07) transparent;
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--color-gray-03);
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
+ 
 `;
 
 const ThisMonthButton = styled(Button)`
@@ -279,6 +320,7 @@ const DateCell = styled.div`
   background-color: var(--color-white);
   border-left: 1px solid var(--color-gray-03);
   border-bottom: 1px solid var(--color-gray-03);
+  cursor: pointer;
 
   &:nth-child(7n + 1) {
     border-left: none;
@@ -322,18 +364,19 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  cursor: pointer;
 `;
 
-const ExpenseContent = styled.div`
-  padding-right: 0.8rem;
-  font-size: 1.4rem;
-  color: var(--color-blue-03);
-`;
-
-const IncomeContent = styled.div`
+const TotalIncomeLabel = styled.div`
   padding-right: 0.8rem;
   font-size: 1.4rem;
   color: var(--color-red-01);
+`;
+
+const TotalExpenseLabel = styled.div`
+  padding-right: 0.8rem;
+  font-size: 1.4rem;
+  color: var(--color-blue-03);
 `;
 
 export default LedgerCalendar;
