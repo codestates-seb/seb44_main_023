@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.comment.domain.Comment;
 import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;
+import java.io.File;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -55,13 +56,13 @@ public class CommentDto {
         @JsonProperty(value = "comment_content")
         private String commentContent;
 
-        public Response(Comment comment) {
+        public Response(Comment comment, String fileUploadPath) {
             this.memberId = comment.getMember().getMemberId();
             this.todoGroupId = comment.getTodo().getTodoGroup().getTodoGroupId();
             this.todoId = comment.getTodo().getTodoId();
             this.commentId = comment.getCommentId();
             this.nickName = comment.getMember().getNickname();
-            this.profileImage = comment.getMember().getProfileImage();
+            this.profileImage = String.join(File.separator, fileUploadPath, comment.getMember().getProfileImage());
             this.commentContent = comment.getCommentContent();
         }
 

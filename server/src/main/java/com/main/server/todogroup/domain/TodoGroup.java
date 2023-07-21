@@ -2,6 +2,7 @@ package com.main.server.todogroup.domain;
 
 import com.main.server.member.Member;
 import com.main.server.todo.domain.Todo;
+import com.main.server.todogroup.dto.InvitationTodoGroupDto.EmailDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
