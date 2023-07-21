@@ -39,6 +39,16 @@ export const deletePayments = async (paymentId) => {
   }
 };
 
+export const readPayments = async (paymentId) => {
+  try {
+    const response = await API.get(`/payments/${paymentId}`);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const readAllPayments = async () => {
   try {
     const response = await API.get("/payments");
