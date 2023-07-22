@@ -4,7 +4,7 @@ import {
   addPayments,
   editPayments,
   deletePayments,
-} from "../../../api/payments.api";
+} from "../../../../api/payments.api";
 import styled from "styled-components";
 import { MdEdit, MdDelete, MdClose } from "react-icons/md";
 
@@ -15,6 +15,7 @@ const LedgerPayments = () => {
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
   const [isPaymentsSelect, setIsPaymentsSelect] = useState(false);
   const listRef = useRef();
+  const [id, setId] = useState();
 
   useEffect(() => {
     // 모든 카테고리 데이터 가져오기
@@ -90,20 +91,29 @@ const LedgerPayments = () => {
   };
 
   const handleClearSearch = () => {
-    setSearchQuery(""); // 검색어를 비움
-    setIsPaymentsSelect(false); // isPaymentsSelect를 false로 변경
+    setSearchQuery("");
+    setIsPaymentsSelect(false);
+    localStorage.removeItem("paymentId");
+  };
+
+  const handleSave = () => {
+    if (id === null) {
+      localStorage.removeItem("paymentId");
+    } else {
+      localStorage.setItem("paymentId", id);
+    }
   };
 
   return (
     <PaymentsContainer>
       {/* 카테고리 검색 창 */}
       {isPaymentsSelect && (
-        <>
+        <SelectBtnWrapper>
           <SelectBtn type="text" value={searchQuery}>
             <SelectBtnText>{searchQuery}</SelectBtnText>
             <CloseIcon onClick={() => handleClearSearch()} />
           </SelectBtn>
-        </>
+        </SelectBtnWrapper>
       )}
       {!isPaymentsSelect && (
         <>
@@ -159,6 +169,8 @@ const LedgerPayments = () => {
                         setSearchQuery(payments.payment_name);
                         setIsPaymentsOpen(false);
                         setIsPaymentsSelect(true);
+                        setId(payments.payment_id);
+                        handleSave();
                       }}
                       style={{ cursor: "pointer" }}
                     >
@@ -201,7 +213,7 @@ const SearchInput = styled.input`
 `;
 
 const PaymentsListContainer = styled.div`
- border-radius: 1rem;
+  border-radius: 1rem;
 `;
 
 const PaymentsList = styled.ul`
@@ -266,23 +278,29 @@ const PaymentsDeleteButton = styled.button`
   font-size: 1rem;
 `;
 
+const SelectBtnWrapper = styled.div`
+  align-items: center;
+  justify-content: center;
+`;
+
 const SelectBtn = styled.button`
   border-radius: 2rem;
   background-color: var(--color-blue-01);
   justify-content: center;
   align-items: center;
-  width: 15rem;
-  height: 3rem;
 `;
 
 const CloseIcon = styled(MdClose)`
   cursor: pointer;
-  margin-left: 1rem;
+  margin-left: 0.6rem;
+  margin-right: 0.5rem;
   font-size: 1.4rem;
-  color: #888;
+  color: var(--color-gray-10);
 `;
 
 const SelectBtnText = styled.span`
+  margin-left: 1rem;
+  margin-bottom: 2rem;
   font-size: 1.5rem;
   color: var(--color-gray-9);
 `;

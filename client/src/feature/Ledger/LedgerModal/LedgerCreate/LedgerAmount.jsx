@@ -6,7 +6,12 @@ const LedgerAmount = () => {
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
-    const filteredValue = inputValue.replace(/[^\d]/g, ""); // 한글, 영어, 숫자 이외의 문자 제거
+    const filteredValue = inputValue.replace(/[^\d]/g, "");
+    if (filteredValue === "") {
+      localStorage.removeItem("ledgerAmount");
+    } else {
+      localStorage.setItem("ledgerAmount", filteredValue);
+    }
     setValue(filteredValue);
   };
 

@@ -4,9 +4,10 @@ import {
   addCategories,
   editCategories,
   deleteCategories,
-} from "../../../api/categories.api";
+} from "../../../../api/categories.api";
 import styled from "styled-components";
 import { MdEdit, MdDelete, MdClose } from "react-icons/md";
+import ledgerCreate from "../../../../store/store.ledgerCreate";
 
 const LedgerCategory = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,14 +16,14 @@ const LedgerCategory = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCategorySelect, setIsCategorySelect] = useState(false);
   const listRef = useRef();
-  const MAX_TEXT_LENGTH = 8;
+  const [id, setId] = useState();
 
   useEffect(() => {
     // 모든 카테고리 데이터 가져오기
     const fetchAllCategories = async () => {
       try {
-        const categories = await readAllCategories();
-        setAllCategories(categories);
+        const response = await readAllCategories();
+        setAllCategories(response);
       } catch (error) {
         console.error(error);
       }
@@ -95,6 +96,14 @@ const LedgerCategory = () => {
     setIsCategorySelect(false); // isCategorySelect를 false로 변경
   };
 
+  const handleSave = () => {
+    if (id === null) {
+      localStorage.removeItem("categoryId");
+    } else {
+      localStorage.setItem("categoryId", id);
+    }
+  };
+
   return (
     <CategoryContainer>
       {/* 카테고리 검색 창 */}
@@ -120,65 +129,69 @@ const LedgerCategory = () => {
       )}
       {/* 검색 결과 카테고리 목록 */}
       {isCategoryOpen && (
-        <CategoryList ref={listRef}>
-          {filteredCategories.map((category) => (
-            <CategoryItem key={category.category_id}>
-              {editingCategoryId === category.category_id ? (
-                <CategoryEditInput
-                  value={category.category_name}
-                  onChange={(e) =>
-                    setAllCategories(
-                      allCategories.map((c) =>
-                        c.category_id === category.category_id
-                          ? { ...c, category_name: e.target.value }
-                          : c
+        <CategoryListContainer>
+          <CategoryList ref={listRef}>
+            {filteredCategories.map((category) => (
+              <CategoryItem key={category.category_id}>
+                {editingCategoryId === category.category_id ? (
+                  <CategoryEditInput
+                    value={category.category_name}
+                    onChange={(e) =>
+                      setAllCategories(
+                        allCategories.map((c) =>
+                          c.category_id === category.category_id
+                            ? { ...c, category_name: e.target.value }
+                            : c
+                        )
                       )
-                    )
-                  }
-                  onKeyPress={(e) => {
-                    if (e.key === "Enter") {
+                    }
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        handleEditCategory(
+                          category.category_id,
+                          category.category_name
+                        );
+                        setEditingCategoryId(null);
+                      }
+                    }}
+                    onBlur={() => {
                       handleEditCategory(
                         category.category_id,
                         category.category_name
                       );
                       setEditingCategoryId(null);
-                    }
-                  }}
-                  onBlur={() => {
-                    handleEditCategory(
-                      category.category_id,
-                      category.category_name
-                    );
-                    setEditingCategoryId(null);
-                  }}
-                />
-              ) : (
-                <>
-                  <CategoryEditSpan
-                    onClick={() => {
-                      setSearchQuery(category.category_name);
-                      setIsCategoryOpen(false);
-                      setIsCategorySelect(true);
                     }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {category.category_name}
-                  </CategoryEditSpan>
-                  <CategoryEditButton
-                    onClick={() => setEditingCategoryId(category.category_id)}
-                  >
-                    <MdEdit />
-                  </CategoryEditButton>
-                  <CategoryDeleteButton
-                    onClick={() => handleDeleteCategory(category.category_id)}
-                  >
-                    <MdDelete />
-                  </CategoryDeleteButton>
-                </>
-              )}
-            </CategoryItem>
-          ))}
-        </CategoryList>
+                  />
+                ) : (
+                  <>
+                    <CategoryEditSpan
+                      onClick={() => {
+                        setSearchQuery(category.category_name);
+                        setIsCategoryOpen(false);
+                        setIsCategorySelect(true);
+                        setId(category.category_id);
+                        handleSave();
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {category.category_name}
+                    </CategoryEditSpan>
+                    <CategoryEditButton
+                      onClick={() => setEditingCategoryId(category.category_id)}
+                    >
+                      <MdEdit />
+                    </CategoryEditButton>
+                    <CategoryDeleteButton
+                      onClick={() => handleDeleteCategory(category.category_id)}
+                    >
+                      <MdDelete />
+                    </CategoryDeleteButton>
+                  </>
+                )}
+              </CategoryItem>
+            ))}
+          </CategoryList>
+        </CategoryListContainer>
       )}
     </CategoryContainer>
   );
@@ -186,39 +199,52 @@ const LedgerCategory = () => {
 
 export default LedgerCategory;
 
-const CategoryContainer = styled.div`
-  background-color: transparent;
-  width: 15rem;
-`;
-
 const SearchInput = styled.input`
-  width: 100%;
+  width: 20rem;
   background-color: transparent;
   margin-bottom: 0.5rem;
+  text-align: center;
+`;
+
+const CategoryContainer = styled.div`
+  background-color: transparent;
+  position: relative;
+  display: inline-block;
+`;
+
+const CategoryListContainer = styled.div`
+  border-radius: 1rem;
 `;
 
 const CategoryList = styled.ul`
   list-style-type: none;
   padding: 0;
-  width: 100%;
   border-radius: 1rem;
   width: 13rem;
+  position: absolute;
+  top: calc(100%);
+  width: 100%;
+  background-color: var(--color-gray-02);
+  border-radius: 0.5rem;
+  border: 0.1rem solid var(--color-gray-10);
+  max-height: 16rem;
+  overflow-y: auto;
 `;
 
 const CategoryItem = styled.div`
-  background-color: var(--color-blue-01);
-  border-radius: 1rem;
   display: flex;
-  margin-bottom: 5px;
   flex: 1;
   font-size: 1.5rem;
-  width: 14.5rem;
+  border-bottom: 1px solid var(--color-gray-10);
   span {
     text-align: left;
     margin-top: 0.5rem;
-    margin-left: 0.5rem;
+    margin-left: 0.9rem;
     margin-bottom: 0.5rem;
     color: var(--color-gray-9);
+  }
+  &:hover {
+    background-color: var(--color-blue-01);
   }
 `;
 
@@ -247,7 +273,6 @@ const CategoryEditButton = styled.button`
 const CategoryDeleteButton = styled.button`
   background-color: transparent;
   border: none;
-  /* padding: 0.5rem 0rem 0rem 0.5rem; */
   margin: 0.5rem 0.5rem 0rem 0.3rem;
   cursor: pointer;
   font-size: 1rem;
@@ -258,18 +283,19 @@ const SelectBtn = styled.button`
   background-color: var(--color-blue-01);
   justify-content: center;
   align-items: center;
-  width: 15rem;
-  height: 3rem;
 `;
 
 const CloseIcon = styled(MdClose)`
   cursor: pointer;
-  margin-left: 1rem;
+  margin-left: 0.6rem;
+  margin-right: 0.5rem;
   font-size: 1.4rem;
-  color: #888;
+  color: var(--color-gray-10);
 `;
 
 const SelectBtnText = styled.span`
+  margin-left: 1rem;
+  margin-bottom: 2rem;
   font-size: 1.5rem;
   color: var(--color-gray-9);
 `;
