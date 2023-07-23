@@ -34,16 +34,16 @@ public class InoutcomeController {
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{in_outcome-id}")
+    @PatchMapping("/{in-outcome-id}")
     public ResponseEntity<InoutcomeResponseDto> updateInoutcome(
-            @PathVariable("in_outcome-id") @Positive Long inoutcomeId,
+            @PathVariable("in-outcome-id") @Positive Long inoutcomeId,
             @Validated @RequestBody InoutcomePatchDto inoutcomePatchDto) {
         Inoutcome updatedInoutcome = inoutcomeService.updateInoutcome(inoutcomeId, inoutcomePatchDto);
         InoutcomeResponseDto responseDto = new InoutcomeResponseDto(updatedInoutcome);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/{in_outcome-id}")
+    @GetMapping("/{in-outcome-id}")
     public ResponseEntity<InoutcomeResponseDto> getInoutcome(
             @PathVariable("in-outcome-id") @Positive Long inoutcomeId) {
         Inoutcome inoutcome = inoutcomeService.getInoutcome(inoutcomeId);
@@ -60,7 +60,7 @@ public class InoutcomeController {
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{in_outcome-id}")
+    @DeleteMapping("/{in-outcome-id}")
     public ResponseEntity<Void> deleteInoutcome(
             @PathVariable("in-outcome-id") @Positive Long inoutcomeId) {
         inoutcomeService.deleteInoutcome(inoutcomeId);
