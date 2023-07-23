@@ -11,12 +11,10 @@ import {
 
 import "./group.css";
 import { updateLedgerGroup } from "../../api/ledgergroupedit.api";
+import { updateTodoGroup } from "../../api/todogroupedit.api";
 
 const GroupEditSave = () => {
 	const {
-		isModalVisible,
-		isEditMode,
-		groupTitle,
 		inputGroupTitle,
 		invitedMembers,
 		setIsModalVisible,

@@ -5,11 +5,15 @@ import { devtools } from "zustand/middleware";
 // const { isModalVisible, isEditMode,inputGroupTitle, groupTitle,invitedMembers,setIsModalVisible, setIsEditMode,  setInputGroupTitle, setGroupTitle, setInvitedMembers ,removeInvitedMember,addInvitedMember} = useGroupEditStore();
 
 const store = (set) => ({
+	mode: 0, //1todo,2ledger
 	isModalVisible: false,
 	isEditMode: false,
 	inputGroupTitle: "",
 	groupTitle: "",
 	invitedMembers: [], // 추가: 초대된 멤버 목록 배열
+	setMode: (value) => {
+		set({ mode: value });
+	},
 	setIsModalVisible: (value) => {
 		set({ isModalVisible: value });
 	},
