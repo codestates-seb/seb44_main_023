@@ -19,7 +19,7 @@ const GroupInfo = ({ title, members }) => {
             <img
               key={`member-${member.member_id}`}
               id={member.member_id}
-              src={member.profile_image}
+              src={"https://api.planfinity.co.kr" + member.profile_image}
               onError={handleErrorImage}
             />
           ))}
@@ -60,6 +60,6 @@ const Member = styled.div`
     width: 100%;
     width: 4rem;
     height: 4rem;
-    object:fit: conver;
+    object-fit: cover;
   }
 `;
