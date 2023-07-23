@@ -185,7 +185,7 @@ const LoginLink = styled.a`
   display: block;
   margin-top: 2rem;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   color: var(--color-blue-03);
   cursor: pointer;
 
