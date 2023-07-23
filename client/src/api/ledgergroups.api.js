@@ -76,3 +76,36 @@ export const createLedgerGroup = async (memberId, ledgerGroupTitle) => {
     throw err;
   }
 };
+
+export const createLedgerContent = async (groupId, data) => {
+  try {
+    const res = await API.post(`/ledgergroups/${groupId}/ledgers`, {
+      ...data,
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const editLedgerContent = async (groupId, ledgerId ,data) => {
+  try {
+    const res = await API.patch(`/ledgergroups/${groupId}/ledgers/${ledgerId}`, {
+      ...data,
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const detailLedgerContent = async (groupId, ledgerId ,data) => {
+  try {
+    const res = await API.get(`/ledgergroups/${groupId}/ledgers/${ledgerId}`, {
+      ...data,
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
