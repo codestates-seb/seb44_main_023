@@ -45,21 +45,21 @@ const MemberWrapper = styled.div`
 `;
 
 const Member = styled.div`
-  font-size: 2.4rem;
-  display: flex;
-  align-items: center;
-  justif-content: center;
+	font-size: 2.4rem;
+	display: flex;
+	align-items: center;
+	justif-content: center;
 
-  .member-title {
-    margin-right: 1.2rem;
-  }
+	.member-title {
+		margin-right: 1.2rem;
+	}
 
-  img {
-    margin-right: -1rem;
-    border-radius: 100%;
-    width: 100%;
-    width: 4rem;
-    height: 4rem;
-    object:fit: conver;
-  }
+	img {
+		margin-right: -1rem;
+		border-radius: 100%;
+		width: 100%;
+		width: 4rem;
+		height: 4rem;
+		object-fit: conver;
+	}
 `;
