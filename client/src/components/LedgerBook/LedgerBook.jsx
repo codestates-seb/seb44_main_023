@@ -29,8 +29,9 @@ const LedgerBook = ({
             </ButtonLabel>
           }
           size="medium"
+          backgroundColor={"var(--color-blue-03)"}
+          hovercolor={"var(--color-blue-04)"}
           style={{
-            backgroundColor: "var(--color-blue-03)",
             fontSize: "1.6rem",
           }}
         />
@@ -42,8 +43,9 @@ const LedgerBook = ({
             </ButtonLabel>
           }
           size="medium"
+          backgroundColor={"var(--color-blue-03)"}
+          hovercolor={"var(--color-blue-04)"}
           style={{
-            backgroundColor: "var(--color-blue-03)",
             fontSize: "1.6rem",
           }}
         />
@@ -135,5 +137,9 @@ const MoreButton = styled.div`
     margin: 0 auto;
     cursor: pointer;
     font-size: 2rem;
+  }
+
+  &:hover {
+    color: var(--color-blue-04);
   }
 `;

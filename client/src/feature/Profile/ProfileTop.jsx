@@ -111,18 +111,20 @@ const ProfileTop = ({ profileInfo }) => {
                 <TextButton
                   onClick={handleCancelEdit}
                   color="var(--color-red-01)"
+                  hovercolor="var(--color-red-02)"
                 >
                   취소
                 </TextButton>
                 <TextButton
                   onClick={handleSaveNickName}
                   color="var(--color-blue-03)"
+                  hovercolor="var(--color-blue-05)"
                 >
                   저장
                 </TextButton>
               </div>
             ) : (
-              <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
+              <TextButton onClick={handleEditMode} color="var(--color-blue-03)" hovercolor="var(--color-blue-05)">
                 수정
               </TextButton>
             )}
@@ -220,6 +222,10 @@ const TextButton = styled.button`
   font-size: 2rem;
   color: ${({ color }) => color};
   background: none;
+
+  &:hover {
+    color: ${({ hovercolor }) => hovercolor};
+  }
 `;
 
 const InputNickname = styled(Input)``;

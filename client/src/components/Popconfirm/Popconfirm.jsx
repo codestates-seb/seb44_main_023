@@ -136,6 +136,10 @@ const PopupContent = styled.div`
       border-radius: 3rem;
       transition: 200ms;
       cursor: pointer;
+
+      &:hover {
+        background-color: var(--color-gray-03);
+      }
     }
 
     .confirm-button {
