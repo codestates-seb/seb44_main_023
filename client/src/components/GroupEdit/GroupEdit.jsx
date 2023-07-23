@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Modal from "../Modal/Modal";
-import GroupEdit from "../../feature/GroupEdit/GroupEdit";
+import GroupEditFrame from "../../feature/GroupEdit/GroupEditFrame";
 import { useGroupEditStore } from "../../store/store.groupEdit";
 
 const GroupEdit = () => {
@@ -15,7 +15,7 @@ const GroupEdit = () => {
 				closable // 우측 상단 모달 닫힘 버튼 유무 default값 : true
 				onClose={() => setIsModalVisible(!isModalVisible)} // 모달 열고 닫는 state 변화 함수
 			>
-				<GroupEdit></GroupEdit>
+				<GroupEditFrame></GroupEditFrame>
 			</GroupEditModal>
 		</>
 	);
