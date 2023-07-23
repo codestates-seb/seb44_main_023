@@ -2,6 +2,8 @@ package com.main.server.ledgerGroup.service;
 
 import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
+import com.main.server.ledger.entity.Ledger;
+import com.main.server.ledger.repository.LedgerRepository;
 import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
@@ -19,10 +21,15 @@ import java.util.List;
 public class LedgerGroupServiceImpl implements LedgerGroupService {
     private final MemberService memberService;
     private final LedgerGroupRepository ledgerGroupRepository;
+//    private final Ledger ledger;
+    private final LedgerRepository ledgerRepository;
 
-    public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository) {
+    public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository,
+                                  LedgerRepository ledgerRepository) {
         this.memberService = memberService;
         this.ledgerGroupRepository = ledgerGroupRepository;
+//        this.ledger = ledger;
+        this.ledgerRepository = ledgerRepository;
     }
 
     @Override
@@ -57,6 +64,14 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     @Override
     public void deleteLedgerGroup(Long ledgerGroupId) {
         LedgerGroup foundLedgerGroup = findVerifiedLedgerGroup(ledgerGroupId);
+
+        List<Ledger> allLedgersDelete = ledgerRepository.findByLedgerGroup(foundLedgerGroup);
+        int size = allLedgersDelete.size();
+
+        for (int i = 0; i < size; i++) {
+            Ledger ledger = allLedgersDelete.get(i);
+            ledgerRepository.delete(ledger);
+        }
         ledgerGroupRepository.delete(foundLedgerGroup);
     }
 

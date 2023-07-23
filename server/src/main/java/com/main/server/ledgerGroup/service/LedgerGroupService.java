@@ -14,4 +14,5 @@ public interface LedgerGroupService {
     void deleteLedgerGroup(Long ledgerGroupId);
 
     LedgerGroup findByGroupId(Long ledgerGroupId);
+    LedgerGroup findVerifiedLedgerGroup(Long ledgerGroupId);
 }
