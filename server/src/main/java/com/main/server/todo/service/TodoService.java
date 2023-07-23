@@ -53,7 +53,7 @@ public class TodoService {
         return savedTodo;
     }
 
-    public Todo updateTodo(Long todoGroupId, Long todoId ,TodoDto.Patch patchDto) {
+    public Todo updateTodo(Long todoGroupId, Long todoId ,TodoDto.Patch patchDto, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);
@@ -65,7 +65,7 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo updateStatusTodo(Long todoGroupId, Long todoId, TodoDto.updateStatus updateStatusDto) {
+    public Todo updateStatusTodo(Long todoGroupId, Long todoId, TodoDto.updateStatus updateStatusDto, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);
@@ -76,14 +76,14 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo getTodo(Long todoGroupId, Long todoId) {
+    public Todo getTodo(Long todoGroupId, Long todoId, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         return findVerifiedTodo(todoId);
     }
 
     @Transactional
-    public List<Todo> getTodos(Long todoGroupId) {
+    public List<Todo> getTodos(Long todoGroupId, String accessToken) {
 
 //        todoGroupService.findById(todoGroupId);
 //        List<Todo> todos = this.todoRepository.findAll();
@@ -99,7 +99,7 @@ public class TodoService {
         return todos;
     }
 
-    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate) {
+    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate, String accessToken) {
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
 
         List<Todo> todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup ,startDate, endDate);
@@ -109,7 +109,7 @@ public class TodoService {
 
     }
 
-    public void deleteTodo(Long todoGroupId, Long todoId) {
+    public void deleteTodo(Long todoGroupId, Long todoId, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);

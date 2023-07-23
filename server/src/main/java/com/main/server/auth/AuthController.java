@@ -70,6 +70,7 @@ public class AuthController {
     }
 
     // 로그아웃
+    // 로그아웃
     @DeleteMapping("/logouts")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader,
                                     HttpServletRequest request) {
@@ -89,40 +90,21 @@ public class AuthController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            // 토큰 유효성 검사
-            if (!jwtTokenizer.validateToken(token)) {
-                return ResponseEntity.badRequest().body("유효하지 않은 액세스 토큰입니다");
-            }
-            // 로그아웃한 토큰을 무효화
+
+            // AccessToken 무효화
             authService.invalidateToken(token);
 
-            return ResponseEntity.ok("로그아웃에 성공하였습니다");
-        }
-
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            if (refreshToken != null) {
+                // RefreshToken 무효화
+                authService.invalidateToken(refreshToken);
             }
-            // 토큰 유효성 검사
-            if (!jwtTokenizer.validateToken(refreshToken)) {
-                return ResponseEntity.badRequest().body("유효하지 않은 액세스 토큰입니다");
-            }
-            // 로그아웃한 토큰을 무효화
-            authService.invalidateToken(refreshToken);
 
             return ResponseEntity.ok("로그아웃에 성공하였습니다");
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
-
     }
+
 
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authorizationHeader) {

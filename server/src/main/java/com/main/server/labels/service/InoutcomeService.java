@@ -44,20 +44,20 @@ public class InoutcomeService {
         Inoutcome postedInoutcome = inoutcomeRepository.save(postDto.toEntity(member));
         return postedInoutcome;
     }
-    public Inoutcome updateInoutcome(Long inoutcomeId, InoutcomePatchDto patchDto) {
+    public Inoutcome updateInoutcome(Long inoutcomeId, InoutcomePatchDto patchDto, String token) {
         Inoutcome updatedInoutcome = existingInoutcome(inoutcomeId);
         updatedInoutcome.changeName(patchDto.getInoutcomeName());
 
         return updatedInoutcome;
     }
-    public Inoutcome getInoutcome(Long inoutcomeId){
+    public Inoutcome getInoutcome(Long inoutcomeId, String token){
         return existingInoutcome(inoutcomeId);
     }
-    public List<Inoutcome> getInoutcomes() {
+    public List<Inoutcome> getInoutcomes(String token) {
         return inoutcomeRepository.findAll();
     }
 
-    public void deleteInoutcome(Long inoutcomeId) {
+    public void deleteInoutcome(Long inoutcomeId, String token) {
         Inoutcome deletedInoutcome = existingInoutcome(inoutcomeId);
         inoutcomeRepository.delete(deletedInoutcome);
     }

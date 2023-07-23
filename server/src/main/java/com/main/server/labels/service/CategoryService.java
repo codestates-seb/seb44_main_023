@@ -42,19 +42,19 @@ public class CategoryService {
         Category postedCategory = categoryRepository.save(postDto.toEntity(member));
         return postedCategory;
     }
-    public Category updateCategory(Long categoryId, CategoryPatchDto patchDto) {
+    public Category updateCategory(Long categoryId, CategoryPatchDto patchDto, String token) {
         Category updatedCategory = existingCategory(categoryId);
         updatedCategory.changeName(patchDto.getCategoryName());
 
         return updatedCategory;
     }
-    public Category getCategory(Long categoryId){
+    public Category getCategory(Long categoryId, String token){
         return existingCategory(categoryId);
     }
-    public List<Category> getCategories() {
+    public List<Category> getCategories(String token) {
         return categoryRepository.findAll();
     }
-    public void deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId, String token) {
         Category deletedCategory = existingCategory(categoryId);
         categoryRepository.delete(deletedCategory);
     }

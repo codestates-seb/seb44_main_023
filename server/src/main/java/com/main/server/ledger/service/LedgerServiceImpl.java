@@ -121,7 +121,7 @@ public class LedgerServiceImpl implements LedgerService {
 
 
     @Override
-        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
+        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
             Long categoryId = patchDto.getCategoryId();
@@ -171,13 +171,13 @@ public class LedgerServiceImpl implements LedgerService {
 
 
         @Override
-        public Ledger getLedger (Long ledgerGroupId, Long ledgerId){
+        public Ledger getLedger (Long ledgerGroupId, Long ledgerId, String token){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             return findVerifiedLedger(ledgerId);
         }
 
         @Override
-        public List<Ledger> getLedgers (Long ledgerGroupId){
+        public List<Ledger> getLedgers (Long ledgerGroupId, String token){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             if (ledgerGroup == null) {
                 // 그룹이 존재하지 않을 경우
@@ -186,7 +186,7 @@ public class LedgerServiceImpl implements LedgerService {
             return ledgerGroup.getLedgers();
         }
     @Override
-    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate) {
+    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate, String token) {
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
 
         List<Ledger> ledgers = this.ledgerRepository.findByLedgerGroupAndLedgerDateBetween(ledgerGroup ,startDate, endDate);
@@ -197,7 +197,7 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
         @Override
-        public void deleteLedger (Long ledgerGroupId, Long ledgerId){
+        public void deleteLedger (Long ledgerGroupId, Long ledgerId, String token){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger deletedLedger = findVerifiedLedger(ledgerId);
             ledgerRepository.delete(deletedLedger);

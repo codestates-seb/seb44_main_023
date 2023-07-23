@@ -46,7 +46,34 @@ public class CategoryController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    Category createdCategory = categoryService.createCategory(categoryPostDto, newAccessToken);
+                    CategoryResponseDto responseDto = new CategoryResponseDto(createdCategory);
+                    return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
             // memberId를 사용하여 회원 정보 확인
@@ -55,23 +82,8 @@ public class CategoryController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            Category createdCategory = categoryService.createCategory(categoryPostDto, token);
-            CategoryResponseDto responseDto = new CategoryResponseDto(createdCategory);
-            return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
-        }
 
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
+            // 작업 수행
             Category createdCategory = categoryService.createCategory(categoryPostDto, token);
             CategoryResponseDto responseDto = new CategoryResponseDto(createdCategory);
             return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -79,6 +91,7 @@ public class CategoryController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
 
     @PatchMapping("/{category-id}")
     public ResponseEntity<CategoryResponseDto> updateCategory(
@@ -92,7 +105,34 @@ public class CategoryController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    Category updatedCategory = categoryService.updateCategory(categoryId, categoryPatchDto, newAccessToken);
+                    CategoryResponseDto responseDto = new CategoryResponseDto(updatedCategory);
+                    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
             // memberId를 사용하여 회원 정보 확인
@@ -101,30 +141,16 @@ public class CategoryController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            Category updatedCategory = categoryService.updateCategory(categoryId, categoryPatchDto);
-            CategoryResponseDto responseDto = new CategoryResponseDto(updatedCategory);
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        }
 
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            Category updatedCategory = categoryService.updateCategory(categoryId, categoryPatchDto);
+            // 작업 수행
+            Category updatedCategory = categoryService.updateCategory(categoryId, categoryPatchDto, token);
             CategoryResponseDto responseDto = new CategoryResponseDto(updatedCategory);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
 
     @GetMapping("/{category-id}")
     public ResponseEntity<CategoryResponseDto> getCategory(@PathVariable("category-id") @Positive Long categoryId,
@@ -136,7 +162,34 @@ public class CategoryController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    Category category = categoryService.getCategory(categoryId, newAccessToken);
+                    CategoryResponseDto responseDto = new CategoryResponseDto(category);
+                    return new ResponseEntity<>(responseDto, HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
             // memberId를 사용하여 회원 정보 확인
@@ -145,30 +198,16 @@ public class CategoryController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            Category category = categoryService.getCategory(categoryId);
-            CategoryResponseDto responseDto = new CategoryResponseDto(category);
-            return new ResponseEntity<>(responseDto, HttpStatus.OK);
-        }
 
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            Category category = categoryService.getCategory(categoryId);
+            // 작업 수행
+            Category category = categoryService.getCategory(categoryId, token);
             CategoryResponseDto responseDto = new CategoryResponseDto(category);
             return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
 
     @GetMapping
     public ResponseEntity<List<CategoryResponseDto>> getCategories(HttpServletRequest request) {
@@ -179,7 +218,36 @@ public class CategoryController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    List<Category> categories = categoryService.getCategories(newAccessToken);
+                    List<CategoryResponseDto> responseDtoList = categories.stream()
+                            .map(CategoryResponseDto::new)
+                            .collect(Collectors.toList());
+                    return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
             // memberId를 사용하여 회원 정보 확인
@@ -188,26 +256,9 @@ public class CategoryController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            List<Category> categories = categoryService.getCategories();
-            List<CategoryResponseDto> responseDtoList = categories.stream()
-                    .map(CategoryResponseDto::new)
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-        }
 
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            List<Category> categories = categoryService.getCategories();
+            // 작업 수행
+            List<Category> categories = categoryService.getCategories(token);
             List<CategoryResponseDto> responseDtoList = categories.stream()
                     .map(CategoryResponseDto::new)
                     .collect(Collectors.toList());
@@ -216,6 +267,7 @@ public class CategoryController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
 
     @DeleteMapping("/{category-id}")
     public ResponseEntity<Void> deleteCategory(
@@ -228,7 +280,33 @@ public class CategoryController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    categoryService.deleteCategory(categoryId, newAccessToken);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
             // memberId를 사용하여 회원 정보 확인
@@ -237,24 +315,13 @@ public class CategoryController {
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
-            // 회원 정보 확인 후 작업 수행
-            categoryService.deleteCategory(categoryId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
 
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            categoryService.deleteCategory(categoryId);
+            // 작업 수행
+            categoryService.deleteCategory(categoryId, token);
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
 }

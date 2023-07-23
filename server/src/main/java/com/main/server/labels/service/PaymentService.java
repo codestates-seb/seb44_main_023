@@ -40,21 +40,21 @@ public class PaymentService {
         Payment postedPayment = paymentRepository.save(postDto.toEntity(member));
         return postedPayment;
     }
-    public Payment updatePayment(Long paymentId, PaymentPatchDto patchDto) {
+    public Payment updatePayment(Long paymentId, PaymentPatchDto patchDto, String token) {
         Payment updatedPayment = existingPayment(paymentId);
         updatedPayment.changeName(patchDto.getPaymentName());
 
         return updatedPayment;
     }
-    public Payment getPayment(Long paymentId){
+    public Payment getPayment(Long paymentId, String token){
         return existingPayment(paymentId);
     }
 
-    public List<Payment> getPayments() {
+    public List<Payment> getPayments(String token) {
         return paymentRepository.findAll();
     }
 
-    public void deletePayment(Long paymentId) {
+    public void deletePayment(Long paymentId, String token) {
         Payment deletedPayment = existingPayment(paymentId);
         paymentRepository.delete(deletedPayment);
     }

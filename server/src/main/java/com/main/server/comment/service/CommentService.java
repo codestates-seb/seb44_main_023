@@ -56,7 +56,7 @@ public class CommentService {
         return savedComment;
     }
 
-    public Comment upDateComment(Long todoGroupId, Long todoId, Long commentId, CommentDto.Patch patchDto) {
+    public Comment upDateComment(Long todoGroupId, Long todoId, Long commentId, CommentDto.Patch patchDto, String token) {
         todoGroupService.findById(todoGroupId);
         todoService.findById(todoId);
         Comment comment = findById(commentId);
@@ -66,7 +66,7 @@ public class CommentService {
     }
 
     @Transactional
-    public List<Comment> getComments(Long todoGroupId, Long todoId) {
+    public List<Comment> getComments(Long todoGroupId, Long todoId, String token) {
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
         Todo todo = todoService.findById(todoId);
 
@@ -75,7 +75,7 @@ public class CommentService {
         return comments;
     }
 
-    public void deleteComment(Long todoGroupId, Long todoId, Long commentId) {
+    public void deleteComment(Long todoGroupId, Long todoId, Long commentId, String token) {
         todoGroupService.findById(todoGroupId);
         todoService.findById(todoId);
         Comment findComment = findById(commentId);

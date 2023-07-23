@@ -96,36 +96,49 @@ public class MemberController {
 
 
     @GetMapping("/member")
-    public List<ResponseDto> getMembers(HttpServletRequest request) {
-
+    public ResponseEntity<List<ResponseDto>> getMembers(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    List<Member> allMembers = memberService.findAllMembers();
+                    List<ResponseDto> responseDtoList = allMembers.stream()
+                            .map(member -> new ResponseDto(member))
+                            .collect(Collectors.toList());
+
+                    // 새로운 AccessToken을 헤더에 담아서 응답
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+                    return new ResponseEntity<>(responseDtoList, headers, HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            List<Member> allMembers = memberService.findAllMembers();
-
-            return allMembers.stream()
-                    .map(member -> new ResponseDto(member))
-                    .collect(Collectors.toList());
-        }
-
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -133,18 +146,23 @@ public class MemberController {
             }
 
             List<Member> allMembers = memberService.findAllMembers();
-
-            return allMembers.stream()
+            List<ResponseDto> responseDtoList = allMembers.stream()
                     .map(member -> new ResponseDto(member))
                     .collect(Collectors.toList());
+
+            // 기존의 AccessToken을 헤더에 담아서 응답
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            return new ResponseEntity<>(responseDtoList, headers, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
-
     }
 
+
+
     @GetMapping("/members")
-    public ResponseDto getMember(HttpServletRequest request) {
+    public ResponseEntity<ResponseDto> getMember(HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
@@ -152,10 +170,41 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    Member foundMember = memberService.findMember(memberId);
+
+                    ResponseDto responseDto = new ResponseDto(foundMember);
+                    responseDto.setEmail(verifiedMember.getEmail());
+
+                    // 새로운 AccessToken을 헤더에 담아서 응답
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+                    return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
+                } else {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -168,27 +217,10 @@ public class MemberController {
             ResponseDto responseDto = new ResponseDto(foundMember);
             responseDto.setEmail(verifiedMember.getEmail());
 
-            return responseDto;
-
-        } else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            // memberId를 사용하여 인증 및 인가 처리
-            Member foundMember = memberService.findMember(memberId);
-
-            ResponseDto responseDto = new ResponseDto(foundMember);
-            responseDto.setEmail(verifiedMember.getEmail());
-
-            return responseDto;
-
+            // 기존의 AccessToken을 헤더에 담아서 응답
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
@@ -196,19 +228,51 @@ public class MemberController {
 
     // 닉네임 변경
     @PatchMapping("/members/nickname")
-    public ResponseEntity<String> patchMember(HttpServletRequest request,
-                                              @RequestBody NicknameDto nicknameDto) {
-
+    public ResponseEntity<String> patchMember(HttpServletRequest request, @RequestBody NicknameDto nicknameDto) {
         String token = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 닉네임 변경 처리
+                    if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+                        throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME_FORMAT);
+                    }
+
+                    Member member = new Member(nicknameDto);
+                    Member updatedMember = memberService.updateMember(memberId, member);
+
+                    // 새로운 AccessToken을 헤더에 담아서 응답
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+                    return new ResponseEntity<>("Succeed Update Nickname", headers, HttpStatus.OK);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -216,49 +280,18 @@ public class MemberController {
             }
 
             // 닉네임 유효성 검증
-            try {
-                // 닉네임 유효성 검증
-                if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
-                    throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME_FORMAT);
-                }
-
-                Member member = new Member(nicknameDto);
-                Member updatedMember = memberService.updateMember(memberId, member);
-                return ResponseEntity.ok().body("Succeed Update Nickname");
-            } catch (BusinessLogicException e) {
-                return ResponseEntity.status(e.getExceptionCode().getStatus())
-                        .body(e.getExceptionCode().getMessage());
+            if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
+                throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME_FORMAT);
             }
 
-        } else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            // 닉네임 유효성 검증
-            try {
-                // 닉네임 유효성 검증
-                if (!nicknameDto.getNickname().matches("^[ㄱ-ㅎ가-힣a-zA-Z0-9-_]{2,10}$")) {
-                    throw new BusinessLogicException(ExceptionCode.INVALID_NICKNAME_FORMAT);
-                }
-
-                Member member = new Member(nicknameDto);
-                Member updatedMember = memberService.updateMember(memberId, member);
-                return ResponseEntity.ok().body("Succeed Update Nickname");
-            } catch (BusinessLogicException e) {
-                return ResponseEntity.status(e.getExceptionCode().getStatus())
-                        .body(e.getExceptionCode().getMessage());
-            }
+            Member member = new Member(nicknameDto);
+            Member updatedMember = memberService.updateMember(memberId, member);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+            return new ResponseEntity<>("Succeed Update Nickname", headers, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
-
     }
 
     // 비밀번호 변경
@@ -273,75 +306,75 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+                    // 비밀번호 변경 처리
+                    return changePasswordLogic(headers, memberId, passwordDto, bindingResult);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
 
-            if (bindingResult.hasErrors()) {
-                // 유효성 검사 오류 처리
-                String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-                return ResponseEntity.badRequest().body(errorMessage);
-            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
 
-            try {
-                boolean passwordChanged = memberService.updatePassword(memberId,
-                        passwordDto.getPassword(),
-                        passwordDto.getNewPassword());
-                if (passwordChanged) {
-                    return ResponseEntity.ok("Password changed successfully!");
-                } else {
-                    return ResponseEntity.badRequest().body("Failed to change password.");
-                }
-            } catch (BusinessLogicException e) {
-                if (e.getExceptionCode() == ExceptionCode.SAME_CURRENT_PASSWORD) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("현재 비밀번호와 일치합니다.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getExceptionCode().getMessage());
-                }
-            }
-
-        } else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            if (bindingResult.hasErrors()) {
-                // 유효성 검사 오류 처리
-                String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-                return ResponseEntity.badRequest().body(errorMessage);
-            }
-
-            try {
-                boolean passwordChanged = memberService.updatePassword(memberId,
-                        passwordDto.getPassword(),
-                        passwordDto.getNewPassword());
-                if (passwordChanged) {
-                    return ResponseEntity.ok("Password changed successfully!");
-                } else {
-                    return ResponseEntity.badRequest().body("Failed to change password.");
-                }
-            } catch (BusinessLogicException e) {
-                if (e.getExceptionCode() == ExceptionCode.SAME_CURRENT_PASSWORD) {
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("현재 비밀번호와 일치합니다.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getExceptionCode().getMessage());
-                }
-            }
-        }
-        else {
+            // 비밀번호 변경 처리
+            return changePasswordLogic(headers, memberId, passwordDto, bindingResult);
+        } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
+    }
+
+    // 비밀번호 변경 처리 메서드
+    private ResponseEntity<String> changePasswordLogic(HttpHeaders headers, long memberId, PasswordDto passwordDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사 오류 처리
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            return new ResponseEntity<>(errorMessage, headers, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            boolean passwordChanged = memberService.updatePassword(memberId,
+                    passwordDto.getPassword(),
+                    passwordDto.getNewPassword());
+            if (passwordChanged) {
+                return new ResponseEntity<>("Password changed successfully!", headers, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Failed to change password.", headers, HttpStatus.BAD_REQUEST);
+            }
+        } catch (BusinessLogicException e) {
+            if (e.getExceptionCode() == ExceptionCode.SAME_CURRENT_PASSWORD) {
+                return new ResponseEntity<>("현재 비밀번호와 일치합니다.", headers, HttpStatus.CONFLICT);
+            } else {
+                return new ResponseEntity<>(e.getExceptionCode().getMessage(), headers, HttpStatus.BAD_REQUEST);
+            }
         }
     }
 
@@ -357,24 +390,34 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 회원 정보 확인 후 작업 수행
+                    memberService.terminateMember(memberId, password);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            memberService.terminateMember(memberId, password);
-            }
-
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -383,48 +426,56 @@ public class MemberController {
 
             // 회원 정보 확인 후 작업 수행
             memberService.terminateMember(memberId, password);
-            }
 
-         else{
+        } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
-            }
         }
-
+    }
 
     // 이미지 업로드
     @PostMapping("/members/profile-image")
-    public ResponseEntity<String> uploadProfileImage(HttpServletRequest request,
-                                                     @RequestParam("file") MultipartFile file) {
-
+    public ResponseEntity<String> uploadProfileImage(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
         String token = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
 
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
 
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
 
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            try {
-                memberService.createProfileImage(memberId, file);
-                return ResponseEntity.ok("Profile image uploaded successfully!");
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
-            }
-        }
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
 
-            else if (refreshToken != null) {
-                // Refresh Token 검증 및 memberId 식별
-                long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
 
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    try {
+                        memberService.createProfileImage(memberId, file);
+
+                        // 새로운 AccessToken을 헤더에 담아서 응답
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.add("Authorization", "Bearer " + newAccessToken);
+                        return new ResponseEntity<>("Profile image uploaded successfully!", headers, HttpStatus.OK);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
+                    }
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            } else {
+                // AccessToken이 유효한 경우
                 // memberId를 사용하여 회원 정보 확인
+                long memberId = jwtTokenizer.getMemberIdFromToken(token);
                 Member verifiedMember = memberService.findMember(memberId);
 
                 if (verifiedMember == null) {
@@ -433,19 +484,22 @@ public class MemberController {
 
                 try {
                     memberService.createProfileImage(memberId, file);
-                    return ResponseEntity.ok("Profile image uploaded successfully!");
+                    // 기존의 AccessToken을 헤더에 담아서 응답
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + token);
+                    return new ResponseEntity<>("Profile image uploaded successfully!", headers, HttpStatus.OK);
                 } catch (Exception e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload profile image.");
                 }
-            } else {
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
             }
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
+    }
 
     // 이미지 수정
     @PatchMapping("/members/profile-image")
-    public ResponseEntity<String> updateProfileImage(HttpServletRequest request,
-                                                     @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> updateProfileImage(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
 
         String token = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
@@ -453,35 +507,44 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    try {
+                        // 새로운 AccessToken으로 프로필 이미지 수정 작업 수행
+                        memberService.updateProfileImage(memberId, file);
+
+                        // 새로운 AccessToken을 헤더에 담아서 응답
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.add("Authorization", "Bearer " + newAccessToken);
+                        return new ResponseEntity<>("Profile image updated successfully!", headers, HttpStatus.OK);
+
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update profile image.");
+                    }
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            try {
-                memberService.updateProfileImage(memberId, file);
-                return ResponseEntity.ok("Profile image updated successfully!");
-            } catch (BusinessLogicException e) {
-                return ResponseEntity.status(e.getExceptionCode().getStatus())
-                        .body(e.getExceptionCode().getMessage());
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to update profile image.");
-            }
-        }
-
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -489,22 +552,22 @@ public class MemberController {
             }
 
             try {
+                // 기존의 AccessToken으로 프로필 이미지 수정 작업 수행
                 memberService.updateProfileImage(memberId, file);
-                return ResponseEntity.ok("Profile image updated successfully!");
-            } catch (BusinessLogicException e) {
-                return ResponseEntity.status(e.getExceptionCode().getStatus())
-                        .body(e.getExceptionCode().getMessage());
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
+
+                // 기존의 AccessToken을 헤더에 담아서 응답
+                HttpHeaders headers = new HttpHeaders();
+                headers.add("Authorization", "Bearer " + token);
+                return new ResponseEntity<>("Profile image updated successfully!", headers, HttpStatus.OK);
+
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to update profile image.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update profile image.");
             }
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-  
+
     // 이미지 조회
     @GetMapping("/members/profile-image")
     public ResponseEntity<byte[]> getProfileImage(HttpServletRequest request) {
@@ -515,41 +578,52 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
 
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
 
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            try {
-                byte[] imageBytes = memberService.getProfileImage(memberId);
-                if (imageBytes != null) {
-                    String fileName = "profile-image.jpg"; // 기본적으로 JPEG로 가정
-                    // 파일 확장자에 따라 적절한 MediaType 설정
-                    String mimeType = MediaTypeFactory.getMediaType(fileName)
-                            .orElse(MediaType.IMAGE_JPEG).toString();
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
 
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
                     HttpHeaders headers = new HttpHeaders();
-                    headers.setContentType(MediaType.parseMediaType(mimeType));
-                    return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+                    try {
+                        byte[] imageBytes = memberService.getProfileImage(memberId);
+                        if (imageBytes != null) {
+                            String fileName = "profile-image.jpg"; // 기본적으로 JPEG로 가정
+                            // 파일 확장자에 따라 적절한 MediaType 설정
+                            String mimeType = MediaTypeFactory.getMediaType(fileName)
+                                    .orElse(MediaType.IMAGE_JPEG).toString();
+                            headers.setContentType(MediaType.parseMediaType(mimeType));
+                            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+                        } else {
+                            return ResponseEntity.notFound().build();
+                        }
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body("Failed to retrieve profile image.".getBytes());
+                    }
                 } else {
-                    return ResponseEntity.notFound().build();
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
                 }
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to retrieve profile image.".getBytes());
             }
-        }
 
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
+            // AccessToken이 유효한 경우
             // memberId를 사용하여 회원 정보 확인
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -566,6 +640,7 @@ public class MemberController {
 
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.parseMediaType(mimeType));
+                    headers.add("Authorization", "Bearer " + token); // 기존의 AccessToken을 헤더에 담아서 응답
                     return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
                 } else {
                     return ResponseEntity.notFound().build();
@@ -589,32 +664,45 @@ public class MemberController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7); // "Bearer " 접두사 제거
 
-            // 토큰 검증 및 memberId 식별
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+                    try {
+                        memberService.deleteProfileImage(memberId);
+                        return ResponseEntity.ok("Profile image deleted successfully!");
+                    } catch (IllegalArgumentException e) {
+                        return ResponseEntity.badRequest().body(e.getMessage());
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body("Failed to delete profile image.");
+                    }
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            // memberId를 사용하여 회원 정보 확인
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 회원 정보 확인 후 작업 수행
-            try {
-                memberService.deleteProfileImage(memberId);
-                return ResponseEntity.ok("Profile image deleted successfully!");
-            } catch (IllegalArgumentException e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Failed to delete profile image.");
-            }
-        }
-
-        else if (refreshToken != null) {
-            // Refresh Token 검증 및 memberId 식별
-            long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-            // memberId를 사용하여 회원 정보 확인
             Member verifiedMember = memberService.findMember(memberId);
 
             if (verifiedMember == null) {
@@ -634,6 +722,5 @@ public class MemberController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
 }
 

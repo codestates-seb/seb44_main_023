@@ -46,7 +46,7 @@ public class TodoGroupService {
         return saveTodoGroup;
     }
 
-    public TodoGroup updateTodoGroup(Long todoGroupId, TodoGroupDto.Patch patchDto) {
+    public TodoGroup updateTodoGroup(Long todoGroupId, TodoGroupDto.Patch patchDto, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
 
         findTodoGroup.changeTitle(patchDto.getTodoGroupTitle());
@@ -55,17 +55,17 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getTodoGroup(Long todoGroupId) {
+    public TodoGroup getTodoGroup(Long todoGroupId, String token) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 
     @Transactional
-    public List<TodoGroup> getTodoGroups() {
+    public List<TodoGroup> getTodoGroups(String token) {
         List<TodoGroup> todoGroups = this.todoGroupRepository.findAll();
         return todoGroups;
     }
 
-    public void deleteTodoGroup(Long todoGroupId) {
+    public void deleteTodoGroup(Long todoGroupId, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
         todoGroupRepository.delete(findTodoGroup);
     }
@@ -85,7 +85,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup invite(Long todoGroupId, InvitationTodoGroupDto.Post invitationTodoGroupDto) {
+    public TodoGroup invite(Long todoGroupId, InvitationTodoGroupDto.Post invitationTodoGroupDto, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
         Member owner = memberRepository.findById(invitationTodoGroupDto.getMemberId())
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
@@ -107,7 +107,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getInviteMember(Long todoGroupId) {
+    public TodoGroup getInviteMember(Long todoGroupId, String token) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 }
