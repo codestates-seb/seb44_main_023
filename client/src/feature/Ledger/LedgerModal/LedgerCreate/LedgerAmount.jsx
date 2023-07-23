@@ -1,37 +1,34 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const LedgerAmount = () => {
+const LedgerAmount = ({ onAmoutValue }) => {
   const [value, setValue] = useState("");
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     const filteredValue = inputValue.replace(/[^\d]/g, "");
-    if (filteredValue === "") {
-      localStorage.removeItem("ledgerAmount");
-    } else {
-      localStorage.setItem("ledgerAmount", filteredValue);
-    }
     setValue(filteredValue);
   };
 
   const handleInputBlur = () => {
     const numberValue = parseInt(value, 10);
     if (isNaN(numberValue) || numberValue <= 0) {
-      setValue("0");
+      setValue(null);
     } else {
       setValue(numberValue.toString());
     }
   };
-  
+
   return (
     <InputWrapper>
       <Input
-        type="text" // 숫자 외에는 입력되지 않도록 타입을 text로 변경
+        // number로 하면 한글자만 들어가는 오류 있어서 text로 설정
+        type="text"
         placeholder="금액"
         value={value}
         onChange={handleInputChange}
         onBlur={handleInputBlur}
+        onAmoutValue={onAmoutValue(value)}
       />
       <WonSign>₩</WonSign>
     </InputWrapper>

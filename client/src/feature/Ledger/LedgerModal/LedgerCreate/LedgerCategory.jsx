@@ -7,9 +7,8 @@ import {
 } from "../../../../api/categories.api";
 import styled from "styled-components";
 import { MdEdit, MdDelete, MdClose } from "react-icons/md";
-import ledgerCreate from "../../../../store/store.ledgerCreate";
 
-const LedgerCategory = () => {
+const LedgerCategory = ({ onCategorySelect }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allCategories, setAllCategories] = useState([]);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
@@ -94,14 +93,7 @@ const LedgerCategory = () => {
   const handleClearSearch = () => {
     setSearchQuery(""); // 검색어를 비움
     setIsCategorySelect(false); // isCategorySelect를 false로 변경
-  };
-
-  const handleSave = () => {
-    if (id === null) {
-      localStorage.removeItem("categoryId");
-    } else {
-      localStorage.setItem("categoryId", id);
-    }
+    onCategorySelect(undefined);
   };
 
   return (
@@ -169,8 +161,7 @@ const LedgerCategory = () => {
                         setSearchQuery(category.category_name);
                         setIsCategoryOpen(false);
                         setIsCategorySelect(true);
-                        setId(category.category_id);
-                        handleSave();
+                        onCategorySelect(category.category_id);
                       }}
                       style={{ cursor: "pointer" }}
                     >

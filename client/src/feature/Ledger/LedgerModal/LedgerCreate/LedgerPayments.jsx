@@ -8,14 +8,13 @@ import {
 import styled from "styled-components";
 import { MdEdit, MdDelete, MdClose } from "react-icons/md";
 
-const LedgerPayments = () => {
+const LedgerPayments = ({onPaymentSelect}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allPayments, setAllPayments] = useState([]);
   const [editingPaymentsId, setEditingPaymentsId] = useState(null);
   const [isPaymentsOpen, setIsPaymentsOpen] = useState(false);
   const [isPaymentsSelect, setIsPaymentsSelect] = useState(false);
   const listRef = useRef();
-  const [id, setId] = useState();
 
   useEffect(() => {
     // 모든 카테고리 데이터 가져오기
@@ -93,15 +92,7 @@ const LedgerPayments = () => {
   const handleClearSearch = () => {
     setSearchQuery("");
     setIsPaymentsSelect(false);
-    localStorage.removeItem("paymentId");
-  };
-
-  const handleSave = () => {
-    if (id === null) {
-      localStorage.removeItem("paymentId");
-    } else {
-      localStorage.setItem("paymentId", id);
-    }
+    onPaymentSelect(undefined);
   };
 
   return (
@@ -169,8 +160,7 @@ const LedgerPayments = () => {
                         setSearchQuery(payments.payment_name);
                         setIsPaymentsOpen(false);
                         setIsPaymentsSelect(true);
-                        setId(payments.payment_id);
-                        handleSave();
+                        onPaymentSelect(payments.payment_id)
                       }}
                       style={{ cursor: "pointer" }}
                     >
