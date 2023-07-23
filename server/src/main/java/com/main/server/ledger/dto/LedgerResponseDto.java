@@ -41,7 +41,6 @@ public class LedgerResponseDto {
 
     private PaymentDto payment;
 
-//boolean includeCategory, boolean includeInoutcome, boolean includePayment
     public LedgerResponseDto(Ledger ledger) {
         this.memberId = ledger.getMember().getMemberId();
         this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
@@ -53,15 +52,6 @@ public class LedgerResponseDto {
         this.category = new CategoryDto(ledger.getCategory());
         this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
         this.payment = new PaymentDto(ledger.getPayment());
-//        if (includeCategory) {
-//            this.category = new CategoryDto(ledger.getCategory());
-//        }
-//        if (includeInoutcome) {
-//            this.inoutcome = new InoutcomeDto(ledger.getInoutcome());
-//        }
-//        if (includePayment) {
-//            this.payment = new PaymentDto(ledger.getPayment());
-//        }
     }
 
         @Getter

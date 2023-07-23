@@ -108,7 +108,7 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
 
-    @Override
+     @Override
         public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
@@ -181,8 +181,7 @@ public class LedgerServiceImpl implements LedgerService {
         ledgers.sort(Comparator.comparing(Ledger::getLedgerDate));
 
         return ledgers;
-
-    }
+        }
 
         @Override
         public void deleteLedger (Long ledgerGroupId, Long ledgerId){

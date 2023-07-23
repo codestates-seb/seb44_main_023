@@ -3,6 +3,7 @@ package com.main.server.ledger.controller;
 import com.main.server.ledger.dto.LedgerPatchDto;
 import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.dto.LedgerResponseDto;
+import com.main.server.ledger.dto.LedgerTotalResponseDto;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledger.service.LedgerService;
 import com.main.server.todo.domain.Todo;
@@ -83,6 +84,40 @@ public class LedgerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/totals")
+    public ResponseEntity<Long> getTotalAmountByDate(
+            @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+            @RequestParam(name = "startDate") String startDate,
+            @RequestParam(name = "endDate") String endDate) {
+        try {
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+
+            List<Ledger> ledgers = ledgerService.getLedgersByDate(ledgerGroupId, start, end);
+
+            // 수입이 붙은 가계부의 금액 합과 지출이 붙은 가계부의 금액 합계
+            Long totalIncome = ledgers.stream()
+                    .filter(ledger -> ledger.getInoutcome() != null)
+                    .filter(ledger -> "수입".equals(ledger.getInoutcome().getInoutcomeName()))
+                    .mapToLong(Ledger::getLedgerAmount)
+                    .sum();
+
+            Long totalOutcome = ledgers.stream()
+                    .filter(ledger -> ledger.getInoutcome() != null)
+                    .filter(ledger -> "지출".equals(ledger.getInoutcome().getInoutcomeName()))
+                    .mapToLong(Ledger::getLedgerAmount)
+                    .sum();
+
+            Long totalAmount = totalIncome - totalOutcome;
+
+            return new ResponseEntity<>(totalAmount, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
