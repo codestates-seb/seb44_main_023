@@ -7,8 +7,10 @@ import com.main.server.ledger.repository.LedgerRepository;
 import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
+import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
 import com.main.server.ledgerGroup.repository.LedgerGroupRepository;
 import com.main.server.member.Member;
+import com.main.server.member.MemberRepository;
 import com.main.server.member.MemberService;
 import com.main.server.todogroup.domain.TodoGroup;
 import org.springframework.stereotype.Service;
@@ -23,13 +25,14 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     private final LedgerGroupRepository ledgerGroupRepository;
 //    private final Ledger ledger;
     private final LedgerRepository ledgerRepository;
+    private final MemberRepository memberRepository;
 
     public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository,
-                                  LedgerRepository ledgerRepository) {
+                                  LedgerRepository ledgerRepository, MemberRepository memberRepository) {
         this.memberService = memberService;
         this.ledgerGroupRepository = ledgerGroupRepository;
-//        this.ledger = ledger;
         this.ledgerRepository = ledgerRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -86,6 +89,28 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
         LedgerGroup foundLedgerGroup = ledgerGroupRepository.findById(ledgerGroupId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEDGER_GROUP_NOT_FOUND));
         return foundLedgerGroup;
+    }
+
+    @Transactional
+    public LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto) {
+        LedgerGroup findLedgerGroup  = findVerifiedLedgerGroup(ledgerGroupId);
+        Member owner = memberRepository.findById(invitationLedgerGroupPostDto.getMemberId())
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+        if (!findLedgerGroup.isOwner(owner)) {
+            throw new BusinessLogicException(ExceptionCode.IS_NOT_OWNER);
+        }
+        List<String> emails = invitationLedgerGroupPostDto.extractEmails();
+        List<Member> membersByEmail = memberRepository.findByEmailIn(emails);
+        if (emails.size() != membersByEmail.size()) {
+            throw  new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+        findLedgerGroup.invites(membersByEmail);
+        return findLedgerGroup;
+    }
+
+    @Transactional
+    public LedgerGroup getInvitedMember(Long ledgerGroupId) {
+        return findVerifiedLedgerGroup(ledgerGroupId);
     }
 }
 

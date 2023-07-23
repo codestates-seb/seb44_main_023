@@ -4,7 +4,11 @@ import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupResponseDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
+import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
+import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupResponseDto;
+import com.main.server.ledgerGroup.invitationDto.InvitationMemberResponseDto;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +24,9 @@ import java.util.stream.Collectors;
 @Validated
 @RequestMapping("/ledgergroups")
 public class LedgerGroupController {
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
 
     private final LedgerGroupService ledgerGroupService;
 
@@ -63,5 +70,18 @@ public class LedgerGroupController {
         ledgerGroupService.deleteLedgerGroup(ledgerGroupId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{ledger-group-id}/invitation")
+    public ResponseEntity invite(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+                                 @Valid @RequestBody InvitationLedgerGroupPostDto invitationLedgerGroupPostDto) {
+        LedgerGroup ledgerGroup = ledgerGroupService.invite(ledgerGroupId, invitationLedgerGroupPostDto);
+        return new ResponseEntity<>(new InvitationLedgerGroupResponseDto(ledgerGroup), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{ledger-group-id}/members")
+    public ResponseEntity inviteMember(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId) {
+        LedgerGroup ledgerGroup = ledgerGroupService.getInvitedMember(ledgerGroupId);
+        return new ResponseEntity(new InvitationMemberResponseDto(ledgerGroup, fileUploadPath), HttpStatus.OK);
     }
 }
