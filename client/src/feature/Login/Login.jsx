@@ -135,7 +135,13 @@ const Login = () => {
           info={validation.password}
         />
       </InputBox>
-      <Button type="submit" label="Login" size="large" onClick={handleLogin} />
+      <Button
+        type="submit"
+        label="Login"
+        size="large"
+        hovercolor={"var(--color-blue-04)"}
+        onClick={handleLogin}
+      />
       <LoginLink onClick={handleLoginLinkClick}>
         아직 회원이 아니신가요? Sign Up
       </LoginLink>
@@ -165,10 +171,11 @@ const LoginLink = styled.a`
   display: block;
   margin-top: 2rem;
   text-align: center;
+  font-size: 1.2rem;
   color: var(--color-blue-03);
   cursor: pointer;
 
   &:hover {
-    color: var(--color-black);
+    color: var(--color-blue-05);
   }
 `;

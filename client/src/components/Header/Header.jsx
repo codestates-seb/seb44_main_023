@@ -159,7 +159,7 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: -2rem;
+  right: 1rem;
   transform: translateX(-50%);
   &::before {
     content: "";
@@ -201,7 +201,7 @@ const CancelButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 
@@ -215,7 +215,7 @@ const ConfirmButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 

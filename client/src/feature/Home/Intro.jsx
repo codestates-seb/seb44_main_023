@@ -35,11 +35,13 @@ const Intro = ({ onClick }) => {
               <Button
                 label="Login"
                 size="large"
+                hovercolor={"var(--color-blue-05)"}
                 onClick={handleLoginButtonClick}
               />
               <Button
                 label="Sign up"
                 size="large"
+                hovercolor={"var(--color-blue-05)"}
                 onClick={handleSignUpButtonClick}
               />
             </MainDivRow>
