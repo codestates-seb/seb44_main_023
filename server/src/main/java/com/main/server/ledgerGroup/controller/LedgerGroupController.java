@@ -21,7 +21,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+@CrossOrigin(origins = "https://codestates.shop")
 @RestController
 @Validated
 @RequestMapping("/ledgergroups")
