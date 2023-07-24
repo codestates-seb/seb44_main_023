@@ -15,10 +15,8 @@ const LedgerCategory = ({ onCategorySelect }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [isCategorySelect, setIsCategorySelect] = useState(false);
   const listRef = useRef();
-  const [id, setId] = useState();
 
   useEffect(() => {
-    // 모든 카테고리 데이터 가져오기
     const fetchAllCategories = async () => {
       try {
         const response = await readAllCategories();
@@ -30,7 +28,6 @@ const LedgerCategory = ({ onCategorySelect }) => {
     fetchAllCategories();
   }, []);
 
-  // 카테고리 추가 함수
   const handleAddCategory = async () => {
     try {
       const newCategory = await addCategories(1, searchQuery);
@@ -41,7 +38,6 @@ const LedgerCategory = ({ onCategorySelect }) => {
     }
   };
 
-  // 카테고리 수정 함수
   const handleEditCategory = async (categoryId, updatedCategoryName) => {
     try {
       await editCategories(1, categoryId, updatedCategoryName);
@@ -61,7 +57,6 @@ const LedgerCategory = ({ onCategorySelect }) => {
     }
   };
 
-  // 카테고리 삭제 함수
   const handleDeleteCategory = async (categoryId) => {
     try {
       await deleteCategories(categoryId);
@@ -73,17 +68,14 @@ const LedgerCategory = ({ onCategorySelect }) => {
     }
   };
 
-  // 검색 결과 카테고리 필터링
   const filteredCategories = allCategories.filter((category) =>
     category.category_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 검색어 입력 이벤트 처리
   const handleSearchQueryChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  // 검색어 입력 후 엔터 키 처리
   const handleSearchQueryEnter = (e) => {
     if (e.key === "Enter") {
       handleAddCategory();
@@ -91,14 +83,13 @@ const LedgerCategory = ({ onCategorySelect }) => {
   };
 
   const handleClearSearch = () => {
-    setSearchQuery(""); // 검색어를 비움
-    setIsCategorySelect(false); // isCategorySelect를 false로 변경
+    setSearchQuery("");
+    setIsCategorySelect(false);
     onCategorySelect(undefined);
   };
 
   return (
     <CategoryContainer>
-      {/* 카테고리 검색 창 */}
       {isCategorySelect && (
         <>
           <SelectBtn type="text" value={searchQuery}>
@@ -119,7 +110,6 @@ const LedgerCategory = ({ onCategorySelect }) => {
           />
         </>
       )}
-      {/* 검색 결과 카테고리 목록 */}
       {isCategoryOpen && (
         <CategoryListContainer>
           <CategoryList ref={listRef}>
