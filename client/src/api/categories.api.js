@@ -1,10 +1,8 @@
 import { API } from "./api";
 
-export const addCategories = async (memberId, categoryName) => {
+export const addCategories = async (categoryName) => {
   try {
     const response = await API.post("/categories", {
-      // 2 => memberId로 변경
-      member_id: 1,
       category_name: categoryName,
     });
     return response.data;
@@ -14,10 +12,9 @@ export const addCategories = async (memberId, categoryName) => {
   }
 };
 
-export const editCategories = async (memberId, categoryId, categoryName) => {
+export const editCategories = async (categoryId, categoryName) => {
   try {
     const response = await API.patch(`/categories/${categoryId}`, {
-      member_id: 1,
       category_id: categoryId,
       category_name: categoryName,
     });

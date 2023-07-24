@@ -1,9 +1,8 @@
 import { API } from "./api";
 
-export const addPayments = async (memberId, paymentName) => {
+export const addPayments = async (paymentName) => {
   try {
     const response = await API.post("/payments", {
-      member_id: 1,
       payment_name: paymentName,
     });
     return response.data;
@@ -13,10 +12,9 @@ export const addPayments = async (memberId, paymentName) => {
   }
 };
 
-export const editPayments = async (memberId, paymentId, paymentName) => {
+export const editPayments = async (paymentId, paymentName) => {
   try {
     const response = await API.patch(`/payments/${paymentId}`, {
-      member_id: 1,
       payment_id: paymentId,
       payment_name: paymentName,
     });
