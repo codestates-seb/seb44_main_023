@@ -25,7 +25,6 @@ import java.util.UUID;
 public class MemberService {
     private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder;
-//    private static final String FILE_UPLOAD_PATH = "FILE_UPLOAD_PATH";
 
     @Autowired
     public MemberService(MemberRepository memberRepository,
@@ -66,10 +65,14 @@ public class MemberService {
 
     public Member findMember(long memberId) {
 
-        Member foundMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        try {
+            Member foundMember = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found"));
 
-        return foundMember;
+            return foundMember;
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid member ID", e);
+        }
     }
 
     public Member findMemberByNickname(String nickname) {
@@ -199,21 +202,7 @@ public class MemberService {
     //}
 
         // 기존 이미지 파일 삭제
-//    private void deleteExistingProfileImage(Member member) {
-//        if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
-//            String existingImagePath = "C://Users//조승아//Desktop//FILE_UPLOAD_PATH/"
-//                    + member.getProfileImage();
-//            Path existingImageFile = Paths.get(existingImagePath);
-//            if (Files.exists(existingImageFile)) {
-//                try {
-//                    Files.delete(existingImageFile);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
-        // 기존 이미지 파일 삭제
+
         private void deleteExistingProfileImage(Member member) {
             if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
                 String existingImagePath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/") + member.getProfileImage();
@@ -268,20 +257,6 @@ public class MemberService {
 
      */
 
-    // 이미지 삭제
-//    public void deleteProfileImage(long memberId) throws IOException {
-//        Member member = memberRepository.findById(memberId)
-//                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
-//
-//        if (member.getProfileImage() == null || member.getProfileImage().isEmpty()) {
-//            throw new IllegalArgumentException("삭제할 수 있는 이미지가 없습니다.");
-//        }
-//
-//        deleteExistingProfileImage(member);
-//
-//        member.setProfileImage(null);
-//        memberRepository.save(member);
-//    }
     // 이미지 삭제
     public void deleteProfileImage(long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)

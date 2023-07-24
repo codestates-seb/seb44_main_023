@@ -12,6 +12,7 @@ import com.main.server.ledgerGroup.repository.LedgerGroupRepository;
 import com.main.server.member.Member;
 import com.main.server.member.MemberRepository;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todogroup.domain.TodoGroup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,18 +27,29 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
 //    private final Ledger ledger;
     private final LedgerRepository ledgerRepository;
     private final MemberRepository memberRepository;
+    private JwtTokenizer jwtTokenizer;
 
     public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository,
-                                  LedgerRepository ledgerRepository, MemberRepository memberRepository) {
+                                  LedgerRepository ledgerRepository, MemberRepository memberRepository,JwtTokenizer jwtTokenizer) {
         this.memberService = memberService;
         this.ledgerGroupRepository = ledgerGroupRepository;
         this.ledgerRepository = ledgerRepository;
         this.memberRepository = memberRepository;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Override
-    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
         LedgerGroup savedLedgerGroup = ledgerGroupRepository.save(postDto.toEntity(member));
 
         return savedLedgerGroup;

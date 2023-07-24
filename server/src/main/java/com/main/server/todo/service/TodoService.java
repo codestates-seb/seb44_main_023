@@ -4,6 +4,7 @@ import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todo.domain.TodoStatus;
 import com.main.server.todo.dto.TodoDto;
@@ -24,23 +25,35 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final MemberService memberService;
     private final TodoGroupService todoGroupService;
+    private JwtTokenizer jwtTokenizer;
 
     public TodoService(TodoRepository todoRepository, MemberService memberService,
-        TodoGroupService todoGroupService) {
+        TodoGroupService todoGroupService, JwtTokenizer jwtTokenizer) {
         this.todoRepository = todoRepository;
         this.memberService = memberService;
         this.todoGroupService = todoGroupService;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
-    public Todo createTodo(Long todoGroupId, TodoDto.Post postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public Todo createTodo(Long todoGroupId, TodoDto.Post postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
         Todo savedTodo = todoRepository.save(postDto.toEntity(member, todoGroup));
 
         return savedTodo;
     }
 
-    public Todo updateTodo(Long todoGroupId, Long todoId ,TodoDto.Patch patchDto) {
+    public Todo updateTodo(Long todoGroupId, Long todoId ,TodoDto.Patch patchDto, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);
@@ -52,7 +65,7 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo updateStatusTodo(Long todoGroupId, Long todoId, TodoDto.updateStatus updateStatusDto) {
+    public Todo updateStatusTodo(Long todoGroupId, Long todoId, TodoDto.updateStatus updateStatusDto, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);
@@ -63,14 +76,14 @@ public class TodoService {
     }
 
     @Transactional
-    public Todo getTodo(Long todoGroupId, Long todoId) {
+    public Todo getTodo(Long todoGroupId, Long todoId, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         return findVerifiedTodo(todoId);
     }
 
     @Transactional
-    public List<Todo> getTodos(Long todoGroupId) {
+    public List<Todo> getTodos(Long todoGroupId, String accessToken) {
 
 //        todoGroupService.findById(todoGroupId);
 //        List<Todo> todos = this.todoRepository.findAll();
@@ -86,7 +99,7 @@ public class TodoService {
         return todos;
     }
 
-    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate) {
+    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate, String accessToken) {
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
 
         List<Todo> todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup ,startDate, endDate);
@@ -96,7 +109,7 @@ public class TodoService {
 
     }
 
-    public void deleteTodo(Long todoGroupId, Long todoId) {
+    public void deleteTodo(Long todoGroupId, Long todoId, String accessToken) {
         todoGroupService.findById(todoGroupId);
 
         Todo findTodo = findVerifiedTodo(todoId);

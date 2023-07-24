@@ -4,11 +4,16 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.main.server.auth.AuthController;
+import com.main.server.member.Member;
+import com.main.server.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.PostConstruct;
 import java.util.Date;
@@ -32,6 +37,9 @@ public class JwtTokenizer {
 
     @Autowired
     private TokenBlacklist tokenBlacklist;
+
+    @Autowired
+    private MemberRepository memberRepository;
     private Set<String> refreshTokenBlacklist = new HashSet<>();
 
     @PostConstruct
@@ -40,12 +48,14 @@ public class JwtTokenizer {
         jwtVerifier = JWT.require(algorithm).build();
     }
 
-    public String generateToken(String subject, long expirationTime) {
+    public String generateToken(String email, long memberId, long expirationTime) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expirationTime);
 
         String generatedToken = JWT.create()
-                .withSubject(subject)
+                .withSubject(email)
+                .withClaim("memberId", String.valueOf(memberId))
+                .withClaim("email", email)
                 .withIssuedAt(now)
                 .withExpiresAt(expirationDate)
                 .sign(algorithm);
@@ -53,13 +63,13 @@ public class JwtTokenizer {
         return generatedToken;
     }
 
-    public String generateAccessToken(String subject) {
-        return generateToken(subject, accessTokenExpirationTime);
+    public String generateAccessToken(String email, long memberId) {
+        return generateToken(email, memberId, accessTokenExpirationTime);
     }
 
-    public String generateRefreshToken(String subject) {
+    public String generateRefreshToken(String email, long memberId) {
         String existingRefreshToken = refreshTokenBlacklist.stream()
-                .filter(token -> validateToken(token))
+                .filter(token -> validateRefreshToken(token))
                 .findFirst()
                 .orElse(null);
 
@@ -67,7 +77,7 @@ public class JwtTokenizer {
             return existingRefreshToken;
         }
 
-        return generateToken(subject, refreshTokenExpirationTime);
+        return generateToken(email, memberId, refreshTokenExpirationTime);
     }
 
     public boolean validateToken(String token) {
@@ -97,4 +107,63 @@ public class JwtTokenizer {
     public long getRefreshTokenExpirationTime() {
         return refreshTokenExpirationTime;
     }
+
+    public long getMemberIdFromToken(String token) {
+        // "Bearer " 프리픽스 제거
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        // System.out.println("Token: " + token); // 토큰 값 출력
+        DecodedJWT decodedJWT = jwtVerifier.verify(token);
+        String memberIdString = extractMemberIdFromToken(decodedJWT);
+
+        if (memberIdString == null || memberIdString.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "토큰 내에서 멤버 ID를 찾을 수 없습니다");
+        }
+        try {
+            return Long.parseLong(memberIdString);
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "토큰 내에 잘못된 멤버 ID가 있습니다");
+        }
+    }
+    public Member getMemberFromToken(String token) {
+        // "Bearer " 프리픽스 제거
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        long memberId = getMemberIdFromToken(token);
+        return memberRepository.findById(memberId).orElse(null);
+    }
+
+
+    private String extractMemberIdFromToken(DecodedJWT decodedJWT) {
+        try {
+            // 토큰 파싱하여 memberId 추출
+            Claim memberIdClaim = decodedJWT.getClaim("memberId");
+
+            if (memberIdClaim.isNull()) {
+                return null;
+            }
+            return memberIdClaim.asString();
+        } catch (JWTVerificationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token");
+        }
+    }
+
+    public String extractEmailFromToken(String token) {
+        try {
+            // Parse the token and extract the email
+            DecodedJWT decodedJWT = jwtVerifier.verify(token);
+            Claim emailClaim = decodedJWT.getClaim("email");
+            if (emailClaim.isNull()) {
+                return null;
+            }
+            return emailClaim.asString();
+        } catch (JWTVerificationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid token");
+        }
+    }
+
+
 }

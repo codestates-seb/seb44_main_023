@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,20 +70,41 @@ public class AuthController {
     }
 
     // 로그아웃
+    // 로그아웃
     @DeleteMapping("/logouts")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader) {
-        String accessToken = extractAccessToken(authorizationHeader);
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader,
+                                    HttpServletRequest request) {
 
-        // 토큰 유효성 검사
-        if (!jwtTokenizer.validateToken(accessToken)) {
-            return ResponseEntity.badRequest().body("유효하지 않은 액세스 토큰입니다");
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // 토큰 검증 및 memberId 식별
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            // AccessToken 무효화
+            authService.invalidateToken(token);
+
+            if (refreshToken != null) {
+                // RefreshToken 무효화
+                authService.invalidateToken(refreshToken);
+            }
+
+            return ResponseEntity.ok("로그아웃에 성공하였습니다");
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
-
-        // 로그아웃한 토큰을 무효화
-        authService.invalidateToken(accessToken);
-
-        return ResponseEntity.ok("로그아웃에 성공하였습니다");
     }
+
 
     @GetMapping("/validate")
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authorizationHeader) {

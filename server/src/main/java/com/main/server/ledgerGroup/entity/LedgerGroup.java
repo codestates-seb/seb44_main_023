@@ -25,9 +25,6 @@ public class LedgerGroup {
     @Column(name = "ledger_group_title", length = 100)
     private String ledgerGroupTitle;
 
-//    @OneToMany(mappedBy = "ledgerGroup", cascade = CascadeType.ALL)
-//    private List<LedgerGroupMember> ledgerGroupMembers = new ArrayList<>();
-
     @OneToMany(mappedBy = "ledgerGroup")
     private List<Ledger> ledgers = new ArrayList<>();
 

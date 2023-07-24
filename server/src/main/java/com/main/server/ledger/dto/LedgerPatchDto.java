@@ -3,15 +3,17 @@ package com.main.server.ledger.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LedgerPatchDto {
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+//    @JsonProperty(value = "member_id")
+//    private Long memberId;
 
     @JsonProperty(value = "ledger_id")
     private Long ledgerId;
