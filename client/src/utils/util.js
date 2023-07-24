@@ -7,3 +7,6 @@ export function roundDecimal(number) {
 export function removeDecimal(number) {
   return Math.floor(number * 10) / 10;
 }
+
+export const todoMode = 1;
+export const ledgerMode = 2;

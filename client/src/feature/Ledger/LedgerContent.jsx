@@ -5,8 +5,11 @@ import useQueryLedgerList from "../../query/ledgerList.query";
 import LedgerCalendar from "./LedgerCalendar/LedgerCalendar";
 import LedgerList from "./LedgerList/LedgerList";
 import dayjs from "dayjs";
+import GroupEdit from "../../components/GroupEdit/GroupEdit";
+import { ledgerMode } from "../../utils/util";
+import { useGroupEditStore } from "../../store/store.groupEdit";
 
-const LedgerContent = ({ pageType, groupId }) => {
+const LedgerContent = ({ pageType, groupId, groupInfo }) => {
   const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
 
   const { isLoading, data } = useQueryLedgerList({
@@ -18,6 +21,7 @@ const LedgerContent = ({ pageType, groupId }) => {
   if (isLoading) return null;
   return (
     <Content
+      groupInfo={groupInfo}
       groupId={groupId}
       pageType={pageType}
       data={data}
@@ -28,6 +32,7 @@ const LedgerContent = ({ pageType, groupId }) => {
 };
 
 const Content = ({
+  groupInfo,
   groupId,
   pageType,
   data,
@@ -53,6 +58,26 @@ const Content = ({
         break;
     }
   };
+  const { ledger_group_title } = groupInfo;
+  console.log("Ledger groupInfo", groupInfo);
+
+  const {
+    mode,
+    isModalVisible,
+    setMode,
+    setIsModalVisible,
+    groupTitle,
+    setGroupTitle,
+  } = useGroupEditStore();
+  console.log("Ledger", ledger_group_title);
+
+  const handleIsEditModalVisible = () => {
+    setIsModalVisible(!isModalVisible);
+    setGroupTitle(ledger_group_title);
+    setMode(ledgerMode);
+    console.log("groupTitle", groupTitle);
+    console.log("ledgerMode", mode);
+  };
 
   return (
     <StyledWrapper>
@@ -75,7 +100,8 @@ const Content = ({
           icon="plus"
           // onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
         />
-        <FloatingButton icon="setting" />
+        <FloatingButton icon="setting" onClick={handleIsEditModalVisible} />
+        <GroupEdit />
       </ButtonWrapper>
     </StyledWrapper>
   );

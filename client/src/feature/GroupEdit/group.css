@@ -1,0 +1,14 @@
+/* Chrome, Safari, and Opera */
+::-webkit-scrollbar {
+  width: 8px; /* 스크롤 바의 너비 조정 (수직 스크롤) */
+  background-color: transparent; /* 스크롤 바의 배경을 투명하게 설정 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* 스크롤 바 썸네일 색상 설정 */
+  border-radius: 4px; /* 스크롤 바 썸네일 모서리를 둥글게 설정 */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4); /* 스크롤 바 썸네일에 호버 효과 적용 */
+}
