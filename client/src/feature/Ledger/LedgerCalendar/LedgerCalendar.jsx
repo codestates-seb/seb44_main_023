@@ -370,13 +370,13 @@ const ContentWrapper = styled.div`
 const TotalIncomeLabel = styled.div`
   padding-right: 0.8rem;
   font-size: 1.4rem;
-  color: var(--color-red-01);
+  color: var(--color-blue-03);
 `;
 
 const TotalExpenseLabel = styled.div`
   padding-right: 0.8rem;
   font-size: 1.4rem;
-  color: var(--color-blue-03);
+  color: var(--color-red-01);
 `;
 
 export default LedgerCalendar;
