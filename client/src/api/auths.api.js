@@ -11,11 +11,7 @@ export const login = async (email, password) => {
 
 export const logout = async (accessToken) => {
   try {
-    const response = await API.delete("/logouts", {
-      headers: {
-        Authorization: accessToken,
-      },
-    });
+    const response = await API.delete("/logouts");
     return response;
   } catch (error) {
     console.log(error);

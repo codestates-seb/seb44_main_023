@@ -12,6 +12,8 @@ import useUserInfoStore from "./store/store.userInfo";
 import Layout from "./Layout/PagesLayout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import useAccessTokenStore from "./store/store.accessToken";
+import { API } from "./api/api";
 import useMainGroupStore from "./store/store.mainGroup";
 
 const queryClient = new QueryClient({
@@ -29,10 +31,19 @@ const queryClient = new QueryClient({
 function App() {
   const { userInfo, setUserInfo } = useUserInfoStore();
   const { isLoading, memberId } = userInfo;
+  const { expirationTime, accessToken } = useAccessTokenStore();
   const { setMainGroup } = useMainGroupStore();
 
+  API.interceptors.request.use((config) => {
+    config.headers = {
+      ...config.headers,
+      "X-Refresh-Token": localStorage.getItem("refreshToken"),
+    };
+    return config;
+  });
+
   useEffect(() => {
-    setUserInfo(1);
+    setUserInfo(accessToken);
     setMainGroup();
   }, []);
 
@@ -43,19 +54,24 @@ function App() {
         {import.meta.env.MODE === "development" && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
-        <Layout>
+        {!!userInfo.memberId ? (
+          <Layout>
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/todo/:groupId" element={<TodoPage />} />
+              <Route path="/ledger/:groupId" element={<LedgerPage />} />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </Layout>
+        ) : (
           <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/profile/:id" element={<ProfilePage />} />
-            <Route path="/todo/:groupId" element={<TodoPage />} />
-            <Route path="/ledger/:groupId" element={<LedgerPage />} />
-            <Route path="*" element={<ErrorPage />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
-        </Layout>
+        )}
       </QueryClientProvider>
     </>
   );

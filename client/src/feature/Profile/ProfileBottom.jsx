@@ -26,7 +26,7 @@ const ProfileBottom = ({ profileInfo }) => {
 
   const handleChangePassword = async () => {
     try {
-      await updatePassword(memberId, passwordInput, newPasswordInput);
+      await updatePassword(passwordInput, newPasswordInput);
       handleEditMode();
       setPasswordInput();
       setNewPasswordInput();
@@ -38,8 +38,8 @@ const ProfileBottom = ({ profileInfo }) => {
 
   const handleDeleteMember = async () => {
     try {
-      await deleteMember(memberId, passwordConfirmInput);
-      navigate("/");
+      await deleteMember(passwordConfirmInput);
+      navigate("/home");
     } catch (err) {
       console.log(err);
     }
@@ -77,18 +77,24 @@ const ProfileBottom = ({ profileInfo }) => {
                 setNewPasswordInput();
               }}
               color="var(--color-red-01)"
+              hovercolor="var(--color-red-02)"
             >
               취소
             </TextButton>
             <TextButton
               onClick={handleChangePassword}
               color="var(--color-blue-03)"
+              hovercolor="var(--color-blue-05)"
             >
               저장
             </TextButton>
           </div>
         ) : (
-          <TextButton onClick={handleEditMode} color="var(--color-gray-04)">
+          <TextButton
+            onClick={handleEditMode}
+            color="var(--color-gray-04)"
+            hovercolor="var(--color-blue-03)"
+          >
             비밀번호 변경
           </TextButton>
         )}
@@ -124,7 +130,12 @@ const ProfileBottom = ({ profileInfo }) => {
           confirmText="탈퇴하기"
           onConfirm={handleDeleteMember}
         >
-          <Button label="회원 탈퇴" size="medium" />
+          <Button
+            label="회원 탈퇴"
+            size="medium"
+            backgroundColor="var(--color-red-01)"
+            hovercolor="var(--color-red-02)"
+          />
         </Popconfirm>
       </Content>
     </StyledWrapper>
@@ -188,4 +199,8 @@ const TextButton = styled.button`
   font-size: 2rem;
   color: ${({ color }) => color};
   background: none;
+
+  &:hover {
+    color: ${({ hovercolor }) => hovercolor};
+  }
 `;

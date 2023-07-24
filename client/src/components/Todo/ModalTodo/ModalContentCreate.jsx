@@ -72,8 +72,9 @@ const ModalContentCreate = ({
             label="취소"
             size="medium"
             fontcolor="var(--color-blue-03)"
+            backgroundColor={"var(--color-white)"}
+            hovercolor={"var(--color-gray-03)"}
             style={{
-              backgroundColor: "var(--color-white)",
               border: "1px solid var(--color-blue-03)",
               color: "var(--color-blue-03)",
             }}
@@ -82,10 +83,8 @@ const ModalContentCreate = ({
           <Button
             label="추가하기"
             size="medium"
-            fontcolor="var(--color-white)"
-            style={{
-              backgroundColor: "var(--color-blue-03)",
-            }}
+            backgroundColor={"var(--color-blue-03)"}
+            hovercolor={"var(--color-blue-04)"}
             onClick={handleCreateTodo}
           />
         </ButtonWrapper>
@@ -110,6 +109,7 @@ const StyledWrapper = styled.div`
     padding-bottom: 2.4rem;
 
     .modal-title-date {
+      /* cursor: pointer; */
       input {
         background: none;
       }

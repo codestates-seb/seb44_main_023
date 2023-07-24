@@ -100,4 +100,9 @@ const CommentInput = styled(Input)`
 const AddButton = styled(FiSend)`
   font-size: 2.4rem;
   color: var(--color-gray-13);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-blue-03);
+  }
 `;
