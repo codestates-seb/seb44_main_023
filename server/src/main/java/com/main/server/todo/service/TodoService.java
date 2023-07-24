@@ -14,6 +14,7 @@ import com.main.server.todogroup.service.TodoGroupService;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +60,12 @@ public class TodoService {
         Todo findTodo = findVerifiedTodo(todoId);
         findTodo.changeTitle(patchDto.getTodoTitle());
         findTodo.changeContent(patchDto.getTodoContent());
-        findTodo.changeScheduleDate(LocalDate.parse(patchDto.getTodoScheduleDate()));
+//        findTodo.changeScheduleDate(LocalDate.parse(patchDto.getTodoScheduleDate()));
+        LocalDate scheduleDate = null;
+        if (patchDto.getTodoScheduleDate() != null) {
+            scheduleDate = LocalDate.parse(patchDto.getTodoScheduleDate());
+        }
+        findTodo.changeScheduleDate(scheduleDate);
 
         return findTodo;
     }
@@ -99,13 +105,25 @@ public class TodoService {
         return todos;
     }
 
-    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate, String accessToken) {
+    public List<Todo> dateGetTodos(Long todoGroupId, LocalDate startDate, LocalDate endDate, boolean includeNoDate, String accessToken) {
         TodoGroup todoGroup = todoGroupService.findById(todoGroupId);
 
-        List<Todo> todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup ,startDate, endDate);
-        todos.sort(Comparator.comparing(Todo::getTodoScheduleDate));
+//        List<Todo> todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup ,startDate, endDate);
+//        todos.sort(Comparator.comparing(Todo::getTodoScheduleDate));
 
-        return todos;
+//        return todos;
+
+        List<Todo> todos;
+
+        if (includeNoDate) {
+            todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetweenOrTodoScheduleDateIsNull(todoGroup, startDate, endDate);
+        } else {
+            todos = this.todoRepository.findByTodoGroupAndTodoScheduleDateBetween(todoGroup, startDate, endDate);
+        }
+
+        return todos.stream()
+            .sorted(Comparator.comparing(Todo::getTodoScheduleDate, Comparator.nullsFirst(Comparator.naturalOrder())))
+            .collect(Collectors.toList());
 
     }
 
