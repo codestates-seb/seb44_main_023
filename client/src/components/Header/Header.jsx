@@ -36,7 +36,7 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigate(`/profile/${memberId}`);
+    navigate(`/profile`);
   };
 
   const handleLogoutClick = (event) => {

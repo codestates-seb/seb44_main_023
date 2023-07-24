@@ -5,6 +5,8 @@ import Avatar from "../assets/userAvarta.png";
 const useUserInfoStore = create((set) => ({
   userInfo: {
     isLoading: true,
+    isLogin: false,
+    accessToken: null,
     memberId: null,
     email: null,
     password: null,
@@ -15,11 +17,10 @@ const useUserInfoStore = create((set) => ({
     profileImage: Avatar,
   },
 
-  setUserInfo: async (memberId) => {
+  setUserInfo: async (accessToken) => {
     try {
-      const userInfo = await readMemberInfo(memberId);
-      const profileImage = await readProfileImage(memberId);
-
+      const userInfo = await readMemberInfo(accessToken);
+      const profileImage = await readProfileImage();
       set(() => ({
         userInfo: {
           isLoading: false,
@@ -28,6 +29,12 @@ const useUserInfoStore = create((set) => ({
         },
       }));
     } catch (err) {
+      set(({ userInfo }) => ({
+        userInfo: {
+          ...userInfo,
+          isLoading: false,
+        },
+      }));
       console.log(err);
     }
   },

@@ -30,7 +30,7 @@ const ProfileTop = ({ profileInfo }) => {
   const handleSaveNickName = async (event) => {
     try {
       event.preventDefault();
-      await updateMemberNickname(profileInfo.memberId, nicknameInput);
+      await updateMemberNickname(nicknameInput);
       setEditMode(!isEditMode);
       setValidation("");
       setNickname(nicknameInput);
@@ -56,7 +56,7 @@ const ProfileTop = ({ profileInfo }) => {
       const formData = new FormData();
       formData.append("file", fileBlob);
 
-      await updateProfileImage(profileInfo.memberId, formData);
+      await updateProfileImage(formData);
       updateUserInfo({ profileImage: res });
       setImageUrl(res);
     } catch (err) {
@@ -124,7 +124,11 @@ const ProfileTop = ({ profileInfo }) => {
                 </TextButton>
               </div>
             ) : (
-              <TextButton onClick={handleEditMode} color="var(--color-blue-03)" hovercolor="var(--color-blue-05)">
+              <TextButton
+                onClick={handleEditMode}
+                color="var(--color-blue-03)"
+                hovercolor="var(--color-blue-05)"
+              >
                 수정
               </TextButton>
             )}

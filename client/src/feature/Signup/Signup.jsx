@@ -24,8 +24,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await signupAPI(email, password, nickname);
-      console.log("사용자 정보:", response);
+      await signupAPI(email, password, nickname);
       navigate("/login");
     } catch (error) {
       if (error === 409) {

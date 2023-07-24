@@ -26,7 +26,7 @@ const ProfileBottom = ({ profileInfo }) => {
 
   const handleChangePassword = async () => {
     try {
-      await updatePassword(memberId, passwordInput, newPasswordInput);
+      await updatePassword(passwordInput, newPasswordInput);
       handleEditMode();
       setPasswordInput();
       setNewPasswordInput();
@@ -38,8 +38,8 @@ const ProfileBottom = ({ profileInfo }) => {
 
   const handleDeleteMember = async () => {
     try {
-      await deleteMember(memberId, passwordConfirmInput);
-      navigate("/");
+      await deleteMember(passwordConfirmInput);
+      navigate("/home");
     } catch (err) {
       console.log(err);
     }
