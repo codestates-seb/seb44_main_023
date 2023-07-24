@@ -7,6 +7,7 @@ import LedgerList from "./LedgerList/LedgerList";
 import dayjs from "dayjs";
 import GroupEdit from "../../components/GroupEdit/GroupEdit";
 import { ledgerMode } from "../../utils/util";
+import { useGroupEditStore } from "../../store/store.groupEdit";
 
 const LedgerContent = ({ pageType, groupId, groupInfo }) => {
 	const [selectedMonth, setSelectedMonth] = useState(dayjs().locale("ko"));
@@ -57,7 +58,8 @@ const Content = ({
 				break;
 		}
 	};
-	const { todo_group_title } = groupInfo.groupTitle;
+	const { ledger_group_title } = groupInfo;
+	console.log("Ledger groupInfo", groupInfo);
 
 	const {
 		mode,
@@ -67,11 +69,11 @@ const Content = ({
 		groupTitle,
 		setGroupTitle,
 	} = useGroupEditStore();
-	console.log("TodoList", todo_group_title);
+	console.log("Ledger", ledger_group_title);
 
 	const handleIsEditModalVisible = () => {
 		setIsModalVisible(!isModalVisible);
-		setGroupTitle(todo_group_title);
+		setGroupTitle(ledger_group_title);
 		setMode(ledgerMode);
 		console.log("groupTitle", groupTitle);
 		console.log("ledgerMode", mode);
@@ -98,7 +100,7 @@ const Content = ({
 					icon="plus"
 					// onClick={handleModalVisible(dayjs().format("YYYY-MM-DD"))}
 				/>
-				<ButtonFloating icon="setting" onClick={handleIsEditModalVisible} />
+				<FloatingButton icon="setting" onClick={handleIsEditModalVisible} />
 				<GroupEdit />
 			</ButtonWrapper>
 		</StyledWrapper>

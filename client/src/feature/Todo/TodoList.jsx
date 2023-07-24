@@ -54,8 +54,7 @@ const List = ({ groupInfo, groupId, data, startDate }) => {
 		setTodoList(data);
 	}, [data]);
 
-	const { todo_group_title } = groupInfo.groupTitle;
-
+	const { todo_group_title } = groupInfo;
 	const {
 		isModalVisible,
 		setMode,

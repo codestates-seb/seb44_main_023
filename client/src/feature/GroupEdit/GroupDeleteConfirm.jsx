@@ -5,16 +5,21 @@ import Popconfirm from "../../components/Popconfirm/Popconfirm";
 import Button from "../../components/Button/Button";
 import { FaTrashCan } from "react-icons/fa6";
 import { useParams } from "react-router-dom";
+import { todoMode, ledgerMode } from "../../utils/util";
 
 import {
 	useGetGroupTitle,
 	useGroupEditStore,
 } from "../../store/store.groupEdit";
 import { deleteLedgerGroup } from "../../api/ledgergroupedit.api";
+import { deleteTodoGroup } from "../../api/todogroupedit.api";
+const memberId = 1;
 
 const GroupDeleteConfirm = () => {
 	const navigate = useNavigate();
 	const {
+		mode,
+
 		isModalVisible,
 		isEditMode,
 		groupTitle,
@@ -41,10 +46,17 @@ const GroupDeleteConfirm = () => {
 
 		console.log("멤버를 지우자!");
 		//api통신으로 멤버지우기 요청을 따로해야하는가?
-		console.log("그룹을  지우자!");
+
 		try {
-			console.log("groupId!:", groupId);
-			await deleteLedgerGroup(groupId);
+			console.log("그룹을  지우자!");
+			console.log("groupId! mode:", mode);
+
+			if (mode == todoMode) {
+				await deleteTodoGroup(groupId);
+			} else if (mode == ledgerMode) {
+				await deleteLedgerGroup(groupId);
+			}
+
 			//성공시 초기화후 메인으로 이동
 			setInvitedMembers([]);
 			setGroupTitle("");
