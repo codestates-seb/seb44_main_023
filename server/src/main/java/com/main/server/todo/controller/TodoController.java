@@ -365,6 +365,7 @@ public class TodoController {
     public ResponseEntity<List<Response>> dateGetTodos(@PathVariable("todo-group-id") @Positive Long todoGroupId,
                                                        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                                        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                                        @RequestParam(value = "includeNoDate", defaultValue = "false") boolean includeNoDate,
                                                        HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
@@ -395,7 +396,7 @@ public class TodoController {
                     headers.add("Authorization", "Bearer " + newAccessToken);
 
                     // Todo 조회
-                    List<Todo> todos = this.todoService.dateGetTodos(todoGroupId, startDate, endDate, newAccessToken);
+                    List<Todo> todos = this.todoService.dateGetTodos(todoGroupId, startDate, endDate, includeNoDate, newAccessToken);
                     List<TodoDto.Response> responses = todos.stream()
                             .map((todo -> new TodoDto.Response(todo)))
                             .collect(Collectors.toList());
@@ -418,7 +419,7 @@ public class TodoController {
             }
 
             // Todo 조회
-            List<Todo> todos = this.todoService.dateGetTodos(todoGroupId, startDate, endDate, token);
+            List<Todo> todos = this.todoService.dateGetTodos(todoGroupId, startDate, endDate, includeNoDate, token);
             List<TodoDto.Response> responses = todos.stream()
                     .map((todo -> new TodoDto.Response(todo)))
                     .collect(Collectors.toList());
