@@ -7,15 +7,17 @@ import com.main.server.todo.domain.Todo;
 import java.io.File;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class CommentDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
 
-        @JsonProperty(value = "member_id")
-        private Long memberId;
+//        @JsonProperty(value = "member_id")
+//        private Long memberId;
 
         @JsonProperty(value = "comment_content")
         private String commentContent;
@@ -29,8 +31,8 @@ public class CommentDto {
     @AllArgsConstructor
     public static class Patch {
 
-        @JsonProperty(value = "member_id")
-        private Long memberId;
+//        @JsonProperty(value = "member_id")
+//        private Long memberId;
 
         @JsonProperty(value = "comment_content")
         private String commentContent;

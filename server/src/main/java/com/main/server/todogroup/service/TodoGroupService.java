@@ -5,6 +5,7 @@ import com.main.server.exception.ExceptionCode;
 import com.main.server.member.Member;
 import com.main.server.member.MemberRepository;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import com.main.server.todogroup.Repository.TodoGroupRepository;
 import com.main.server.todogroup.domain.TodoGroup;
@@ -22,21 +23,30 @@ public class TodoGroupService {
     private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final TodoGroupRepository todoGroupRepository;
+    private JwtTokenizer jwtTokenizer;
 
-    public TodoGroupService(MemberService memberService, MemberRepository memberRepository, TodoGroupRepository todoGroupRepository) {
+    public TodoGroupService(MemberService memberService, MemberRepository memberRepository, TodoGroupRepository todoGroupRepository, JwtTokenizer jwtTokenizer) {
         this.memberService = memberService;
         this.memberRepository = memberRepository;
         this.todoGroupRepository = todoGroupRepository;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
-    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
-        TodoGroup saveTodoGroup = todoGroupRepository.save(postDto.toEntity(member));
+    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto, String token) {
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+        TodoGroup saveTodoGroup = todoGroupRepository.save(postDto.toEntity(member));
         return saveTodoGroup;
     }
 
-    public TodoGroup updateTodoGroup(Long todoGroupId, TodoGroupDto.Patch patchDto) {
+    public TodoGroup updateTodoGroup(Long todoGroupId, TodoGroupDto.Patch patchDto, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
 
         findTodoGroup.changeTitle(patchDto.getTodoGroupTitle());
@@ -45,17 +55,17 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getTodoGroup(Long todoGroupId) {
+    public TodoGroup getTodoGroup(Long todoGroupId, String token) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 
     @Transactional
-    public List<TodoGroup> getTodoGroups() {
+    public List<TodoGroup> getTodoGroups(String token) {
         List<TodoGroup> todoGroups = this.todoGroupRepository.findAll();
         return todoGroups;
     }
 
-    public void deleteTodoGroup(Long todoGroupId) {
+    public void deleteTodoGroup(Long todoGroupId, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
         todoGroupRepository.delete(findTodoGroup);
     }
@@ -75,7 +85,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup invite(Long todoGroupId, InvitationTodoGroupDto.Post invitationTodoGroupDto) {
+    public TodoGroup invite(Long todoGroupId, InvitationTodoGroupDto.Post invitationTodoGroupDto, String token) {
         TodoGroup findTodoGroup = findVerifiedTodoGroup(todoGroupId);
         Member owner = memberRepository.findById(invitationTodoGroupDto.getMemberId())
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
@@ -97,7 +107,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getInviteMember(Long todoGroupId) {
+    public TodoGroup getInviteMember(Long todoGroupId, String token) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 }

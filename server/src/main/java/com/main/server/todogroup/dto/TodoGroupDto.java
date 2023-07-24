@@ -5,15 +5,17 @@ import com.main.server.member.Member;
 import com.main.server.todogroup.domain.TodoGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class TodoGroupDto {
 
     @Getter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
 
-        @JsonProperty(value = "member_id")
-        private Long memberId;
+//        @JsonProperty(value = "member_id")
+//        private Long memberId;
 
         @JsonProperty(value = "todo_group_title")
         private String todoGroupTitle;

@@ -17,6 +17,7 @@ import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
+import com.main.server.security.JwtTokenizer;
 import com.main.server.todo.domain.Todo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,20 +37,31 @@ public class LedgerServiceImpl implements LedgerService {
     private final CategoryRepository categoryRepository;
     private final InoutcomeRepository inoutcomeRepository;
     private final PaymentRepository paymentRepository;
+    private JwtTokenizer jwtTokenizer;
 
     public LedgerServiceImpl(LedgerRepository ledgerRepository, MemberService memberService, LedgerGroupService ledgerGroupService,
-                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository) {
+                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository, JwtTokenizer jwtTokenizer) {
         this.ledgerRepository = ledgerRepository;
         this.memberService = memberService;
         this.ledgerGroupService = ledgerGroupService;
         this.categoryRepository = categoryRepository;
         this.inoutcomeRepository = inoutcomeRepository;
         this.paymentRepository = paymentRepository;
+        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Override
-    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
+    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto, String token) {
+
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
         Category category = null;  // 카테고리 초기값 설정
         Long categoryId = postDto.getCategoryId();
@@ -109,7 +121,7 @@ public class LedgerServiceImpl implements LedgerService {
 
 
     @Override
-        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
+        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
             Long categoryId = patchDto.getCategoryId();
@@ -159,13 +171,13 @@ public class LedgerServiceImpl implements LedgerService {
 
 
         @Override
-        public Ledger getLedger (Long ledgerGroupId, Long ledgerId){
+        public Ledger getLedger (Long ledgerGroupId, Long ledgerId, String token){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             return findVerifiedLedger(ledgerId);
         }
 
         @Override
-        public List<Ledger> getLedgers (Long ledgerGroupId){
+        public List<Ledger> getLedgers (Long ledgerGroupId, String token){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             if (ledgerGroup == null) {
                 // 그룹이 존재하지 않을 경우
@@ -174,7 +186,7 @@ public class LedgerServiceImpl implements LedgerService {
             return ledgerGroup.getLedgers();
         }
     @Override
-    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate) {
+    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate, String token) {
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
 
         List<Ledger> ledgers = this.ledgerRepository.findByLedgerGroupAndLedgerDateBetween(ledgerGroup ,startDate, endDate);
@@ -185,7 +197,7 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
         @Override
-        public void deleteLedger (Long ledgerGroupId, Long ledgerId){
+        public void deleteLedger (Long ledgerGroupId, Long ledgerId, String token){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger deletedLedger = findVerifiedLedger(ledgerId);
             ledgerRepository.delete(deletedLedger);

@@ -9,16 +9,16 @@ import java.util.List;
 
 public interface LedgerService {
 
-    Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto);
+    Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto, String token);
 
-    Ledger updateLedger(Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto);
+    Ledger updateLedger(Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token);
 
-    Ledger getLedger(Long ledgerGroupId, Long ledgerId);
+    Ledger getLedger(Long ledgerGroupId, Long ledgerId, String token);
 
-    List<Ledger> getLedgers(Long ledgerGroupId);
+    List<Ledger> getLedgers(Long ledgerGroupId, String token);
 
-    List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate);
+    List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate, String token);
 
-    void deleteLedger(Long ledgerGroupId, Long ledgerId);
+    void deleteLedger(Long ledgerGroupId, Long ledgerId, String token);
 
 }
