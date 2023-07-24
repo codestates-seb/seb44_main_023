@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LedgerBook from "../../components/LedgerBook/LedgerBook";
 import useQueryLedgerList from "../../query/ledgerList.query";
 
@@ -45,6 +45,10 @@ const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
         break;
     }
   };
+
+  useEffect(() => {
+    setLedgerList(data);
+  }, [data]);
 
   return (
     <StyledWrapper>

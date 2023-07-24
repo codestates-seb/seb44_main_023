@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import FloatingButton from "../../components/Button/ButtonFloating";
 import useQueryLedgerList from "../../query/ledgerList.query";
@@ -35,6 +35,10 @@ const Content = ({
   setSelectedMonth,
 }) => {
   const [ledgerList, setLedgerList] = useState(data);
+
+  useEffect(() => {
+    setLedgerList(data);
+  }, [data]);
 
   const handleSelectedMonth = (type) => () => {
     switch (type) {

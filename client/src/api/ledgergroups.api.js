@@ -56,9 +56,7 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    const res = await API.get(
-      `/ledgergroups/${groupId}/ledgers/dates?startDate=${startDate}&endDate=${endDate}`
-    );
+    const res = await API.get(`/ledgergroups/${groupId}/ledgers`);
     return res.data;
   } catch (err) {
     throw err;
@@ -88,18 +86,21 @@ export const createLedgerContent = async (groupId, data) => {
   }
 };
 
-export const editLedgerContent = async (groupId, ledgerId ,data) => {
+export const editLedgerContent = async (groupId, ledgerId, data) => {
   try {
-    const res = await API.patch(`/ledgergroups/${groupId}/ledgers/${ledgerId}`, {
-      ...data,
-    });
+    const res = await API.patch(
+      `/ledgergroups/${groupId}/ledgers/${ledgerId}`,
+      {
+        ...data,
+      }
+    );
     return res.data;
   } catch (err) {
     throw err;
   }
 };
 
-export const detailLedgerContent = async (groupId, ledgerId ,data) => {
+export const detailLedgerContent = async (groupId, ledgerId, data) => {
   try {
     const res = await API.get(`/ledgergroups/${groupId}/ledgers/${ledgerId}`, {
       ...data,

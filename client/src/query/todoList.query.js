@@ -4,7 +4,11 @@ import { readTodoList } from "../api/todogroups.api";
 export const request = async ({ groupId, startDate, endDate }) => {
   try {
     const todoList = await readTodoList(groupId, startDate, endDate);
-    return todoList;
+    return todoList.filter(
+      (item) =>
+        item.todo_schedule_date >= startDate &&
+        item.todo_schedule_date <= endDate
+    );
   } catch (error) {
     console.log(error);
     throw error;
