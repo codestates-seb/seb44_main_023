@@ -10,7 +10,7 @@ const MainLedger = ({ groupId }) => {
   const navigate = useNavigate();
 
   const handleAddButton = () => {
-    navigate("/profile/1");
+    navigate("/profile");
   };
 
   if (isLoading) return <StyledWrapper />;

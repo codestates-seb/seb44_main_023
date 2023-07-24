@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logoSpare.png";
+import headerLogo from "../../assets/logo/header_logo.png";
 import { MdOutlineLogout } from "react-icons/md";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
@@ -59,7 +59,7 @@ const Header = () => {
       if (response.status === 200) {
         setAccessToken(null);
       }
-      navigate("/home");
+      window.location.href = "/home";
       setPopupVisible(false);
     } catch (error) {
       if (error === 400) {
@@ -75,7 +75,7 @@ const Header = () => {
   return (
     <HeaderContainer>
       <LogoWrapper onClick={handleLogoClick}>
-        <LogoImage src={Logo} alt="Logo" />
+        <LogoImage src={headerLogo} alt="Logo" />
       </LogoWrapper>
       <RightSectionWrapper>
         <Button onClick={handleProfileClick}>
@@ -119,12 +119,11 @@ const HeaderContainer = styled.header`
 `;
 
 const LogoWrapper = styled.div`
-  margin-right: 2rem;
   cursor: pointer;
 `;
 
 const LogoImage = styled.img`
-  width: 15rem;
+  width: 18rem;
 `;
 
 const RightSectionWrapper = styled.div`
@@ -159,7 +158,7 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: 1rem;
+  right: -2rem;
   transform: translateX(-50%);
   &::before {
     content: "";

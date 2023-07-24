@@ -55,7 +55,7 @@ const TodoPage = () => {
         members={members}
         setStartDate={setStartDate}
       />
-      <TodoList startDate={startDate} />
+      <TodoList groupInfo={groupInfo} startDate={startDate} />
     </StyledWrapper>
   );
 };

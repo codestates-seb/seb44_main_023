@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { login } from "../../api/auths.api";
 import useLoginStore from "../../store/store.login";
 import useAccessTokenStore from "../../store/store.accessToken";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
@@ -26,11 +26,10 @@ const Login = () => {
     try {
       const response = await login(email, password);
       // console.log("사용자 정보:", response);
-      
-      
+
       // accessToken
       const accessToken = response.headers.authorization;
-      // store.accessToken.js에 저장 
+      // store.accessToken.js에 저장
       setAccessToken(accessToken);
       // console.log("AccessToken:", accessToken);
 
@@ -40,7 +39,6 @@ const Login = () => {
 
       setLogin(true);
       setValidation("");
-
       navigate("/");
     } catch (error) {
       if (error === 404) {

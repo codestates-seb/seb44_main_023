@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom"; // react-router-dom에서 useNav
 import background from "../assets/background.png";
 import ErrorCode from "../assets/404page.svg";
 import "../index.css";
+import useAccessTokenStore from "../store/store.accessToken";
+import useUserInfoStore from "../store/store.userInfo";
 
 const ErrorContainer = styled.div`
   background-image: url(${background});
@@ -49,9 +51,11 @@ const Button = styled.button`
 
 const ErrorPage = () => {
   const navigate = useNavigate(); // useNavigate 훅을 사용합니다.
+  const { userInfo } = useUserInfoStore();
 
   const handleButtonClick = () => {
-    navigate("/");
+    if (userInfo.memberId) navigate("/");
+    else navigate("/home");
   };
 
   return (

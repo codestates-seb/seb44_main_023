@@ -7,6 +7,8 @@ import Loading from "../components/Loading/Loading";
 import { useStoreHide } from "../store/store.hide";
 import { useGetWeatherInfo } from "../store/store.weather";
 import WeatherImage from "../feature/Home/WeatherImage";
+import Clock from "../feature/Main/Clock/Clock";
+import WeatherWidget from "../components/WeatherWidget/WeatherWidget";
 
 const MainPage = () => {
   const { isHidden, changeVisibility } = useStoreHide();
@@ -41,6 +43,12 @@ const MainPage = () => {
         }}
       >
         <WeatherImage weahterType={weatherType} />
+        <WeatherWrapper>
+          <WeatherWidget scale={0.95} />
+        </WeatherWrapper>
+        <ClockWrapper>
+          <Clock />
+        </ClockWrapper>
         <ButtonWrapper>
           <FloatingButton icon="hide" onClick={changeVisibility} />
         </ButtonWrapper>
@@ -83,6 +91,19 @@ const StyledWrapper = styled.div`
   transition: 200ms;
 `;
 
+const WeatherWrapper = styled.div`
+  position: fixed;
+  position: fixed;
+  right: 1.6rem;
+  top: 1.6rem;
+`;
+
+const ClockWrapper = styled.div`
+  position: fixed;
+  right: 50%;
+  bottom: 50%;
+  transform: translateX(50%);
+`;
 const ButtonWrapper = styled.div`
   position: fixed;
   right: 1.6rem;

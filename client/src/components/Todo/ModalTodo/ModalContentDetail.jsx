@@ -79,6 +79,7 @@ const ModalContentDetail = ({
             groupId={groupId}
             todoId={todo_id}
             {...item}
+            profile_image={"https://api.planfinity.co.kr" + item.profile_image}
           />
         ))}
       </CommentWrapper>

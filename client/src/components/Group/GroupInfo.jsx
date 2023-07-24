@@ -48,7 +48,7 @@ const Member = styled.div`
   font-size: 2.4rem;
   display: flex;
   align-items: center;
-  justif-content: center;
+  justify-content: center;
 
   .member-title {
     margin-right: 1.2rem;

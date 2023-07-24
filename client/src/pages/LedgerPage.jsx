@@ -69,7 +69,11 @@ const LedgerPage = () => {
         pageType={pageType}
         handleChangeParameter={handleChangeParameter}
       />
-      <LedgerContent pageType={pageType} groupId={groupId} />
+      <LedgerContent
+        pageType={pageType}
+        groupId={groupId}
+        groupInfo={groupInfo}
+      />
     </StyledWrapper>
   );
 };
