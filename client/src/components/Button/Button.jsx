@@ -63,7 +63,7 @@ const StyledButton = styled.button`
       color: white;
       border-color: transparent;
       border-style: solid;
-      background-color: var(--color-red-01);
+      background-color: ${(props) => props.backgroundColor};
       box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
       &:hover {

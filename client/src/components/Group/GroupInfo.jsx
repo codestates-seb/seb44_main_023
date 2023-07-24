@@ -48,7 +48,7 @@ const Member = styled.div`
 	font-size: 2.4rem;
 	display: flex;
 	align-items: center;
-	justif-content: center;
+	justify-content: center;
 
 	.member-title {
 		margin-right: 1.2rem;
@@ -60,6 +60,6 @@ const Member = styled.div`
 		width: 100%;
 		width: 4rem;
 		height: 4rem;
-		object-fit: conver;
+		object-fit: cover;
 	}
 `;

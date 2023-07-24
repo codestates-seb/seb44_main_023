@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/logoSpare.png";
-import UserAvatar from "../../assets/userAvarta.png";
-import { HiMiniMoon } from "react-icons/hi2";
 import { MdOutlineLogout } from "react-icons/md";
-import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
 import { logout } from "../../api/auths.api";
 import { useGetUserInfo } from "../../store/store.userInfo";
@@ -39,7 +36,7 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigate(`/profile/${memberId}`);
+    navigate(`/profile`);
   };
 
   const handleLogoutClick = (event) => {
@@ -81,9 +78,6 @@ const Header = () => {
         <LogoImage src={Logo} alt="Logo" />
       </LogoWrapper>
       <RightSectionWrapper>
-        <Button>
-          <MoonIcon size={24} />
-        </Button>
         <Button onClick={handleProfileClick}>
           <UserAvatarImage src={profileImage} alt="User Avatar" />
         </Button>
@@ -113,7 +107,7 @@ const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 99;
   display: flex;
   width: 100%;
   height: 6rem;
@@ -145,11 +139,6 @@ const Button = styled.button`
 
 const WeatherComponent = styled.div``;
 
-const MoonIcon = styled(HiMiniMoon)`
-  width: 2.4rem;
-  height: 2.4rem;
-`;
-
 const UserAvatarImage = styled.img`
   width: 2.8rem;
   height: 2.8rem;
@@ -162,11 +151,6 @@ const LogoutIcon = styled(MdOutlineLogout)`
   height: 2.6rem;
 `;
 
-const WeatherIcon = styled(TiWeatherPartlySunny)`
-  width: 2.4rem;
-  height: 2.4rem;
-`;
-
 const PopupWrapper = styled.div`
   background-color: var(--color-gray-01);
   box-shadow: 0.5rem 0.5rem 1rem 0.2rem rgba(0, 0, 0, 0.25);
@@ -175,7 +159,7 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: -8.5rem;
+  right: 1rem;
   transform: translateX(-50%);
   &::before {
     content: "";
@@ -217,7 +201,7 @@ const CancelButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 
@@ -231,7 +215,7 @@ const ConfirmButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 
