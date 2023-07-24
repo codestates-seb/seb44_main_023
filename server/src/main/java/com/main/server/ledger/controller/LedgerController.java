@@ -70,7 +70,7 @@ public class LedgerController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
-    @CrossOrigin("*")
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.OPTIONS})
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
