@@ -66,7 +66,7 @@ export const readLedgerList = async (groupId, startDate, endDate) => {
 export const createLedgerGroup = async (memberId, ledgerGroupTitle) => {
   try {
     const res = await API.post("/ledgergroups", {
-      member_id: 1,
+      member_id: memberId,
       ledger_group_title: ledgerGroupTitle,
     });
     return res.data;
@@ -111,7 +111,9 @@ export const detailLedgerContent = async (groupId, ledgerId) => {
 
 export const deleteLedgerContent = async (groupId, ledgerId) => {
   try {
-    const res = await API.delete(`/ledgergroups/${groupId}/ledgers/${ledgerId}`);
+    const res = await API.delete(
+      `/ledgergroups/${groupId}/ledgers/${ledgerId}`
+    );
     return res.data;
   } catch (err) {
     throw err;
