@@ -43,7 +43,7 @@ public class InvitationMemberDto {
     public static class ProfileDto {
         @JsonProperty(value = "member_id")
         private Long memberId;
-        @JsonProperty(value = "profild_image")
+        @JsonProperty(value = "profile_image")
         private String profileImage;
 
         public ProfileDto(Member member, String fileUploadPath) {
