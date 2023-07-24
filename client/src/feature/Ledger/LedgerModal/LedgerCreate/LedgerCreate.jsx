@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import Modal from "../../../../components/Modal/Modal";
-/* 👇 구현 완료 후 삭제 예정 */
 import Button from "../../../../components/Button/Button";
 
 import styled from "styled-components";
@@ -12,9 +10,9 @@ import LedgerPayments from "./LedgerPayments";
 
 import { readAllInOutcomes } from "../../../../api/inoutcomes.api";
 import { createLedgerContent } from "../../../../api/ledgergroups.api";
+import useUserInfoStore from "../../../../store/store.userInfo";
 
-const LedgerCreate = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+const LedgerCreate = ({ isModalVisible, handleModalVisible, groupId }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [inOutComesId, setInOutComesId] = useState();
   const [selectedPaymentId, setSelectedPaymentId] = useState();
@@ -22,13 +20,10 @@ const LedgerCreate = () => {
   const [amountValue, setAmountValue] = useState();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const { groupId } = useParams();
-  const [pageType, setPageType] = useState("list");
-  const [data, setData] = useState(false);
-  const isIncomeSelected = inOutComesId === 1;
+  const [date, setDate] = useState("");
+  const {userInfo} = useUserInfoStore();
 
   useEffect(() => {
-    // API에서 메뉴 아이템 가져오기
     const fetchMenuItems = async () => {
       try {
         const response = await readAllInOutcomes();
@@ -54,17 +49,13 @@ const LedgerCreate = () => {
     setContent(e.target.value);
   };
 
-  const handleModalVisible = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
   const handleValidate = () => {
-    // 필수값 : inOutComesId, amoutValue, title, content
     if (
       inOutComesId === undefined ||
       amountValue === null ||
       title === "" ||
-      content === ""
+      content === "" ||
+      date === ""
     ) {
       alert("필수 요소를 다 채우셨는지 확인 해주세요.");
     } else {
@@ -73,10 +64,8 @@ const LedgerCreate = () => {
   };
 
   const addLedgerContents = async () => {
-    const groupId = 6
     const data = {
-      member_id: 1,
-      ledger_id: 1,
+      member_id: userInfo.memberId,
       ledger_group_id: groupId,
       ledger_title: title,
       ledger_content: content,
@@ -84,15 +73,14 @@ const LedgerCreate = () => {
       category_id: selectedCategoryId,
       in_outcome_id: inOutComesId,
       payment_id: selectedPaymentId,
-      ledger_schedule_date: "2023-07-19"
-    }
+      ledger_schedule_date: date,
+    };
     try {
       const response = await createLedgerContent(groupId, data);
-      console.log(response.data);
-      console.log("성공", response);
+      window.location.reload();
       handleModalVisible();
     } catch (error) {
-      console.log("실패", error);
+      alert("관리자에게 문의하세요.", error);
     }
   };
 
@@ -108,37 +96,49 @@ const LedgerCreate = () => {
     setAmountValue(parseInt(amountValue));
   };
 
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    setDate(selectedDate);
+  }
+
+  const handleInOutComesChange = (itemId) => {
+    setInOutComesId(itemId);
+    if (itemId === 1) {
+      setSelectedPaymentId(null);
+    }
+  };
+
   return (
     <>
-      <Button
-        label="모달 열기"
-        size="large"
-        onClick={handleModalVisible}
-        fontWeight={"bold"}
-      />
-      {/* 모달 시작 */}
       <Modal
-        id="TodoModal" // 모달 id값
-        open={isModalVisible} // 모달 열림 / 닫힘 state값
-        closable // 우측 상단 모달 닫힘 버튼 유무 default값 : true
-        onClose={handleModalVisible} // 모달 열고 닫는 state 변화 함수
+        id="LedgerModal"
+        open={isModalVisible}
+        closable
+        onClose={handleModalVisible}
       >
         <Container>
           <LedgerAddTitle>
-            <p className="text">지출 및 소득 내역 추가하기</p>
+          <p className="text">지출 및 소득 내역 추가하기</p>
+          <div className="modal-title-date">
+            <input
+                id="todo_schedule_date"
+                type="date"
+                onChange={handleDateChange}
+              />
+          </div>
           </LedgerAddTitle>
           <ModalBar>
             <LeftContent>
               <Dropdown
                 menu={menuItems}
-                defaultKey={{ key: 1, label: "수입" }}
+                defaultKey={{ key: 1, label: "지출" }}
                 className="dropdown"
-                onItemSelect={(itemId) => setInOutComesId(itemId)}
+                onItemSelect={handleInOutComesChange}
               />
               <DivLeftLine />
               <LedgerCategoryContainer>
                 <LedgerInputWrapper>
-                  <LedgerPayments onPaymentSelect={handlePaymentId}/>
+                  <LedgerPayments onPaymentSelect={handlePaymentId} />
                 </LedgerInputWrapper>
               </LedgerCategoryContainer>
               <DivLeftLine />
@@ -191,10 +191,6 @@ const LedgerCreate = () => {
 
 export default LedgerCreate;
 
-// const Dropdown = styled.div`
-//   font-size: 1.5rem;
-// `;
-
 const Container = styled.div`
   margin: 3rem 3rem;
   position: relative;
@@ -238,11 +234,23 @@ const RightContent = styled.div`
 
 const LedgerAddTitle = styled.div`
   border-bottom: 1px solid var(--color-gray-10);
+  display: flex;
+  justify-content: space-between;
+  gap: 2.4rem;
+
   .text {
     font-size: 2.2rem;
     margin-bottom: 1rem;
     margin-left: 2rem;
     color: var(--color-gray-11);
+  }
+  .modal-title {
+    font-size: 2.4rem;
+    padding-right: 2.4rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-gray-10);
+    padding-bottom: 2.4rem;
   }
 `;
 
