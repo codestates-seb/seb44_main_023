@@ -67,6 +67,7 @@ const GroupDeleteConfirm = () => {
 			setIsEditMode(false);
 			setIsModalVisible(false);
 			navigate("/");
+			window.location.reload();
 		} catch (err) {
 			setValidation(err.response);
 		}
