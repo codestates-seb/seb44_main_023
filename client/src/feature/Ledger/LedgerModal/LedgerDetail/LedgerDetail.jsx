@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Modal from "../../../../components/Modal/Modal";
-/* 👇 구현 완료 후 삭제 예정 */
 import Button from "../../../../components/Button/Button";
 
 import styled from "styled-components";
 
-// import { LedgerEdit } from "../LedgerEdit/LedgerEdit"
-
 import { detailLedgerContent } from "../../../../api/ledgergroups.api";
 import { deleteLedgerContent } from "../../../../api/ledgergroups.api";
-import { useNavigate } from "react-router-dom";
 
-const LedgerDetail = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const navigate = useNavigate();
+const LedgerDetail = ({
+  groupId,
+  ledgerId,
+  handleModalVisible,
+  isModalVisible,
+}) => {
   const [data, setData] = useState();
 
-  const handleModalVisible = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
   const handleDetailOpen = async () => {
-    const groupId = 6;
-    const ledgerId = 20;
     try {
       const response = await detailLedgerContent(groupId, ledgerId);
       setData(response);
@@ -36,12 +29,9 @@ const LedgerDetail = () => {
   }, []);
 
   const handleDelete = async () => {
-    const groupId = 6;
-    const ledgerId = 7;
     try {
       await deleteLedgerContent(groupId, ledgerId);
       handleModalVisible();
-      console.log("삭제 성공")
     } catch (error) {
       console.log("실패", error);
     }
@@ -49,77 +39,68 @@ const LedgerDetail = () => {
 
   return (
     <>
-      <Button
-        label="모달 디테일 열기"
-        size="large"
-        onClick={handleModalVisible}
-        fontWeight={"bold"}
-      />
-      {/* 모달 시작 */}
       <Modal
-        id="TodoModal"
+        id="LedgerModal"
         open={isModalVisible}
         closable
         onClose={handleModalVisible}
       >
-        <Container>
-          <Title>
-            <TitleText>{data?.ledger_title}</TitleText>
-          </Title>
-          <ModalBar>
-            <LeftContent>
-              <InOutCome>{data?.inoutcome.inoutcomeName}</InOutCome>
-              <DivLeftLine />
-              <LedgerCategoryContainer>
-                  <LedgerPayments>{data && data?.payment.paymentName || "지출 수단"}</LedgerPayments>
-              </LedgerCategoryContainer>
-              <DivLeftLine />
-              <LedgerCategoryContainer>
-                  <LedgerCategory>{data && data?.category.categoryName || "지출/수입 카테고리"}</LedgerCategory>
-              </LedgerCategoryContainer>
-              <DivRightLine />
-            </LeftContent>
-            <RightContent>
-              <LedgerAmount>
-                <span className="amount">{data?.ledger_amount}</span>
-                <span className="won-sign">₩</span>
-              </LedgerAmount>
-            </RightContent>
-          </ModalBar>
-          <TextArea>
-            <div className="content-textarea">{data?.ledger_content}</div>
-          </TextArea>
-          <ButtonWrapper>
-            <Button
-              label="삭제하기"
-              size="medium"
-              fontcolor="var(--color-blue-03)"
-              backgroundColor="var(--color-white)"
-              style={{
-                border: "1px solid var(--color-red-01)",
-                color: "var(--color-red-01)",
-              }}
-              onClick={handleDelete}
-            />
-            <Button
-              label="수정하기"
-              size="medium"
-              fontcolor="var(--color-white)"
-              backgroundColor={"var(--color-blue-03)"}
-            />
-          </ButtonWrapper>
-        </Container>
+        <Title>
+          <TitleText>{data?.ledger_title}</TitleText>
+        </Title>
+        <ModalBar>
+          <LeftContent>
+            <InOutCome>{data?.inoutcome.inoutcomeName}</InOutCome>
+            <DivLeftLine />
+            <LedgerCategoryContainer>
+              <LedgerPayments>
+                {(data && data?.payment.paymentName) || "지출 수단"}
+              </LedgerPayments>
+            </LedgerCategoryContainer>
+            <DivLeftLine />
+            <LedgerCategoryContainer>
+              <LedgerCategory>
+                {(data && data?.category.categoryName) ||
+                  "지출/수입 카테고리"}
+              </LedgerCategory>
+            </LedgerCategoryContainer>
+            <DivRightLine />
+          </LeftContent>
+          <RightContent>
+            <LedgerAmount>
+              <span className="amount">{data?.ledger_amount}</span>
+              <span className="won-sign">₩</span>
+            </LedgerAmount>
+          </RightContent>
+        </ModalBar>
+        <TextArea>
+          <div className="content-textarea">{data?.ledger_content}</div>
+        </TextArea>
+        <ButtonWrapper>
+          <Button
+            label="삭제하기"
+            size="medium"
+            fontcolor="var(--color-blue-03)"
+            backgroundColor="var(--color-white)"
+            style={{
+              border: "1px solid var(--color-red-01)",
+              color: "var(--color-red-01)",
+            }}
+            onClick={handleDelete}
+          />
+          <Button
+            label="수정하기"
+            size="medium"
+            fontcolor="var(--color-white)"
+            backgroundColor={"var(--color-blue-03)"}
+          />
+        </ButtonWrapper>
       </Modal>
     </>
   );
 };
 
 export default LedgerDetail;
-
-const Container = styled.div`
-  margin: 3rem 3rem;
-  position: relative;
-`;
 
 const ModalBar = styled.div`
   display: grid;
@@ -151,8 +132,8 @@ const LedgerAmount = styled.span`
     color: var(--color-gray-11);
   }
   .won-sign {
-  margin-left: 0.5rem;
-  color: var(--color-gray-11);
+    margin-left: 0.5rem;
+    color: var(--color-gray-11);
   }
 `;
 
@@ -212,7 +193,6 @@ const TextArea = styled.div`
 const LedgerCategoryContainer = styled.div`
   width: 20rem;
 `;
-
 
 const DivLeftLine = styled.div`
   border-left: 1px solid var(--color-gray-10);
