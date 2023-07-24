@@ -104,7 +104,7 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     }
 
     @Transactional
-    public LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto) {
+    public LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto, String token) {
         LedgerGroup findLedgerGroup  = findVerifiedLedgerGroup(ledgerGroupId);
         Member owner = memberRepository.findById(invitationLedgerGroupPostDto.getMemberId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));

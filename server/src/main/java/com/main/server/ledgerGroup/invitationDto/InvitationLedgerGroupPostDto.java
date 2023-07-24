@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class InvitationLedgerGroupPostDto {
 
-//    @JsonProperty(value = "member_id")
-//    private Long memberId;
+    @JsonProperty(value = "member_id")
+    private Long memberId;
     @NotEmpty
     @JsonProperty(value = "emails")
     private List<InvitationEmailDto> emails;

@@ -16,6 +16,6 @@ public interface LedgerGroupService {
 
     LedgerGroup findByGroupId(Long ledgerGroupId);
     LedgerGroup findVerifiedLedgerGroup(Long ledgerGroupId);
-    LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto);
+    LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto, String token);
     LedgerGroup getInvitedMember(Long ledgerGroupId);
 }

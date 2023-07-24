@@ -270,7 +270,7 @@ public class InoutcomeController {
 
     @DeleteMapping("/{in-outcome-id}")
     public ResponseEntity<Void> deleteInoutcome(
-            @PathVariable("in_outcome-id") @Positive Long inoutcomeId,
+            @PathVariable("in-outcome-id") @Positive Long inoutcomeId,
             HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
