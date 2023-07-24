@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import useAccessTokenStore from "./store/store.accessToken";
 import { API } from "./api/api";
+import useMainGroupStore from "./store/store.mainGroup";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,24 +32,20 @@ function App() {
   const { userInfo, setUserInfo } = useUserInfoStore();
   const { isLoading, memberId } = userInfo;
   const { expirationTime, accessToken } = useAccessTokenStore();
+  const { setMainGroup } = useMainGroupStore();
 
   API.interceptors.request.use((config) => {
-    if (accessToken)
-      config.headers = {
-        ...config.headers,
-        Authorization: accessToken,
-      };
-    else
-      config.headers = {
-        ...config.headers,
-        "X-Refresh-Token": localStorage.getItem("refreshToken"),
-      };
+    config.headers = {
+      ...config.headers,
+      "X-Refresh-Token": localStorage.getItem("refreshToken"),
+    };
     return config;
   });
 
   useEffect(() => {
     setUserInfo(accessToken);
-  }, [accessToken]);
+    setMainGroup();
+  }, []);
 
   if (isLoading) return null;
   return (

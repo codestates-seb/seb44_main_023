@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://cedd-180-230-249-174.ngrok-free.app/",
+        target: "https://api.planfinity.co.kr/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
         secure: false,

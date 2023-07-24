@@ -163,6 +163,7 @@ const Signup = () => {
         size="large"
         onClick={handleSignup}
         fontWeight={"600"}
+        hovercolor={"var(--color-blue-04)"}
       />
       <LoginLink onClick={handleLoginLinkClick}>
         이미 계정이 있으신가요? Login
@@ -183,10 +184,11 @@ const LoginLink = styled.a`
   display: block;
   margin-top: 2rem;
   text-align: center;
+  font-size: 1.4rem;
   color: var(--color-blue-03);
   cursor: pointer;
 
   &:hover {
-    color: var(--color-black);
+    color: var(--color-blue-05);
   }
 `;

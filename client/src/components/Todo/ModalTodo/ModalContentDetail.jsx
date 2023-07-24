@@ -6,6 +6,7 @@ import {
   readTodo,
   readTodoComment,
 } from "../../../api/todogroups.api";
+import { useGetUserInfo } from "../../../store/store.userInfo";
 import Button from "../../Button/Button";
 import TodoComment from "./TodoComment";
 
@@ -20,6 +21,7 @@ const ModalContentDetail = ({
 }) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const userInfo = useGetUserInfo();
 
   const requestTodoInfo = async () => {
     try {
@@ -63,12 +65,12 @@ const ModalContentDetail = ({
       <div className="todo-content">{todo_content}</div>
       <TodoComment
         groupId={groupId}
-        member_id={1}
         todoId={todo_id}
         isEdit={true}
         setTodoComment={setTodoComment}
-        nickname="진아"
-        profile_image="https://i.pinimg.com/474x/df/2d/25/df2d253fbd0eb7d50193f1374128e9f0.jpg"
+        member_id={userInfo.memberId}
+        nickname={userInfo.nickname}
+        profile_image={userInfo.profileImage}
       />
       <CommentWrapper>
         {todoComment.map((item, index) => (
@@ -84,9 +86,9 @@ const ModalContentDetail = ({
         <Button
           label="삭제하기"
           size="medium"
-          fontcolor="var(--color-blue-03)"
+          backgroundColor={"var(--color-white)"}
+          hovercolor={"var(--color-gray-03)"}
           style={{
-            backgroundColor: "var(--color-white)",
             border: "1px solid var(--color-red-01)",
             color: "var(--color-red-01)",
           }}
@@ -95,10 +97,8 @@ const ModalContentDetail = ({
         <Button
           label="수정하기"
           size="medium"
-          fontcolor="var(--color-white)"
-          style={{
-            backgroundColor: "var(--color-blue-03)",
-          }}
+          backgroundColor={"var(--color-blue-03)"}
+          hovercolor={"var(--color-blue-04)"}
           onClick={() => setModalType("edit")}
         />
       </ButtonWrapper>

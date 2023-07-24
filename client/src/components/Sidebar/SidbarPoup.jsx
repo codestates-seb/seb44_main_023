@@ -23,10 +23,13 @@ const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
       try {
         if (title === "Todo") {
           const todoGroup = await createTodoGroup(1, inputValue);
-          onAddButtonClick(todoGroup.todo_group_title);
+          onAddButtonClick(todoGroup.todo_group_title, todoGroup.todo_group_id);
         } else if (title === "가계부") {
           const ledgerGroup = await createLedgerGroup(1, inputValue);
-          onAddButtonClick(ledgerGroup.ledger_group_title);
+          onAddButtonClick(
+            ledgerGroup.ledger_group_title,
+            ledgerGroup.ledger_group_id
+          );
         }
         setInputValue("");
         onClose();
