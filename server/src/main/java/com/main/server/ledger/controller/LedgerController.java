@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@CrossOrigin(origins = "https://codestates.shop")
 @RestController
 @RequestMapping("/ledgergroups/{ledger-group-id}/ledgers")
 public class LedgerController {
@@ -40,7 +40,6 @@ public class LedgerController {
         this.memberService = memberService;
     }
 
-    @CrossOrigin("*")
     @PostMapping
     public ResponseEntity<LedgerResponseDto> createLedger(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -103,7 +102,7 @@ public class LedgerController {
         }
     }
     
-    @CrossOrigin("*")
+    
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -165,8 +164,8 @@ public class LedgerController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-    
-    @CrossOrigin("*")
+
+
     @GetMapping("/{ledger-id}")
     public ResponseEntity getLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                     @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -229,7 +228,6 @@ public class LedgerController {
     }
 
 
-    @CrossOrigin("*")
     @GetMapping()
     public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                                               HttpServletRequest request) {
@@ -297,7 +295,7 @@ public class LedgerController {
         }
     }
 
-    @CrossOrigin("*")
+  
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -381,7 +379,7 @@ public class LedgerController {
         }
     }
 
-    @CrossOrigin("*")
+
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @PathVariable("ledger-id") @Positive Long ledgerId,

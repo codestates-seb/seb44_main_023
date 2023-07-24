@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-@CrossOrigin
+@CrossOrigin(origins = "https://codestates.shop")
 @RestController
 @Validated
 public class TodoController {
