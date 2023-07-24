@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-// import WeatherWidget from "../../components/WeatherWidget/WeatherWidget";
-/* 날씨 위젯 부분은 날씨 브랜치 fe-dev에 머지 후 작업 */
-
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import headerLogo from "../../assets/logo/header_logo.png";
 
-const SignupHeader = () => {
+const LoginHeader = () => {
+  const navigate = useNavigate(); 
+
+  const handleLogoClick = () => {
+    navigate("/home");
+  };
+
   return (
     <Header>
-      <HeaderLogo src={headerLogo}></HeaderLogo>
-      {/* <WeatherWidget scale={0.95} /> */}
+      <HeaderLogo src={headerLogo} onClick={handleLogoClick}></HeaderLogo>
     </Header>
   );
 };
 
-export default SignupHeader;
+export default LoginHeader;
 
 const HeaderLogo = styled.img`
   width: 18rem;
