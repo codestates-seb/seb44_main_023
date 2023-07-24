@@ -41,3 +41,16 @@ export const deleteLedgerGroup = async (groupId) => {
 		throw err;
 	}
 };
+
+export const inviteLedgerGroup = async (groupId) => {
+	console.log("invite");
+	console.log("inviteLedgerGroup : groupId!:", groupId);
+
+	try {
+		console.log(" try invite!:", groupId);
+		await API.post(`/ledgergroups/${groupId}/invitation`);
+		console.log("done");
+	} catch (err) {
+		throw err;
+	}
+};

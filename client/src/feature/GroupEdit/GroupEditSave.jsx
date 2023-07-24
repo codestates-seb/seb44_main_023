@@ -10,8 +10,11 @@ import {
 } from "../../store/store.groupEdit";
 
 import "./group.css";
-import { updateLedgerGroup } from "../../api/ledgergroupedit.api";
-import { updateTodoGroup } from "../../api/todogroupedit.api";
+import {
+	inviteLedgerGroup,
+	updateLedgerGroup,
+} from "../../api/ledgergroupedit.api";
+import { inviteTodoGroup, updateTodoGroup } from "../../api/todogroupedit.api";
 import useUserInfoStore from "../../store/store.userInfo";
 
 const GroupEditSave = () => {
@@ -34,24 +37,26 @@ const GroupEditSave = () => {
 	const memberId = userInfo.memberId;
 
 	const { groupId } = useParams();
-	const handleSaveGroupEdit = async (event) => {
+	const handleSaveGroupEdit = async () => {
 		if (invitedMembers.length !== 0) {
-			console.log("가계부멤버초대하자!", invitedMembers.length, invitedMembers);
-			//  try {
-			//  event.preventDefault();
-			// //api통신으로 멤버초대요청
-
-			// //성공후에만 할행동
-
-			//  } catch (err) {
-			//     setMemberValidation(err.response.data);
-			//  //실패후에만 할행동
-			//     console.log("memberValidation:",memberValidation);
-			//  }
+			console.log("멤버초대하자!", invitedMembers.length, invitedMembers);
+			try {
+				// event.preventDefault();
+				//api통신으로 멤버초대요청
+				if (mode == todoMode) {
+					await inviteTodoGroup(groupId);
+				} else if (mode == ledgerMode) {
+					await inviteLedgerGroup(groupId);
+				}
+			} catch (err) {
+				setMemberValidation(err.response.data);
+				//실패후에만 할행동
+				console.log("memberValidation:", memberValidation);
+			}
 		}
 
 		if (inputGroupTitle !== "") {
-			console.log("가계부그룹이름바꾸자!:", inputGroupTitle);
+			console.log("그룹이름바꾸자!:", inputGroupTitle);
 
 			try {
 				//api통신으로 그룹명변경요청
@@ -66,13 +71,13 @@ const GroupEditSave = () => {
 
 				//성공시에 보여지는 그룹타이틀명을 변경한다.
 				setGroupTitle(inputGroupTitle);
-				window.location.reload();
 			} catch (err) {
 				setTitleValidation(err.response.data);
 				console.log("titleValidation:", titleValidation);
 			}
 		}
 		//성공하고선 기본으로 초기화
+		window.location.reload();
 		setInvitedMembers([]);
 		setInputGroupTitle("");
 		setIsEditMode(false);

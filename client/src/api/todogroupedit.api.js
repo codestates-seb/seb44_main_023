@@ -36,3 +36,16 @@ export const deleteTodoGroup = async (groupId) => {
 		throw err;
 	}
 };
+
+export const inviteTodoGroup = async (groupId) => {
+	console.log("invite");
+	console.log("inviteTodoGroup : groupId!:", groupId);
+
+	try {
+		console.log(" try invite!:", groupId);
+		await API.post(`/todogroups/${groupId}/invitation`);
+		console.log("done");
+	} catch (err) {
+		throw err;
+	}
+};
