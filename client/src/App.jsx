@@ -37,6 +37,7 @@ function App() {
   API.interceptors.request.use((config) => {
     config.headers = {
       ...config.headers,
+      ...(accessToken ? { Authorization: accessToken } : {}),
       "X-Refresh-Token": localStorage.getItem("refreshToken"),
     };
     return config;
@@ -45,7 +46,7 @@ function App() {
   useEffect(() => {
     setUserInfo(accessToken);
     setMainGroup();
-  }, []);
+  }, [accessToken]);
 
   if (isLoading) return null;
   return (

@@ -59,7 +59,7 @@ const Header = () => {
       if (response.status === 200) {
         setAccessToken(null);
       }
-      navigate("/home");
+      window.location.href = "/home";
       setPopupVisible(false);
     } catch (error) {
       if (error === 400) {

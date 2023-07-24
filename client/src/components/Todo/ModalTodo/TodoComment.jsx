@@ -16,7 +16,7 @@ const TodoComment = ({
   setTodoComment,
 }) => {
   const [comment, setComment] = useState("");
-
+  console.log(comment_content, profile_image);
   const handleCreate = async () => {
     try {
       const res = await createTodoComment(groupId, todoId, member_id, comment);
