@@ -121,9 +121,8 @@ public class Ledger {
     }
 
     public void changeCategory(Category category) {
-        if(category != null) {
+       // if(category != null) {
             this.category = category;
-        }
     }
 
     public void changeInoutcome(Inoutcome inoutcome) {
@@ -133,9 +132,9 @@ public class Ledger {
     }
 
     public void changePayment(Payment payment) {
-        if(payment != null) {
+        //if(payment != null) {
             this.payment = payment;
-        }
+
     }
 
 }

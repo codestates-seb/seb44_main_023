@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface LedgerRepository extends JpaRepository<Ledger, Long> {
     List<Ledger> findByLedgerGroupAndLedgerDateBetween(LedgerGroup ledgerGroup, LocalDate startDate, LocalDate endDate);
+    List<Ledger> findByLedgerGroup(LedgerGroup ledgerGroup);
 }
 
 
