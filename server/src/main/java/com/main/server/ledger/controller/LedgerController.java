@@ -101,8 +101,8 @@ public class LedgerController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
-
+    
+    
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -295,7 +295,7 @@ public class LedgerController {
         }
     }
 
-
+  
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
