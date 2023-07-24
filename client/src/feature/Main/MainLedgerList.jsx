@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LedgerBook from "../../components/LedgerBook/LedgerBook";
 import useQueryLedgerList from "../../query/ledgerList.query";
 
@@ -24,6 +24,8 @@ const MainLedgerList = ({ groupId }) => {
 };
 
 const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
+  const [ledgerList, setLedgerList] = useState(data);
+
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -44,10 +46,15 @@ const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
     }
   };
 
+  useEffect(() => {
+    setLedgerList(data);
+  }, [data]);
+
   return (
     <StyledWrapper>
       <LedgerBook
-        ledgerList={data}
+        ledgerList={ledgerList}
+        setLedgerList={setLedgerList}
         handleSelectedMonth={handleSelectedMonth}
         selectedMonth={selectedMonth}
         isMain={true}

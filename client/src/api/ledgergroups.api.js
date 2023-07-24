@@ -56,9 +56,7 @@ export const readLedgerGroupMember = async (groupId) => {
 
 export const readLedgerList = async (groupId, startDate, endDate) => {
   try {
-    const res = await API.get(
-      `/ledgergroups/${groupId}/ledgers/dates?startDate=${startDate}&endDate=${endDate}`
-    );
+    const res = await API.get(`/ledgergroups/${groupId}/ledgers`);
     return res.data;
   } catch (err) {
     throw err;
@@ -68,9 +66,54 @@ export const readLedgerList = async (groupId, startDate, endDate) => {
 export const createLedgerGroup = async (memberId, ledgerGroupTitle) => {
   try {
     const res = await API.post("/ledgergroups", {
-      member_id: 1,
+      member_id: memberId,
       ledger_group_title: ledgerGroupTitle,
     });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const createLedgerContent = async (groupId, data) => {
+  try {
+    const res = await API.post(`/ledgergroups/${groupId}/ledgers`, {
+      ...data,
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const editLedgerContent = async (groupId, ledgerId, data) => {
+  try {
+    const res = await API.patch(
+      `/ledgergroups/${groupId}/ledgers/${ledgerId}`,
+      {
+        ...data,
+      }
+    );
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const detailLedgerContent = async (groupId, ledgerId) => {
+  try {
+    const res = await API.get(`/ledgergroups/${groupId}/ledgers/${ledgerId}`);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteLedgerContent = async (groupId, ledgerId) => {
+  try {
+    const res = await API.delete(
+      `/ledgergroups/${groupId}/ledgers/${ledgerId}`
+    );
     return res.data;
   } catch (err) {
     throw err;

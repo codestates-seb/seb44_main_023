@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import FloatingButton from "../../components/Button/ButtonFloating";
 import useQueryLedgerList from "../../query/ledgerList.query";
@@ -39,6 +39,12 @@ const Content = ({
   selectedMonth,
   setSelectedMonth,
 }) => {
+  const [ledgerList, setLedgerList] = useState(data);
+
+  useEffect(() => {
+    setLedgerList(data);
+  }, [data]);
+
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -84,13 +90,15 @@ const Content = ({
       {pageType === "calendar" ? (
         <LedgerCalendar
           groupId={groupId}
-          ledgerList={data}
+          ledgerList={ledgerList}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />
       ) : (
         <LedgerList
-          ledgerList={data}
+          groupId={groupId}
+          ledgerList={ledgerList}
+          setLedgerList={setLedgerList}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />

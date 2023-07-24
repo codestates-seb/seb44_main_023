@@ -4,7 +4,11 @@ import { readLedgerList } from "../api/ledgergroups.api";
 export const request = async ({ groupId, startDate, endDate }) => {
   try {
     const ledgerList = await readLedgerList(groupId, startDate, endDate);
-    return ledgerList;
+    return ledgerList.filter(
+      (item) =>
+        item.ledger_schedule_date >= startDate &&
+        item.ledger_schedule_date <= endDate
+    );
   } catch (error) {
     console.log(error);
     throw error;

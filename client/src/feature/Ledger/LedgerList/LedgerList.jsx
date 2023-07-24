@@ -2,11 +2,19 @@ import { styled } from "styled-components";
 import LedgerBook from "../../../components/LedgerBook/LedgerBook";
 import LedgerGraph from "./LedgerGraph";
 
-const LedgerList = ({ ledgerList, selectedMonth, handleSelectedMonth }) => {
+const LedgerList = ({
+  groupId,
+  ledgerList,
+  setLedgerList,
+  selectedMonth,
+  handleSelectedMonth,
+}) => {
   return (
     <StyledWrapper>
       <LedgerBook
+        groupId={groupId}
         ledgerList={ledgerList}
+        setLedgerList={setLedgerList}
         handleSelectedMonth={handleSelectedMonth}
         selectedMonth={selectedMonth}
       />

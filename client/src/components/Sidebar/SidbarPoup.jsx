@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Input from "../Input/PageInput";
 import { createTodoGroup } from "../../api/todogroups.api";
 import { createLedgerGroup } from "../../api/ledgergroups.api";
+import useUserInfoStore from "../../store/store.userInfo";
 
 const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
   const [inputValue, setInputValue] = useState("");
@@ -18,14 +19,22 @@ const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
     }
   };
 
+  const { userInfo } = useUserInfoStore();
+
   const handleAddButtonClick = async () => {
     if (inputValue.trim() !== "") {
       try {
         if (title === "Todo") {
-          const todoGroup = await createTodoGroup(1, inputValue);
+          const todoGroup = await createTodoGroup(
+            userInfo.memberId,
+            inputValue
+          );
           onAddButtonClick(todoGroup.todo_group_title, todoGroup.todo_group_id);
         } else if (title === "가계부") {
-          const ledgerGroup = await createLedgerGroup(1, inputValue);
+          const ledgerGroup = await createLedgerGroup(
+            userInfo.memberId,
+            inputValue
+          );
           onAddButtonClick(
             ledgerGroup.ledger_group_title,
             ledgerGroup.ledger_group_id
