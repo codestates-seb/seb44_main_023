@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://codestates.shop")
+
 @RestController
 @RequestMapping("/ledgergroups/{ledger-group-id}/ledgers")
 public class LedgerController {
@@ -102,7 +102,7 @@ public class LedgerController {
         }
     }
 
-
+  
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
