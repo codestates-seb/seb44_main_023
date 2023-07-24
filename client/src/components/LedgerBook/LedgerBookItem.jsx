@@ -11,26 +11,31 @@ const LedgerBookItem = ({ bookInfo, groupId }) => {
     inoutcome: { inoutcomeId },
   } = bookInfo;
 
-  const [isModalVisible, setIsModalVisible] = useState(false)  
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const handleModalVisible = () => setIsModalVisible(!isModalVisible);
-  
+
   return (
     <>
       <StyledWrapper onClick={handleModalVisible}>
         <Date>{dayjs(ledger_schedule_date).get("date")}일</Date>
         <InOutcomeIcon
-          className={`inout ${inoutcomeId === 1 ? "plus" : "minus"}`}
+          className={`inout ${inoutcomeId === 1 ? "minus" : "plus"}`}
         >
-          {inoutcomeId === 1 ? "+" : "-"}
+          {inoutcomeId === 1 ? "-" : "+"}
         </InOutcomeIcon>
-        <Detail className={`detail ${inoutcomeId === 1 ? "plus" : "minus"}`}>
+        <Detail className={`detail ${inoutcomeId === 1 ? "minus" : "plus"}`}>
           <div className="ledger-title">{ledger_title}</div>
           <div className="ledger-amount">
             {ledger_amount?.toLocaleString()}원
           </div>
         </Detail>
       </StyledWrapper>
-      <LedgerDetail isModalVisible={isModalVisible} handleModalVisible={handleModalVisible} groupId={groupId} ledgerId={bookInfo.ledger_id}/>
+      <LedgerDetail
+        isModalVisible={isModalVisible}
+        handleModalVisible={handleModalVisible}
+        groupId={groupId}
+        ledgerId={bookInfo.ledger_id}
+      />
     </>
   );
 };
