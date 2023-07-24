@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { styled } from "styled-components";
 
-const LedgerBookItem = ({ bookInfo }) => {
+const LedgerBookItem = ({ bookInfo, groupId }) => {
   const {
     ledger_schedule_date,
     ledger_title,

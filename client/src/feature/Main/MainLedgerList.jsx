@@ -24,6 +24,8 @@ const MainLedgerList = ({ groupId }) => {
 };
 
 const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
+  const [ledgerList, setLedgerList] = useState(data);
+
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -47,7 +49,8 @@ const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
   return (
     <StyledWrapper>
       <LedgerBook
-        ledgerList={data}
+        ledgerList={ledgerList}
+        setLedgerList={setLedgerList}
         handleSelectedMonth={handleSelectedMonth}
         selectedMonth={selectedMonth}
         isMain={true}

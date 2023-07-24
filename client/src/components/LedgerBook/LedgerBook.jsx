@@ -6,7 +6,9 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
 
 const LedgerBook = ({
+  groupId,
   ledgerList,
+  setLedgerList,
   selectedMonth,
   handleSelectedMonth,
   isMain = false,
@@ -59,6 +61,7 @@ const LedgerBook = ({
               ? ledgerList.map((bookInfo, index) => (
                   <LedgerBookItem
                     key={`ledger-book-item-${index}`}
+                    groupId={groupId}
                     bookInfo={bookInfo}
                   />
                 ))
@@ -67,6 +70,7 @@ const LedgerBook = ({
                   .map((bookInfo, index) => (
                     <LedgerBookItem
                       key={`ledger-book-item-${index}`}
+                      groupId={groupId}
                       bookInfo={bookInfo}
                     />
                   ))}

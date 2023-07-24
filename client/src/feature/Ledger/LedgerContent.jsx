@@ -34,6 +34,8 @@ const Content = ({
   selectedMonth,
   setSelectedMonth,
 }) => {
+  const [ledgerList, setLedgerList] = useState(data);
+
   const handleSelectedMonth = (type) => () => {
     switch (type) {
       case "PREV":
@@ -59,13 +61,15 @@ const Content = ({
       {pageType === "calendar" ? (
         <LedgerCalendar
           groupId={groupId}
-          ledgerList={data}
+          ledgerList={ledgerList}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />
       ) : (
         <LedgerList
-          ledgerList={data}
+          groupId={groupId}
+          ledgerList={ledgerList}
+          setLedgerList={setLedgerList}
           selectedMonth={selectedMonth}
           handleSelectedMonth={handleSelectedMonth}
         />
