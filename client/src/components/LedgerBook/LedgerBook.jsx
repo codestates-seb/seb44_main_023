@@ -4,6 +4,7 @@ import LedgerBookItem from "./LedgerBookItem";
 import LedgerBookSummary from "./LedgerBookSummary";
 import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
+import LedgerCreate from "../../feature/Ledger/LedgerModal/LedgerCreate/LedgerCreate";
 
 const LedgerBook = ({
   groupId,
@@ -14,9 +15,13 @@ const LedgerBook = ({
   isMain = false,
 }) => {
   const [isShowAll, setIsShowAll] = useState(false);
-
+  const [isModalVisible, setIsModalVisible] = useState(false)  
+  
+  const handleModalVisible = () => setIsModalVisible(!isModalVisible);
+  
   return (
     <StyledWrapper ismain={String(isMain)}>
+      <LedgerCreate isModalVisible={isModalVisible} handleModalVisible={handleModalVisible} groupId={groupId}/>
       <LedgerBookSummary
         ledgerList={ledgerList}
         selectedMonth={selectedMonth}
@@ -24,6 +29,7 @@ const LedgerBook = ({
       />
       <ButtonWrapper>
         <AddButton
+          onClick={handleModalVisible}
           label={
             <ButtonLabel>
               내역 추가

@@ -100,11 +100,18 @@ export const editLedgerContent = async (groupId, ledgerId, data) => {
   }
 };
 
-export const detailLedgerContent = async (groupId, ledgerId, data) => {
+export const detailLedgerContent = async (groupId, ledgerId) => {
   try {
-    const res = await API.get(`/ledgergroups/${groupId}/ledgers/${ledgerId}`, {
-      ...data,
-    });
+    const res = await API.get(`/ledgergroups/${groupId}/ledgers/${ledgerId}`);
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteLedgerContent = async (groupId, ledgerId) => {
+  try {
+    const res = await API.delete(`/ledgergroups/${groupId}/ledgers/${ledgerId}`);
     return res.data;
   } catch (err) {
     throw err;
