@@ -13,7 +13,7 @@ import {
 } from "../../store/store.groupEdit";
 import { deleteLedgerGroup } from "../../api/ledgergroupedit.api";
 import { deleteTodoGroup } from "../../api/todogroupedit.api";
-const memberId = 1;
+import useUserInfoStore from "../../store/store.userInfo";
 
 const GroupDeleteConfirm = () => {
 	const navigate = useNavigate();
@@ -39,6 +39,9 @@ const GroupDeleteConfirm = () => {
 		setIsConfirmVisible(!isConfirmVisible);
 	};
 	const [validation, setValidation] = useState("");
+	const { userInfo } = useUserInfoStore();
+	const memberId = userInfo.memberId;
+
 	const { groupId } = useParams();
 
 	const handleConfirm = async (event) => {

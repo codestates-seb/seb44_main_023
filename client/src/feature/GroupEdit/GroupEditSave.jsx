@@ -12,7 +12,7 @@ import {
 import "./group.css";
 import { updateLedgerGroup } from "../../api/ledgergroupedit.api";
 import { updateTodoGroup } from "../../api/todogroupedit.api";
-const memberId = 1;
+import useUserInfoStore from "../../store/store.userInfo";
 
 const GroupEditSave = () => {
 	const {
@@ -30,6 +30,8 @@ const GroupEditSave = () => {
 	//통신성공여부메시지
 	const [memberValidation, setMemberValidation] = useState("");
 	const [titleValidation, setTitleValidation] = useState("");
+	const { userInfo } = useUserInfoStore();
+	const memberId = userInfo.memberId;
 
 	const { groupId } = useParams();
 	const handleSaveGroupEdit = async (event) => {
