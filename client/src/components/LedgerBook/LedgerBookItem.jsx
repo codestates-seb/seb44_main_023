@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import { styled } from "styled-components";
+import LedgerDetail from "../../feature/Ledger/LedgerModal/LedgerDetail/LedgerDetail";
+import React, { useState } from "react";
 
 const LedgerBookItem = ({ bookInfo, groupId }) => {
   const {
@@ -9,19 +11,27 @@ const LedgerBookItem = ({ bookInfo, groupId }) => {
     inoutcome: { inoutcomeId },
   } = bookInfo;
 
+  const [isModalVisible, setIsModalVisible] = useState(false)  
+  const handleModalVisible = () => setIsModalVisible(!isModalVisible);
+  
   return (
-    <StyledWrapper>
-      <Date>{dayjs(ledger_schedule_date).get("date")}일</Date>
-      <InOutcomeIcon
-        className={`inout ${inoutcomeId === 1 ? "minus" : "plus"}`}
-      >
-        {inoutcomeId === 1 ? "-" : "+"}
-      </InOutcomeIcon>
-      <Detail className={`detail ${inoutcomeId === 1 ? "minus" : "plus"}`}>
-        <div className="ledger-title">{ledger_title}</div>
-        <div className="ledger-amount">{ledger_amount?.toLocaleString()}원</div>
-      </Detail>
-    </StyledWrapper>
+    <>
+      <StyledWrapper onClick={handleModalVisible}>
+        <Date>{dayjs(ledger_schedule_date).get("date")}일</Date>
+        <InOutcomeIcon
+          className={`inout ${inoutcomeId === 1 ? "plus" : "minus"}`}
+        >
+          {inoutcomeId === 1 ? "+" : "-"}
+        </InOutcomeIcon>
+        <Detail className={`detail ${inoutcomeId === 1 ? "plus" : "minus"}`}>
+          <div className="ledger-title">{ledger_title}</div>
+          <div className="ledger-amount">
+            {ledger_amount?.toLocaleString()}원
+          </div>
+        </Detail>
+      </StyledWrapper>
+      <LedgerDetail isModalVisible={isModalVisible} handleModalVisible={handleModalVisible} groupId={groupId} ledgerId={bookInfo.ledger_id}/>
+    </>
   );
 };
 
