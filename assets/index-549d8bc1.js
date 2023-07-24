@@ -2150,11 +2150,11 @@ at.goToAndStop(xt-at.firstFrame-1,!0)}_t.type==="loop"&&(mt===null||mt!==_t.fram
 `,TotalIncomeLabel=st.div`
   padding-right: 0.8rem;
   font-size: 1.4rem;
-  color: var(--color-red-01);
+  color: var(--color-blue-03);
 `,TotalExpenseLabel=st.div`
   padding-right: 0.8rem;
   font-size: 1.4rem;
-  color: var(--color-blue-03);
+  color: var(--color-red-01);
 `;var classnames={exports:{}};/*!
 	Copyright (c) 2018 Jed Watson.
 	Licensed under the MIT License (MIT), see
