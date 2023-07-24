@@ -16,6 +16,7 @@ const MainLedgerList = ({ groupId }) => {
   if (isLoading) return null;
   return (
     <LedgerList
+      groupId={groupId}
       data={data}
       selectedMonth={selectedMonth}
       setSelectedMonth={setSelectedMonth}
@@ -23,7 +24,7 @@ const MainLedgerList = ({ groupId }) => {
   );
 };
 
-const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
+const LedgerList = ({ groupId, data, selectedMonth, setSelectedMonth }) => {
   const [ledgerList, setLedgerList] = useState(data);
 
   const handleSelectedMonth = (type) => () => {
@@ -53,6 +54,7 @@ const LedgerList = ({ data, selectedMonth, setSelectedMonth }) => {
   return (
     <StyledWrapper>
       <LedgerBook
+        groupId={groupId}
         ledgerList={ledgerList}
         setLedgerList={setLedgerList}
         handleSelectedMonth={handleSelectedMonth}
