@@ -3,29 +3,29 @@ import React, { useState } from "react";
 /* 날씨 위젯 부분은 날씨 브랜치 fe-dev에 머지 후 작업 */
 
 import styled from "styled-components";
-import smallLogo from "../../assets/home/smallLogo.svg";
+import headerLogo from "../../assets/logo/header_logo.png";
 
 const SignupHeader = () => {
   return (
-      <Header>
-        <SmallLogo src={smallLogo}></SmallLogo>
-        {/* <WeatherWidget scale={0.95} /> */}
-      </Header>
+    <Header>
+      <HeaderLogo src={headerLogo}></HeaderLogo>
+      {/* <WeatherWidget scale={0.95} /> */}
+    </Header>
   );
 };
 
 export default SignupHeader;
 
-const SmallLogo = styled.img`
-  width: 15rem;
-  height: 4.5rem;
+const HeaderLogo = styled.img`
+  width: 18rem;
+  cursor: pointer;
 `;
 
 const Header = styled.div`
   position: absolute;
   display: flex;
   justify-content: flex-start;
-  padding-left: 7.2rem;
-  padding-top: 1rem;
+  padding-left: 3rem;
+  padding-top: 2rem;
   width: 100%;
 `;
