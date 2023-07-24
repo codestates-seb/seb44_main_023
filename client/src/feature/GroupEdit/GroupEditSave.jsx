@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Button from "../../components/Button/Button";
 import { useParams } from "react-router-dom";
-
+import { todoMode, ledgerMode } from "../../utils/util";
 import {
 	useGroupEditStore,
 	useGetGroupTitle,
@@ -12,9 +12,11 @@ import {
 import "./group.css";
 import { updateLedgerGroup } from "../../api/ledgergroupedit.api";
 import { updateTodoGroup } from "../../api/todogroupedit.api";
+const memberId = 1;
 
 const GroupEditSave = () => {
 	const {
+		mode,
 		inputGroupTitle,
 		invitedMembers,
 		setIsModalVisible,
@@ -54,7 +56,12 @@ const GroupEditSave = () => {
 				// await updateMemberNickname(profileInfo.memberId, nicknameInput);
 				console.log("가계부 groupId!:", groupId);
 
-				await updateLedgerGroup(1, groupId, inputGroupTitle);
+				if (mode == todoMode) {
+					await updateTodoGroup(groupId, inputGroupTitle);
+				} else if (mode == ledgerMode) {
+					await updateLedgerGroup(memberId, groupId, inputGroupTitle);
+				}
+
 				//성공시에 보여지는 그룹타이틀명을 변경한다.
 				setGroupTitle(inputGroupTitle);
 				window.location.reload();

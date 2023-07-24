@@ -8,8 +8,10 @@ import ModalTodo from "../../components/Todo/ModalTodo/ModalTodo";
 import useQueryTodoList from "../../query/todoList.query";
 import GroupEdit from "../../components/GroupEdit/GroupEdit";
 import { useGroupEditStore } from "../../store/store.groupEdit";
+import "../../utils/util";
+import { todoMode } from "../../utils/util";
 
-const TodoList = ({ startDate }) => {
+const TodoList = ({ groupInfo, startDate }) => {
 	const { groupId } = useParams();
 	const { isLoading, data } = useQueryTodoList({
 		groupId,
@@ -22,10 +24,17 @@ const TodoList = ({ startDate }) => {
 	});
 
 	if (isLoading) return null;
-	return <List data={data} groupId={groupId} startDate={startDate} />;
+	return (
+		<List
+			data={data}
+			groupInfo={groupInfo}
+			groupId={groupId}
+			startDate={startDate}
+		/>
+	);
 };
 
-const List = ({ groupId, data, startDate }) => {
+const List = ({ groupInfo, groupId, data, startDate }) => {
 	const [date, setDate] = useState();
 	const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 	const [todoList, setTodoList] = useState();
@@ -45,17 +54,23 @@ const List = ({ groupId, data, startDate }) => {
 		setTodoList(data);
 	}, [data]);
 
-	const { todo_group_title } = data;
-	console.log("TodoList,data : ", data);
+	const { todo_group_title } = groupInfo.groupTitle;
 
-	const { isModalVisible, setIsModalVisible, groupTitle, setGroupTitle } =
-		useGroupEditStore();
+	const {
+		isModalVisible,
+		setMode,
+		setIsModalVisible,
+		groupTitle,
+		setGroupTitle,
+	} = useGroupEditStore();
 	console.log("TodoList", todo_group_title);
 
 	const handleIsEditModalVisible = () => {
 		setIsModalVisible(!isModalVisible);
 		setGroupTitle(todo_group_title);
+		setMode(todoMode);
 		console.log("groupTitle", groupTitle);
+		console.log("todoMode", todoMode);
 	};
 
 	return (
