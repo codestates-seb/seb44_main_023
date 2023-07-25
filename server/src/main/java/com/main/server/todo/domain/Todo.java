@@ -7,6 +7,7 @@ import com.main.server.todogroup.domain.TodoGroup;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -88,9 +89,10 @@ public class Todo {
     }
 
     public void changeScheduleDate(final LocalDate scheduledate) {
-        if(scheduledate != null) {
-            this.todoScheduleDate = scheduledate;
-        }
+//        if(scheduledate != null) {
+//            this.todoScheduleDate = scheduledate;
+//        }
+        this.todoScheduleDate = Optional.ofNullable(scheduledate).orElse(null);
     }
 
     public void updateStatus(TodoStatus todoStatus) {

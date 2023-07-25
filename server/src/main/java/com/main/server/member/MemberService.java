@@ -158,7 +158,7 @@ public class MemberService {
 
         // 파일 업로드 처리 로직
         String fileName = file.getOriginalFilename();
-        String fileUploadPath = System.getenv("FILE_UPLOAD_PATH");
+        String fileUploadPath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/");
         Path filePath = Paths.get(fileUploadPath, fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -185,18 +185,26 @@ public class MemberService {
 
         // 새로운 이미지 파일 업로드
         String fileName = file.getOriginalFilename();
-        String fileUploadPath = System.getenv("FILE_UPLOAD_PATH");
-        Path filePath = Paths.get(fileUploadPath, fileName);
+        Path filePath = Path.of("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/", fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
         member.setProfileImage(fileName);
         memberRepository.save(member);
     }
+        // 새로운 이미지 파일 업로드
+//        String fileName = file.getOriginalFilename();
+  //      String fileUploadPath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/");
+    //    Path filePath = Paths.get(fileUploadPath, fileName);
+      //  Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        //member.setProfileImage(fileName);
+        //memberRepository.save(member);
+    //}
 
         // 기존 이미지 파일 삭제
         private void deleteExistingProfileImage(Member member) {
             if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
-                String existingImagePath = System.getenv("FILE_UPLOAD_PATH") + member.getProfileImage();
+                String existingImagePath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/") + member.getProfileImage();
                 Path existingImageFile = Paths.get(existingImagePath);
                 if (Files.exists(existingImageFile)) {
                     try {
@@ -209,13 +217,34 @@ public class MemberService {
         }
 
     // 이미지 조회 메서드 추가
+
     public byte[] getProfileImage(long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
 
         String fileName = member.getProfileImage();
         if (fileName != null && !fileName.isEmpty()) {
-            String fileUploadPath = System.getenv("FILE_UPLOAD_PATH");
+            Path filePath = Paths.get("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/", fileName);
+            if (Files.exists(filePath)) {
+                return Files.readAllBytes(filePath);
+            } else {
+                throw new FileNotFoundException("File does not exist: " + fileName);
+            }
+        } else {
+            throw new IllegalStateException("Profile image file name is missing.");
+        }
+    }
+
+    // 이미지 조회 메서드 추가
+    /*
+
+    public byte[] getProfileImage(long memberId) throws IOException {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
+
+        String fileName = member.getProfileImage();
+        if (fileName != null && !fileName.isEmpty()) {
+            String fileUploadPath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/");
             Path filePath = Paths.get(fileUploadPath, fileName);
             if (Files.exists(filePath)) {
                 return Files.readAllBytes(filePath);
@@ -226,6 +255,11 @@ public class MemberService {
             throw new IllegalStateException("Profile image file name is missing.");
         }
     }
+
+
+
+     */
+
 
     // 이미지 삭제
     public void deleteProfileImage(long memberId) throws IOException {

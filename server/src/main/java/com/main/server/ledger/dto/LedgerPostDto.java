@@ -53,16 +53,18 @@ public class LedgerPostDto {
     }
 
     public Long getCategoryId() {
+
         return categoryId != null ? categoryId : null;
     }
 
-//    public Long getInoutcomeId() {
-//        return inoutcomeId != null ? inoutcomeId : null;
-//    }
-public Long getInoutcomeId() {
-    if (inoutcomeId == null) {
-        throw new BusinessLogicException(ExceptionCode.INOUTCOME_REQUIRED);
+    public Long getPaymentId() {
+        return paymentId != null ? paymentId : null;
     }
-    return inoutcomeId;
-}
+
+    public Long getInoutcomeId() {
+         if (inoutcomeId == null) {
+            throw new BusinessLogicException(ExceptionCode.INOUTCOME_REQUIRED);
+         }
+        return inoutcomeId;
+    }
 }

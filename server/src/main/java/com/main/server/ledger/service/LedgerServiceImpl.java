@@ -120,22 +120,22 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
 
+
     @Override
         public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token){
+          
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
-            Long categoryId = patchDto.getCategoryId();
-            if (categoryId != null) {
-                Category category = categoryRepository.findById(categoryId).orElse(null);
-                if (category == null) {// 카테고리 ID가 유효하지 않은 경우
-                    throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
-                }
-                updatedLedger.changeCategory(category);  // 카테고리 연결 업데이트
-            } else {
-                if (updatedLedger.getCategory() != null) {// 카테고리 ID가 null인 경우 카테고리 연결을 유지하거나 제거
-                    updatedLedger.changeCategory(null);
-                }
-            }
+            //Long categoryId = patchDto.getCategoryId();
+         if (patchDto.getCategoryId() != null) {
+             Category category = categoryRepository.findById(patchDto.getCategoryId()).orElse(null);
+             if (category == null) {
+                 throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
+             }
+             updatedLedger.changeCategory(category);  // 카테고리 연결 업데이트
+         } else {
+             updatedLedger.changeCategory(null);
+         }
             Long inoutcomeId = patchDto.getInoutcomeId();
             if (inoutcomeId != null) {
                 Inoutcome inoutcome = inoutcomeRepository.findById(inoutcomeId).orElse(null);
@@ -148,18 +148,16 @@ public class LedgerServiceImpl implements LedgerService {
                     updatedLedger.changeInoutcome(null);
                 }
             }
-            Long paymentId = patchDto.getPaymentId();
-            if (paymentId != null) {
-                Payment payment = paymentRepository.findById(paymentId).orElse(null);
+            //Long paymentId = patchDto.getPaymentId();
+            if (patchDto.getPaymentId() != null) {
+                Payment payment = paymentRepository.findById(patchDto.getPaymentId()).orElse(null);
                 if (payment == null) {// 카테고리 ID가 유효하지 않은 경우
                     throw new BusinessLogicException(ExceptionCode.PAYMENT_NOT_FOUND);
                 }
                 updatedLedger.changePayment(payment);  // 카테고리 연결 업데이트
             } else {
-                if (updatedLedger.getPayment() != null) {// 카테고리 ID가 null인 경우 카테고리 연결을 유지하거나 제거
                     updatedLedger.changePayment(null);
                 }
-            }
             updatedLedger.changeTitle(patchDto.getLedgerTitle());
             updatedLedger.changeContent(patchDto.getLedgerContent());
             updatedLedger.changeAmount(patchDto.getLedgerAmount());
@@ -193,8 +191,7 @@ public class LedgerServiceImpl implements LedgerService {
         ledgers.sort(Comparator.comparing(Ledger::getLedgerDate));
 
         return ledgers;
-
-    }
+        }
 
         @Override
         public void deleteLedger (Long ledgerGroupId, Long ledgerId, String token){

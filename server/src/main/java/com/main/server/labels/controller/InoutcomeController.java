@@ -269,7 +269,7 @@ public class InoutcomeController {
         }
     }
 
-    @DeleteMapping("/{in_outcome-id}")
+    @DeleteMapping("/{in-outcome-id}")
     public ResponseEntity<Void> deleteInoutcome(
             @PathVariable("in_outcome-id") @Positive Long inoutcomeId,
             HttpServletRequest request) {
