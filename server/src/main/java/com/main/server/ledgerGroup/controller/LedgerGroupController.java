@@ -4,7 +4,11 @@ import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupResponseDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
+import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
+import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupResponseDto;
+import com.main.server.ledgerGroup.invitationDto.InvitationMemberResponseDto;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
+import org.springframework.beans.factory.annotation.Value;
 import com.main.server.member.Member;
 import com.main.server.member.MemberService;
 import com.main.server.security.JwtTokenizer;
@@ -26,6 +30,9 @@ import java.util.stream.Collectors;
 @Validated
 @RequestMapping("/ledgergroups")
 public class LedgerGroupController {
+
+    @Value("${file.upload.path}")
+    private String fileUploadPath;
 
     private final LedgerGroupService ledgerGroupService;
 
@@ -71,7 +78,7 @@ public class LedgerGroupController {
 
                     // 작업 수행
                     LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto, newAccessToken);
-
+                  
                     return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), headers, HttpStatus.CREATED);
                 } else {
                     // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
@@ -200,6 +207,7 @@ public class LedgerGroupController {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
                 }
             }
+
 
             // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
@@ -344,5 +352,135 @@ public class LedgerGroupController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+
+    @PostMapping("/ledgergroups/{ledger-group-id}/invitation")
+    public ResponseEntity invite(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+                                 @Valid @RequestBody InvitationLedgerGroupPostDto invitationLedgerGroupPostDto,
+                                 HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+                    // 작업 수행
+                    ledgerGroupService.deleteLedgerGroup(ledgerGroupId);
+
+                    return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+                  
+                    // 초대 처리
+                    LedgerGroup ledgerGroup = ledgerGroupService.invite(ledgerGroupId, invitationLedgerGroupPostDto, newAccessToken);
+
+                    return new ResponseEntity<>(new InvitationLedgerGroupResponseDto(ledgerGroup), headers, HttpStatus.CREATED);
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            // 작업 수행
+            ledgerGroupService.deleteLedgerGroup(ledgerGroupId);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+          
+            // 초대 처리
+            LedgerGroup ledgerGroup = ledgerGroupService.invite(ledgerGroupId, invitationLedgerGroupPostDto, token);
+
+            return new ResponseEntity<>(new InvitationLedgerGroupResponseDto(ledgerGroup), HttpStatus.CREATED);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
+    }
+
+    @GetMapping("/{ledger-group-id}/members")
+    public ResponseEntity inviteMember(@PathVariable("ledger-group-id")
+                                       @Positive Long ledgerGroupId, HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+                    // 작업 수행
+
+                 LedgerGroup ledgerGroup = ledgerGroupService.getInvitedMember(ledgerGroupId);
+                 return new ResponseEntity(new InvitationMemberResponseDto(ledgerGroup, fileUploadPath), HttpStatus.OK);
+
+                } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+            LedgerGroup ledgerGroup = ledgerGroupService.getInvitedMember(ledgerGroupId);
+            return new ResponseEntity(new InvitationMemberResponseDto(ledgerGroup, fileUploadPath), HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+        }
+
+        }
 
 }

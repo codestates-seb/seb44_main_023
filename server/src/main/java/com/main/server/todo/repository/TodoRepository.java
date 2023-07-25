@@ -12,4 +12,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     //List<Todo> findAllByTodoScheduleDateBetween(LocalDate start, LocalDate end);
 
     List<Todo> findByTodoGroupAndTodoScheduleDateBetween(TodoGroup todoGroup, LocalDate startDate, LocalDate endDate);
+    List<Todo> findByTodoGroupAndTodoScheduleDateIsNull(TodoGroup todoGroup);
+    List<Todo> findByTodoGroupAndTodoScheduleDateBetweenOrTodoScheduleDateIsNull(TodoGroup todoGroup, LocalDate startDate, LocalDate endDate);
 }

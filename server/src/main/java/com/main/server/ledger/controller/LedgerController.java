@@ -3,6 +3,7 @@ package com.main.server.ledger.controller;
 import com.main.server.ledger.dto.LedgerPatchDto;
 import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.dto.LedgerResponseDto;
+import com.main.server.ledger.dto.LedgerTotalResponseDto;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledger.service.LedgerService;
 import com.main.server.member.Member;
@@ -113,7 +114,7 @@ public class LedgerController {
         String refreshToken = request.getHeader("X-Refresh-Token");
 
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 접두사 제거
+            token = token.substring(7); // "Bearer " 접두사 제거   
 
             // AccessToken 유효성 검사
             if (!jwtTokenizer.validateToken(token)) {
@@ -227,7 +228,6 @@ public class LedgerController {
         }
     }
 
-
     @GetMapping()
     public ResponseEntity<List<LedgerResponseDto>> getLedgers(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                                               HttpServletRequest request) {
@@ -294,7 +294,6 @@ public class LedgerController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
 
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
@@ -376,9 +375,113 @@ public class LedgerController {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
+
+
+    @CrossOrigin("*")
+    @GetMapping("/totals")
+    public ResponseEntity<Long> getTotalAmountByDate(
+            @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
+            @RequestParam(name = "startDate") String startDate,
+            @RequestParam(name = "endDate") String endDate, HttpServletRequest request) {
+
+        String token = request.getHeader("Authorization");
+        String refreshToken = request.getHeader("X-Refresh-Token");
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // "Bearer " 접두사 제거
+
+            // AccessToken 유효성 검사
+            if (!jwtTokenizer.validateToken(token)) {
+                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
+                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
+                    // Refresh Token 검증 및 memberId 식별
+                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
+
+                    // memberId를 사용하여 회원 정보 확인
+                    Member verifiedMember = memberService.findMember(memberId);
+
+                    if (verifiedMember == null) {
+                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+                    }
+
+                    // 새로운 AccessToken 발급
+                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
+
+                    // 새로운 AccessToken으로 인증 및 인가 처리
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Authorization", "Bearer " + newAccessToken);
+
+       try{
+            LocalDate start = LocalDate.parse(startDate);
+            LocalDate end = LocalDate.parse(endDate);
+
+            List<Ledger> ledgers = ledgerService.getLedgersByDate(ledgerGroupId, start, end, token);
+
+            // 수입이 붙은 가계부의 금액 합과 지출이 붙은 가계부의 금액 합계
+            Long totalIncome = ledgers.stream()
+                    .filter(ledger -> ledger.getInoutcome() != null)
+                    .filter(ledger -> "수입".equals(ledger.getInoutcome().getInoutcomeName()))
+                    .mapToLong(Ledger::getLedgerAmount)
+                    .sum();
+
+            Long totalOutcome = ledgers.stream()
+                    .filter(ledger -> ledger.getInoutcome() != null)
+                    .filter(ledger -> "지출".equals(ledger.getInoutcome().getInoutcomeName()))
+                    .mapToLong(Ledger::getLedgerAmount)
+                    .sum();
+
+            Long totalAmount = totalIncome - totalOutcome;
+
+            return new ResponseEntity<>(totalAmount, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+       } else {
+                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                }
+            }
+
+            // AccessToken이 유효한 경우
+            long memberId = jwtTokenizer.getMemberIdFromToken(token);
+
+            // memberId를 사용하여 회원 정보 확인
+            Member verifiedMember = memberService.findMember(memberId);
+
+            if (verifiedMember == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
+            }
+
+            // 작업 수행
+            try{
+                LocalDate start = LocalDate.parse(startDate);
+                LocalDate end = LocalDate.parse(endDate);
+
+                List<Ledger> ledgers = ledgerService.getLedgersByDate(ledgerGroupId, start, end, token);
+
+                // 수입이 붙은 가계부의 금액 합과 지출이 붙은 가계부의 금액 합계
+                Long totalIncome = ledgers.stream()
+                        .filter(ledger -> ledger.getInoutcome() != null)
+                        .filter(ledger -> "수입".equals(ledger.getInoutcome().getInoutcomeName()))
+                        .mapToLong(Ledger::getLedgerAmount)
+                        .sum();
+
+                Long totalOutcome = ledgers.stream()
+                        .filter(ledger -> ledger.getInoutcome() != null)
+                        .filter(ledger -> "지출".equals(ledger.getInoutcome().getInoutcomeName()))
+                        .mapToLong(Ledger::getLedgerAmount)
+                        .sum();
+
+                Long totalAmount = totalIncome - totalOutcome;
+
+                return new ResponseEntity<>(totalAmount, HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
 
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -404,6 +507,7 @@ public class LedgerController {
                     if (verifiedMember == null) {
                         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
                     }
+
 
                     // 새로운 AccessToken 발급
                     String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
