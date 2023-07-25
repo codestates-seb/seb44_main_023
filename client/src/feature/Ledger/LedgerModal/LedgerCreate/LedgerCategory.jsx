@@ -8,7 +8,7 @@ import {
 import styled from "styled-components";
 import { MdEdit, MdDelete, MdClose } from "react-icons/md";
 
-const LedgerCategory = ({ onCategorySelect, mode }) => {
+const LedgerCategory = ({ onCategorySelect }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allCategories, setAllCategories] = useState([]);
   const [editingCategoryId, setEditingCategoryId] = useState(null);
