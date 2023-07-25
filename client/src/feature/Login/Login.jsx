@@ -35,7 +35,7 @@ const Login = () => {
 
       // refreshToken
       const refreshToken = response.headers["x-refresh-token"];
-      sessionStorage.setItem("refreshToken", refreshToken);
+      localStorage.setItem("refreshToken", refreshToken);
 
       setLogin(true);
       setValidation("");
