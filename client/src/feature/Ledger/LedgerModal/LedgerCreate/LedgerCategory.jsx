@@ -30,7 +30,7 @@ const LedgerCategory = ({ onCategorySelect }) => {
 
   const handleAddCategory = async () => {
     try {
-      const newCategory = await addCategories(1, searchQuery);
+      const newCategory = await addCategories(searchQuery);
       setAllCategories([...allCategories, newCategory]);
       setSearchQuery("");
     } catch (error) {
@@ -40,7 +40,7 @@ const LedgerCategory = ({ onCategorySelect }) => {
 
   const handleEditCategory = async (categoryId, updatedCategoryName) => {
     try {
-      await editCategories(1, categoryId, updatedCategoryName);
+      await editCategories(categoryId, updatedCategoryName);
       setAllCategories(
         allCategories.map((category) =>
           category.category_id === categoryId

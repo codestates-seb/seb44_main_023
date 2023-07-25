@@ -32,9 +32,10 @@ const LedgerPayments = ({onPaymentSelect}) => {
   // 카테고리 추가 함수
   const handleAddPayments = async () => {
     try {
-      const newPayments = await addPayments(1, searchQuery);
+      const newPayments = await addPayments(searchQuery);
       setAllPayments([...allPayments, newPayments]);
       setSearchQuery("");
+      // 여기서는 잘 찍힘 들어가면서 숫자로 변환됨
     } catch (error) {
       console.error(error);
     }
@@ -43,7 +44,7 @@ const LedgerPayments = ({onPaymentSelect}) => {
   // 카테고리 수정 함수
   const handleEditPayments = async (paymentsId, updatedPaymentsName) => {
     try {
-      await editPayments(1, paymentsId, updatedPaymentsName);
+      await editPayments(paymentsId, updatedPaymentsName);
       setAllPayments(
         allPayments.map((payments) =>
           payments.payment_id === paymentsId
@@ -94,7 +95,6 @@ const LedgerPayments = ({onPaymentSelect}) => {
     setIsPaymentsSelect(false);
     onPaymentSelect(undefined);
   };
-
   return (
     <PaymentsContainer>
       {/* 카테고리 검색 창 */}
@@ -135,6 +135,7 @@ const LedgerPayments = ({onPaymentSelect}) => {
                             : c
                         )
                       )
+                    
                     }
                     onKeyPress={(e) => {
                       if (e.key === "Enter") {
