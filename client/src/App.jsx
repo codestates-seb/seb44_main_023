@@ -38,7 +38,7 @@ function App() {
     config.headers = {
       ...config.headers,
       ...(accessToken ? { Authorization: accessToken } : {}),
-      "X-Refresh-Token": localStorage.getItem("refreshToken"),
+      "X-Refresh-Token": sessionStorage.getItem("refreshToken"),
     };
     return config;
   });
