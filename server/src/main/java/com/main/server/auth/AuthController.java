@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
-@CrossOrigin(origins = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://codestates.shop", allowCredentials = "true")
 @RestController
 public class AuthController {
 
