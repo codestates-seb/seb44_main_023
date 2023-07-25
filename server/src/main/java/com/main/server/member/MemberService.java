@@ -202,7 +202,6 @@ public class MemberService {
     //}
 
         // 기존 이미지 파일 삭제
-
         private void deleteExistingProfileImage(Member member) {
             if (member.getProfileImage() != null && !member.getProfileImage().isEmpty()) {
                 String existingImagePath = System.getenv("C://Users//조승아//Desktop//FILE_UPLOAD_PATH/") + member.getProfileImage();
@@ -218,6 +217,7 @@ public class MemberService {
         }
 
     // 이미지 조회 메서드 추가
+
     public byte[] getProfileImage(long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
@@ -237,6 +237,7 @@ public class MemberService {
 
     // 이미지 조회 메서드 추가
     /*
+
     public byte[] getProfileImage(long memberId) throws IOException {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid member ID"));
@@ -255,7 +256,10 @@ public class MemberService {
         }
     }
 
+
+
      */
+
 
     // 이미지 삭제
     public void deleteProfileImage(long memberId) throws IOException {

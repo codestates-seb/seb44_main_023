@@ -123,7 +123,7 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
         public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token){
-
+          
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
             //Long categoryId = patchDto.getCategoryId();

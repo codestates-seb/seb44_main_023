@@ -24,6 +24,7 @@ import java.util.List;
 public class LedgerGroupServiceImpl implements LedgerGroupService {
     private final MemberService memberService;
     private final LedgerGroupRepository ledgerGroupRepository;
+
 //    private final Ledger ledger;
     private final LedgerRepository ledgerRepository;
     private final MemberRepository memberRepository;

@@ -25,7 +25,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin //(origins = "https://codestates.shop")
+@CrossOrigin(origins = "https://codestates.shop")
 @RestController
 @Validated
 @RequestMapping("/ledgergroups")
@@ -78,7 +78,7 @@ public class LedgerGroupController {
 
                     // 작업 수행
                     LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto, newAccessToken);
-
+                  
                     return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), headers, HttpStatus.CREATED);
                 } else {
                     // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
@@ -207,6 +207,7 @@ public class LedgerGroupController {
                     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
                 }
             }
+
 
             // AccessToken이 유효한 경우
             long memberId = jwtTokenizer.getMemberIdFromToken(token);
@@ -384,6 +385,11 @@ public class LedgerGroupController {
                     HttpHeaders headers = new HttpHeaders();
                     headers.add("Authorization", "Bearer " + newAccessToken);
 
+                    // 작업 수행
+                    ledgerGroupService.deleteLedgerGroup(ledgerGroupId);
+
+                    return new ResponseEntity<>(headers, HttpStatus.NO_CONTENT);
+                  
                     // 초대 처리
                     LedgerGroup ledgerGroup = ledgerGroupService.invite(ledgerGroupId, invitationLedgerGroupPostDto, newAccessToken);
 
@@ -404,6 +410,11 @@ public class LedgerGroupController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
             }
 
+            // 작업 수행
+            ledgerGroupService.deleteLedgerGroup(ledgerGroupId);
+
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+          
             // 초대 처리
             LedgerGroup ledgerGroup = ledgerGroupService.invite(ledgerGroupId, invitationLedgerGroupPostDto, token);
 
@@ -412,7 +423,6 @@ public class LedgerGroupController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-
 
     @GetMapping("/{ledger-group-id}/members")
     public ResponseEntity inviteMember(@PathVariable("ledger-group-id")

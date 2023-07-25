@@ -26,7 +26,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin //(origins = "https://codestates.shop")
+@CrossOrigin(origins = "https://codestates.shop")
 @RestController
 @RequestMapping("/ledgergroups/{ledger-group-id}/ledgers")
 public class LedgerController {
@@ -102,8 +102,8 @@ public class LedgerController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
-    
-    
+
+
     @PatchMapping("/{ledger-id}")
     public ResponseEntity patchLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                       @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -114,7 +114,7 @@ public class LedgerController {
         String refreshToken = request.getHeader("X-Refresh-Token");
 
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 접두사 제거
+            token = token.substring(7); // "Bearer " 접두사 제거   
 
             // AccessToken 유효성 검사
             if (!jwtTokenizer.validateToken(token)) {
@@ -295,8 +295,6 @@ public class LedgerController {
         }
     }
 
-  
-
     @GetMapping("/dates")
     public ResponseEntity<List<LedgerResponseDto>> getLedgersBetweenDates(
             @PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
@@ -377,10 +375,8 @@ public class LedgerController {
             }
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
-        }
-    }
 
-//<<<<<<< HEAD
+
     @CrossOrigin("*")
     @GetMapping("/totals")
     public ResponseEntity<Long> getTotalAmountByDate(
@@ -487,9 +483,6 @@ public class LedgerController {
         }
     }
 
-
-
-
     @DeleteMapping("/{ledger-id}")
     public ResponseEntity deleteLedger(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                        @PathVariable("ledger-id") @Positive Long ledgerId,
@@ -514,6 +507,7 @@ public class LedgerController {
                     if (verifiedMember == null) {
                         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
                     }
+
 
                     // 새로운 AccessToken 발급
                     String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());

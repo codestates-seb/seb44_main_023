@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
+@CrossOrigin(origins = "https://codestates.shop", allowCredentials = "true" )
 @RestController
 public class MemberController {
     private MemberService memberService;
