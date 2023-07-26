@@ -52,64 +52,14 @@ public class TodoGroupController {
     }
 
     @PostMapping("/todogroups")
-    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto,
-                                          HttpServletRequest request) {
+    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto, Member member) {
 
-        String token = request.getHeader("Authorization");
-        String refreshToken = request.getHeader("X-Refresh-Token");
-
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 접두사 제거
-
-            // AccessToken 유효성 검사
-            if (token == null || !jwtTokenizer.validateToken(token)) {
-                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
-                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
-                    // Refresh Token 검증 및 memberId 식별
-                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-
-                    // memberId를 사용하여 회원 정보 확인
-                    Member verifiedMember = memberService.findMember(memberId);
-
-                    if (verifiedMember == null) {
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-                    }
-
-                    // 새로운 AccessToken 발급
-                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
-
-                    // 새로운 AccessToken으로 인증 및 인가 처리
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.add("Authorization", "Bearer " + newAccessToken);
 
                     // TodoGroup 생성
-                    TodoGroup todoGroup = this.todoGroupService.createTodoGroup(postDto, newAccessToken);
+                    TodoGroup todoGroup = this.todoGroupService.createTodoGroup(postDto, member);
 
-                    return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), headers, HttpStatus.CREATED);
-                } else {
-                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
+                    return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
                 }
-            }
-
-            // AccessToken이 유효한 경우
-            long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-
-            // TodoGroup 생성
-            TodoGroup todoGroup = this.todoGroupService.createTodoGroup(postDto, token);
-
-            return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
-        }
-    }
 
 
     @PatchMapping("/todogroups/{todo-group-id}")
