@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
-const LedgerAmount = ({ onAmoutValue }) => {
-  const [value, setValue] = useState("");
+const LedgerAmount = ({ onAmoutValue, value }) => {
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     const filteredValue = inputValue.replace(/[^\d]/g, "");
-    setValue(filteredValue);
+    value(value);
   };
 
   const handleInputBlur = () => {
     const numberValue = parseInt(value, 10);
     if (isNaN(numberValue) || numberValue <= 0) {
-      setValue(null);
+      value(null);
     } else {
-      setValue(numberValue.toString());
+      value(numberValue.toString());
     }
   };
 
