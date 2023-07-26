@@ -52,7 +52,7 @@ public class TodoGroupController {
     }
 
     @PostMapping("/todogroups")
-    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto, Member member) {
+    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto, @Positive Long todoGroupId, Member member) {
 
 
                     // TodoGroup 생성
