@@ -6,7 +6,7 @@ const LedgerAmount = ({ onAmoutValue, value }) => {
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
     const filteredValue = inputValue.replace(/[^\d]/g, "");
-    value(value);
+    value(filteredValue);
   };
 
   const handleInputBlur = () => {
