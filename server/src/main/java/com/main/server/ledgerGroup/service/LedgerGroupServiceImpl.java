@@ -40,22 +40,12 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     }
 
     @Override
-    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto, String token) {
-
-        // 토큰 검증 및 memberId 식별
-        long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-        // memberId를 사용하여 회원 정보 확인
-        Member member = memberService.findMember(memberId);
-        if (member == null) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
-
+    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto) {
+        Member member = memberService.findMember(postDto.getMemberId());
         LedgerGroup savedLedgerGroup = ledgerGroupRepository.save(postDto.toEntity(member));
 
         return savedLedgerGroup;
     }
-
     @Override
     public LedgerGroup updateLedgerGroup(Long ledgerGroupId, LedgerGroupPatchDto patchDto) {
         LedgerGroup foundLedgerGroup = findVerifiedLedgerGroup(ledgerGroupId);
