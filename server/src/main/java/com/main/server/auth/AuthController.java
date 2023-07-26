@@ -58,17 +58,14 @@ public class AuthController {
             authService.authenticate(authDto.getEmail(), authDto.getPassword());
             AuthResponse authResponse = authService.processLogin(authDto.getEmail());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + authResponse.getAccessToken());
-            headers.add("X-Refresh-Token", authResponse.getRefreshToken());
-            return ResponseEntity.ok().headers(headers).body("로그인에 성공했습니다");
+            return ResponseEntity.ok().body(authResponse);
+
         } catch (BusinessLogicException e) {
             return ResponseEntity.status(e.getExceptionCode().getStatus())
                     .body(e.getExceptionCode().getMessage());
         }
     }
 
-    // 로그아웃
     // 로그아웃
     @DeleteMapping("/logouts")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authorizationHeader,
