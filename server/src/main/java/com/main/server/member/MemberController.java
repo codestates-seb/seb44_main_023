@@ -74,13 +74,10 @@ public class MemberController {
             // 회원 정보 업데이트
             memberService.updateMember(registeredMember.getMemberId(), registeredMember);
 
-            AuthResponse authResponse = new AuthResponse(accessToken, refreshToken);
+            AuthResponse authResponse = new AuthResponse(accessToken, refreshToken, registeredMember.getMemberId());
 
-            // HttpHeaders 객체를 생성하여 AccessToken과 RefreshToken을 Headers에 추가
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + accessToken);
-            headers.add("X-Refresh-Token", refreshToken);
-            return ResponseEntity.ok().headers(headers).body("회원가입에 성공했습니다");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
         } catch (BusinessLogicException e) {
             return ResponseEntity.status(e.getExceptionCode().getStatus())
                     .body(e.getExceptionCode().getMessage());
