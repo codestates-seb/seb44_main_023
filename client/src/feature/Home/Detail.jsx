@@ -102,7 +102,6 @@ const Detail = () => {
 const DetailWarpper = styled.div`
   background-position: center;
   width: 100%;
-  height: 100vh;
   display: flex;
   background: rgba(36, 36, 36, 0.911);
 `;
@@ -116,6 +115,7 @@ const TitleSection = styled.div`
   display: flex;
   background: white;
   width: 60%;
+  height: 100vh;
 `;
 
 const ContentsDiv = styled.div`
@@ -125,20 +125,19 @@ const ContentsDiv = styled.div`
   flex-direction: column;
   text-align: center;
   align-items: center;
-  margin-top: 24rem;
-  gap: 60px;
+  padding-top: 24rem;
+  gap: 6rem;
 `;
 
 const Title = styled.div`
   font-size: 3rem;
   margin-left: 1rem;
   line-height: 2.7rem;
-  letter-spacing: 0em;
   color: black;
 `;
 
 const PenLogo = styled.img`
-  width: 120px;
+  width: 12rem;
 `;
 
 const Guide = styled.div`
@@ -157,7 +156,7 @@ const NameContainer = styled.div`
   background-color: #4482b7;
   width: 40%;
   display: flex;
-  gap: 170px;
+  gap: 17rem;
   justify-content: center;
   padding: 15rem;
   width: 100%;
@@ -168,18 +167,19 @@ const NameSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  white-space: nowrap;
 `;
 
 const NameList = styled.div`
   color: #ffffff;
   font-size: 3.6rem;
-  padding-bottom: 20px;
+  padding-bottom: 2rem;
 `;
 
 const Name = styled.div`
   color: #ffffff;
   font-size: 2rem;
-  margin-top: 16px;
+  margin-top: 1.6rem;
   font-family: "SUIT-Regular";
 
   @font-face {
