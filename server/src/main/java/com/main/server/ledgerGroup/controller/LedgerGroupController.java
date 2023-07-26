@@ -43,51 +43,14 @@ public class LedgerGroupController {
         this.jwtTokenizer = jwtTokenizer;
         this.memberService = memberService;
     }
+    
     @PostMapping
-    public ResponseEntity createLedgerGroup(@Valid @RequestBody LedgerGroupPostDto ledgerGroupPostDto,
-                                            HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        String refreshToken = request.getHeader("X-Refresh-Token");
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 접두사 제거
-            // AccessToken 유효성 검사
-            if (!jwtTokenizer.validateToken(token)) {
-                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
-                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
-                    // Refresh Token 검증 및 memberId 식별
-                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-                    // memberId를 사용하여 회원 정보 확인
-                    Member verifiedMember = memberService.findMember(memberId);
-                    if (verifiedMember == null) {
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-                    }
-                    // 새로운 AccessToken 발급
-                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
-                    // 새로운 AccessToken으로 인증 및 인가 처리
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.add("Authorization", "Bearer " + newAccessToken);
-                    // 작업 수행
-                    LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto, newAccessToken);
-                    return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), headers, HttpStatus.CREATED);
-                } else {
-                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
-                }
-            }
-            // AccessToken이 유효한 경우
-            long memberId = jwtTokenizer.getMemberIdFromToken(token);
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 작업 수행
-            LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto, token);
-            return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), HttpStatus.CREATED);
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
-        }
+    public ResponseEntity createLedgerGroup(@Valid @RequestBody LedgerGroupPostDto ledgerGroupPostDto) {
+        LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto);
+
+        return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), HttpStatus.CREATED);
     }
+    
     @PatchMapping("/{ledger-group-id}")
     public ResponseEntity updateLedgerGroup(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                             @Valid @RequestBody LedgerGroupPatchDto ledgerGroupPatchDto,
@@ -179,56 +142,17 @@ public class LedgerGroupController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
         }
     }
+    
     @GetMapping
-    public ResponseEntity<List<LedgerGroupResponseDto>> getLedgerGroups(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        String refreshToken = request.getHeader("X-Refresh-Token");
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // "Bearer " 접두사 제거
-            // AccessToken 유효성 검사
-            if (!jwtTokenizer.validateToken(token)) {
-                // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
-                if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
-                    // Refresh Token 검증 및 memberId 식별
-                    long memberId = jwtTokenizer.getMemberIdFromToken(refreshToken);
-                    // memberId를 사용하여 회원 정보 확인
-                    Member verifiedMember = memberService.findMember(memberId);
-                    if (verifiedMember == null) {
-                        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-                    }
-                    // 새로운 AccessToken 발급
-                    String newAccessToken = jwtTokenizer.generateAccessToken(verifiedMember.getEmail(), verifiedMember.getMemberId());
-                    // 새로운 AccessToken으로 인증 및 인가 처리
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.add("Authorization", "Bearer " + newAccessToken);
-                    // 작업 수행
-                    List<LedgerGroup> ledgerGroups = ledgerGroupService.getLedgerGroups();
-                    List<LedgerGroupResponseDto> responses = ledgerGroups.stream()
-                            .map((ledgerGroup -> new LedgerGroupResponseDto(ledgerGroup)))
-                            .collect(Collectors.toList());
-                    return new ResponseEntity<>(responses, headers, HttpStatus.OK);
-                } else {
-                    // RefreshToken이 만료되었을 경우, 새로운 로그인 요청
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해주세요");
-                }
-            }
-            // AccessToken이 유효한 경우
-            long memberId = jwtTokenizer.getMemberIdFromToken(token);
-            // memberId를 사용하여 회원 정보 확인
-            Member verifiedMember = memberService.findMember(memberId);
-            if (verifiedMember == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다");
-            }
-            // 작업 수행
-            List<LedgerGroup> ledgerGroups = ledgerGroupService.getLedgerGroups();
-            List<LedgerGroupResponseDto> responses = ledgerGroups.stream()
-                    .map((ledgerGroup -> new LedgerGroupResponseDto(ledgerGroup)))
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(responses, HttpStatus.OK);
-        } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다");
-        }
+    public ResponseEntity<List<LedgerGroupResponseDto>> getLedgerGroups() {
+        List<LedgerGroup> ledgerGroups = ledgerGroupService.getLedgerGroups();
+        List<LedgerGroupResponseDto> responses = ledgerGroups.stream()
+                .map((ledgerGroup -> new LedgerGroupResponseDto(ledgerGroup)))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
+    
     @DeleteMapping("/{ledger-group-id}")
     public ResponseEntity deleteLedgerGroup(@PathVariable("ledger-group-id") @Positive Long ledgerGroupId,
                                             HttpServletRequest request) {
