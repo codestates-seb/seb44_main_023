@@ -74,7 +74,7 @@ public class AuthService {
             throw new BusinessLogicException(ExceptionCode.INVALID_REFRESH_TOKEN);
         }
 
-        return new AuthResponse(accessToken, refreshToken);
+        return new AuthResponse(accessToken, refreshToken, member.getMemberId());
     }
 
     public void invalidateToken(String accessToken) {
