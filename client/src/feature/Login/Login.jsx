@@ -28,14 +28,16 @@ const Login = () => {
       // console.log("사용자 정보:", response);
 
       // accessToken
-      const accessToken = response.headers.authorization;
-      // store.accessToken.js에 저장
-      setAccessToken(accessToken);
-      // console.log("AccessToken:", accessToken);
+      const accessToken = response.data.accessToken;
+      localStorage.setItem("accessToken", accessToken);
 
       // refreshToken
-      const refreshToken = response.headers["x-refresh-token"];
+      const refreshToken = response.data.refreshToken;
       localStorage.setItem("refreshToken", refreshToken);
+
+      // memberId
+      const memberId = response.data.memberId;
+      localStorage.setItem("memberId", memberId);
 
       setLogin(true);
       setValidation("");

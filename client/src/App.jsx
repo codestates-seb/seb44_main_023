@@ -34,14 +34,8 @@ function App() {
   const { expirationTime, accessToken } = useAccessTokenStore();
   const { setMainGroup } = useMainGroupStore();
 
-  API.interceptors.request.use((config) => {
-    config.headers = {
-      ...config.headers,
-      ...(accessToken ? { Authorization: accessToken } : {}),
-      "X-Refresh-Token": localStorage.getItem("refreshToken"),
-    };
-    return config;
-  });
+  const isLoggedIn = !!localStorage.getItem("accessToken");
+  console.log(localStorage.getItem("memberId"));
 
   useEffect(() => {
     setUserInfo(accessToken);
@@ -55,7 +49,7 @@ function App() {
         {import.meta.env.MODE === "development" && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
-        {!!userInfo.memberId ? (
+        {isLoggedIn ? (
           <Layout>
             <Routes>
               <Route path="/" element={<MainPage />} />
