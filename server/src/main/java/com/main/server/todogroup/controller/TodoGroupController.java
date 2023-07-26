@@ -52,7 +52,7 @@ public class TodoGroupController {
     }
 
    @PostMapping("/todogroups")
-    public ResponseEntity createTodoGroup(@RequestBody TodoGroup postDto) {
+    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto) {
         TodoGroup todoGroup = todoGroupService.createTodoGroup(postDto);
 
         return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
