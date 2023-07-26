@@ -19,8 +19,8 @@ public class AuthDto {
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     private String password;
 
-    // private String accessToken; // JWT AccessToken 추가
-    // private String refreshToken; // JWT RefreshToken 추가
+    private String accessToken; // JWT AccessToken 추가
+    private String refreshToken; // JWT RefreshToken 추가
 
-
+    private Long memberId;
 }
