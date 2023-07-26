@@ -32,11 +32,11 @@ public class TodoGroupService {
         this.jwtTokenizer = jwtTokenizer;
     }
 
-    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto, Long memberId) {
-        // Member 조회
-        Member member = memberService.findMember(memberId);
-        TodoGroup todoGroup = postDto.toEntity(member);
-        return todoGroupRepository.save(todoGroup);
+    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto) {
+        Member member = memberService.findMember(postDto.getMemberId());
+        TodoGroup saveTodoGroup = todoGroupRepository.save(postDto.toEntity(member));
+
+        return saveTodoGroup;
     }
 
     public TodoGroup updateTodoGroup(Long todoGroupId, TodoGroupDto.Patch patchDto, String token) {
