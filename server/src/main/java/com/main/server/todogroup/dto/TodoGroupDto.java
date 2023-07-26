@@ -14,8 +14,8 @@ public class TodoGroupDto {
     @NoArgsConstructor
     public static class Post {
 
-//        @JsonProperty(value = "member_id")
-//        private Long memberId;
+       @JsonProperty(value = "member_id")
+       private Long memberId;
 
         @JsonProperty(value = "todo_group_title")
         private String todoGroupTitle;
