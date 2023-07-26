@@ -62,7 +62,7 @@ public class TodoGroupController {
             token = token.substring(7); // "Bearer " 접두사 제거
 
             // AccessToken 유효성 검사
-            if (!jwtTokenizer.validateToken(token)) {
+            if (token == null || !jwtTokenizer.validateToken(token)) {
                 // AccessToken이 만료된 경우 RefreshToken으로 갱신 시도
                 if (refreshToken != null && jwtTokenizer.validateRefreshToken(refreshToken)) {
                     // Refresh Token 검증 및 memberId 식별
