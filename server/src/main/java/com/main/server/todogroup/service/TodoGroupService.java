@@ -52,7 +52,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public List<TodoGroup> getTodoGroups(String token) {
+    public List<TodoGroup> getTodoGroups() {
         List<TodoGroup> todoGroups = this.todoGroupRepository.findAll();
         return todoGroups;
     }
