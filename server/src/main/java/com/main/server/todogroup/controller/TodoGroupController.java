@@ -52,14 +52,11 @@ public class TodoGroupController {
     }
 
    @PostMapping("/todogroups")
-    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto, @Positive Long todoGroupId) {
+    public ResponseEntity createTodoGroup(@Valid @RequestBody TodoGroupDto.Post postDto) {
+        TodoGroup todoGroup = todoGroupService.createTodoGroup(postDto);
 
-
-                    // TodoGroup 생성
-                    TodoGroup todoGroup = this.todoGroupService.createTodoGroup(postDto, todoGroupId);
-
-                    return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
-                }
+        return new ResponseEntity<>(new TodoGroupDto.Response(todoGroup), HttpStatus.CREATED);
+    }
 
 
     @PatchMapping("/todogroups/{todo-group-id}")
