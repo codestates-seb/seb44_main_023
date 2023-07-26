@@ -48,7 +48,7 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getTodoGroup(Long todoGroupId, String token) {
+    public TodoGroup getTodoGroup(Long todoGroupId) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 
