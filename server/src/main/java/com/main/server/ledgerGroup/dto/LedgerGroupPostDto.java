@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LedgerGroupPostDto {
 
-   @JsonProperty(value = "member_id")
-   private Long memberId;
+   // @JsonProperty(value = "member_id")
+   // private Long memberId;
 
     @JsonProperty(value = "ledger_group_title")
     private String ledgerGroupTitle;
