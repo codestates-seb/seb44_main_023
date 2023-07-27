@@ -3,12 +3,11 @@ package com.main.server.ledger.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
+import com.main.server.labels.entity.Category;
 import com.main.server.labels.entity.Inoutcome;
 import com.main.server.labels.entity.Payment;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
-import com.main.server.member.Member;
-import com.main.server.labels.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,20 +46,18 @@ public class LedgerPostDto {
     @JsonProperty(value = "payment_id")
     private Long paymentId;
 
-    public Ledger toEntity(Member member, LedgerGroup ledgerGroup, Category category, Inoutcome inoutcome, Payment payment) {
+    public Ledger toEntity(LedgerGroup ledgerGroup, Category category, Inoutcome inoutcome, Payment payment) {
         LocalDate date = LocalDate.parse(ledgerDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return new Ledger(member, ledgerGroup, ledgerTitle, ledgerContent, ledgerAmount, date, category, inoutcome, payment);
+        return new Ledger(ledgerGroup, ledgerTitle, ledgerContent, ledgerAmount, date, category, inoutcome, payment);
     }
 
     public Long getCategoryId() {
-
         return categoryId != null ? categoryId : null;
     }
 
-    public Long getPaymentId() {
-        return paymentId != null ? paymentId : null;
-    }
-
+//    public Long getInoutcomeId() {
+//        return inoutcomeId != null ? inoutcomeId : null;
+//    }
     public Long getInoutcomeId() {
          if (inoutcomeId == null) {
             throw new BusinessLogicException(ExceptionCode.INOUTCOME_REQUIRED);

@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LedgerResponseDto {
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+//    @JsonProperty(value = "member_id")
+//    private Long memberId;
 
     @JsonProperty(value = "ledger_id")
     private Long ledgerId;
@@ -42,7 +42,7 @@ public class LedgerResponseDto {
     private PaymentDto payment;
 
     public LedgerResponseDto(Ledger ledger) {
-        this.memberId = ledger.getMember().getMemberId();
+//        this.memberId = ledger.getMember().getMemberId();
         this.ledgerGroupId = ledger.getLedgerGroup().getLedgerGroupId();
         this.ledgerId = ledger.getLedgerId();
         this.ledgerTitle = ledger.getLedgerTitle();

@@ -4,13 +4,11 @@ import com.main.server.labels.entity.Category;
 import com.main.server.labels.entity.Inoutcome;
 import com.main.server.labels.entity.Payment;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
-import com.main.server.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -44,13 +42,13 @@ public class Ledger {
         this.ledgerGroup = ledgerGroup;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
+//    private Member member;
 
-    public void addMember(Member member) {
-        this.member = member;
-    }
+//    public void addMember(Member member) {
+//        this.member = member;
+//    }
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -76,9 +74,9 @@ public class Ledger {
         this.payment = payment;
     }
 
-    public Ledger(Member member, LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent,
+    public Ledger(LedgerGroup ledgerGroup, String ledgerTitle, String ledgerContent,
                   Long ledgerAmount, LocalDate ledgerDate, Category category, Inoutcome inoutcome, Payment payment) {
-        this.member = member;
+//        this.member = member;
         this.ledgerGroup = ledgerGroup;
         this.ledgerTitle = ledgerTitle;
         this.ledgerContent = ledgerContent;
@@ -121,8 +119,9 @@ public class Ledger {
     }
 
     public void changeCategory(Category category) {
-       // if(category != null) {
+        if(category != null) {
             this.category = category;
+        }
     }
 
     public void changeInoutcome(Inoutcome inoutcome) {
@@ -132,9 +131,9 @@ public class Ledger {
     }
 
     public void changePayment(Payment payment) {
-        //if(payment != null) {
+        if(payment != null) {
             this.payment = payment;
-
+        }
     }
 
 }

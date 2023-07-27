@@ -1,15 +1,11 @@
 package com.main.server.labels.categorydto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.main.server.labels.entity.Category;
-import com.main.server.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class CategoryPatchDto {
     @JsonProperty(value = "category_id")
     private Long categoryId;

@@ -1,7 +1,6 @@
 package com.main.server.labels.entity;
 
 import com.main.server.ledger.entity.Ledger;
-import com.main.server.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,18 +23,18 @@ public class Payment {
     @Column(name = "payment_name", length = 100)
     private String paymentName;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
-    public void addMember(Member member) {
-        this.member = member;
-    }
+//    @ManyToOne
+//    @JoinColumn(name = "member_id")
+//    private Member member;
+//    public void addMember(Member member) {
+//        this.member = member;
+//    }
 
     @OneToMany(mappedBy = "payment")
     private List<Ledger> ledgers = new ArrayList<>();
 
-    public Payment(Member member, String paymentName) {
-        this.member = member;
+    public Payment(String paymentName) {
+//        this.member = member;
         this.paymentName = paymentName;
     }
 

@@ -12,13 +12,8 @@ import com.main.server.ledger.dto.LedgerPatchDto;
 import com.main.server.ledger.dto.LedgerPostDto;
 import com.main.server.ledger.entity.Ledger;
 import com.main.server.ledger.repository.LedgerRepository;
-import com.main.server.ledgerGroup.controller.LedgerGroupController;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
-import com.main.server.member.Member;
-import com.main.server.member.MemberService;
-import com.main.server.security.JwtTokenizer;
-import com.main.server.todo.domain.Todo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,36 +27,25 @@ import java.util.List;
 public class LedgerServiceImpl implements LedgerService {
 
     private final LedgerRepository ledgerRepository;
-    private final MemberService memberService;
+//    private final MemberService memberService;
     private final LedgerGroupService ledgerGroupService;
     private final CategoryRepository categoryRepository;
     private final InoutcomeRepository inoutcomeRepository;
     private final PaymentRepository paymentRepository;
-    private JwtTokenizer jwtTokenizer;
 
-    public LedgerServiceImpl(LedgerRepository ledgerRepository, MemberService memberService, LedgerGroupService ledgerGroupService,
-                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository, JwtTokenizer jwtTokenizer) {
+    public LedgerServiceImpl(LedgerRepository ledgerRepository, LedgerGroupService ledgerGroupService,
+                             CategoryRepository categoryRepository, InoutcomeRepository inoutcomeRepository, PaymentRepository paymentRepository) {
         this.ledgerRepository = ledgerRepository;
-        this.memberService = memberService;
+//        this.memberService = memberService;
         this.ledgerGroupService = ledgerGroupService;
         this.categoryRepository = categoryRepository;
         this.inoutcomeRepository = inoutcomeRepository;
         this.paymentRepository = paymentRepository;
-        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Override
-    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto, String token) {
-
-        // 토큰 검증 및 memberId 식별
-        long memberId = jwtTokenizer.getMemberIdFromToken(token);
-
-        // memberId를 사용하여 회원 정보 확인
-        Member member = memberService.findMember(memberId);
-        if (member == null) {
-            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
-
+    public Ledger createLedger(Long ledgerGroupId, LedgerPostDto postDto) {
+//        Member member = memberService.findMember(postDto.getMemberId());
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
         Category category = null;  // 카테고리 초기값 설정
         Long categoryId = postDto.getCategoryId();
@@ -87,29 +71,29 @@ public class LedgerServiceImpl implements LedgerService {
         if (category != null) {
             if (inoutcome != null) {
                 if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, payment); // aaa
+                    ledger = postDto.toEntity(ledgerGroup, category, inoutcome, payment); // aaa
                 } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, inoutcome, null); // aab
+                    ledger = postDto.toEntity(ledgerGroup, category, inoutcome, null); // aab
                 }
             } else {
                 if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, null, payment); // aba
+                    ledger = postDto.toEntity(ledgerGroup, category, null, payment); // aba
                 } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, category, null, null); // abb
+                    ledger = postDto.toEntity(ledgerGroup, category, null, null); // abb
                 }
             }
         } else {
             if (inoutcome != null) {
                 if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, payment); // baa
+                    ledger = postDto.toEntity(ledgerGroup, null, inoutcome, payment); // baa
                 } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, inoutcome, null); // bab
+                    ledger = postDto.toEntity(ledgerGroup, null, inoutcome, null); // bab
                 }
             } else {
                 if (payment != null) {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, null, payment); // bba
+                    ledger = postDto.toEntity(ledgerGroup, null, null, payment); // bba
                 } else {
-                    ledger = postDto.toEntity(member, ledgerGroup, null, null, null); // bbb
+                    ledger = postDto.toEntity(ledgerGroup, null, null, null); // bbb
                 }
             }
         }
@@ -120,22 +104,22 @@ public class LedgerServiceImpl implements LedgerService {
     }
 
 
-
-    @Override
-        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto, String token){
-          
+     @Override
+        public Ledger updateLedger (Long ledgerGroupId, Long ledgerId, LedgerPatchDto patchDto){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger updatedLedger = findVerifiedLedger(ledgerId);
-            //Long categoryId = patchDto.getCategoryId();
-         if (patchDto.getCategoryId() != null) {
-             Category category = categoryRepository.findById(patchDto.getCategoryId()).orElse(null);
-             if (category == null) {
-                 throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
-             }
-             updatedLedger.changeCategory(category);  // 카테고리 연결 업데이트
-         } else {
-             updatedLedger.changeCategory(null);
-         }
+            Long categoryId = patchDto.getCategoryId();
+            if (categoryId != null) {
+                Category category = categoryRepository.findById(categoryId).orElse(null);
+                if (category == null) {// 카테고리 ID가 유효하지 않은 경우
+                    throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
+                }
+                updatedLedger.changeCategory(category);  // 카테고리 연결 업데이트
+            } else {
+                if (updatedLedger.getCategory() != null) {// 카테고리 ID가 null인 경우 카테고리 연결을 유지하거나 제거
+                    updatedLedger.changeCategory(null);
+                }
+            }
             Long inoutcomeId = patchDto.getInoutcomeId();
             if (inoutcomeId != null) {
                 Inoutcome inoutcome = inoutcomeRepository.findById(inoutcomeId).orElse(null);
@@ -148,16 +132,18 @@ public class LedgerServiceImpl implements LedgerService {
                     updatedLedger.changeInoutcome(null);
                 }
             }
-            //Long paymentId = patchDto.getPaymentId();
-            if (patchDto.getPaymentId() != null) {
-                Payment payment = paymentRepository.findById(patchDto.getPaymentId()).orElse(null);
+            Long paymentId = patchDto.getPaymentId();
+            if (paymentId != null) {
+                Payment payment = paymentRepository.findById(paymentId).orElse(null);
                 if (payment == null) {// 카테고리 ID가 유효하지 않은 경우
                     throw new BusinessLogicException(ExceptionCode.PAYMENT_NOT_FOUND);
                 }
                 updatedLedger.changePayment(payment);  // 카테고리 연결 업데이트
             } else {
+                if (updatedLedger.getPayment() != null) {// 카테고리 ID가 null인 경우 카테고리 연결을 유지하거나 제거
                     updatedLedger.changePayment(null);
                 }
+            }
             updatedLedger.changeTitle(patchDto.getLedgerTitle());
             updatedLedger.changeContent(patchDto.getLedgerContent());
             updatedLedger.changeAmount(patchDto.getLedgerAmount());
@@ -169,13 +155,13 @@ public class LedgerServiceImpl implements LedgerService {
 
 
         @Override
-        public Ledger getLedger (Long ledgerGroupId, Long ledgerId, String token){
+        public Ledger getLedger (Long ledgerGroupId, Long ledgerId){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             return findVerifiedLedger(ledgerId);
         }
 
         @Override
-        public List<Ledger> getLedgers (Long ledgerGroupId, String token){
+        public List<Ledger> getLedgers (Long ledgerGroupId){
             LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
             if (ledgerGroup == null) {
                 // 그룹이 존재하지 않을 경우
@@ -184,7 +170,7 @@ public class LedgerServiceImpl implements LedgerService {
             return ledgerGroup.getLedgers();
         }
     @Override
-    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate, String token) {
+    public List<Ledger> getLedgersByDate(Long ledgerGroupId, LocalDate startDate, LocalDate endDate) {
         LedgerGroup ledgerGroup = ledgerGroupService.findByGroupId(ledgerGroupId);
 
         List<Ledger> ledgers = this.ledgerRepository.findByLedgerGroupAndLedgerDateBetween(ledgerGroup ,startDate, endDate);
@@ -194,7 +180,7 @@ public class LedgerServiceImpl implements LedgerService {
         }
 
         @Override
-        public void deleteLedger (Long ledgerGroupId, Long ledgerId, String token){
+        public void deleteLedger (Long ledgerGroupId, Long ledgerId){
             ledgerGroupService.findByGroupId(ledgerGroupId);
             Ledger deletedLedger = findVerifiedLedger(ledgerId);
             ledgerRepository.delete(deletedLedger);

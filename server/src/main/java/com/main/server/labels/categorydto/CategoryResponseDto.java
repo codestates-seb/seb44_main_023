@@ -2,7 +2,6 @@ package com.main.server.labels.categorydto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.main.server.labels.entity.Category;
-import com.main.server.ledgerGroup.entity.LedgerGroup;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,8 +9,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CategoryResponseDto {
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+//    @JsonProperty(value = "member_id")
+//    private Long memberId;
 
     @JsonProperty(value = "category_id")
     private Long categoryId;
@@ -20,7 +19,7 @@ public class CategoryResponseDto {
     private String categoryName;
 
     public CategoryResponseDto(Category category) {
-        this.memberId = category.getMember().getMemberId();
+//        this.memberId = category.getMember().getMemberId();
         this.categoryId = category.getCategoryId();
         this.categoryName = category.getCategoryName();
     }
