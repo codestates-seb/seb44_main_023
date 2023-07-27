@@ -2,17 +2,12 @@ package com.main.server.ledgerGroup.service;
 
 import com.main.server.exception.BusinessLogicException;
 import com.main.server.exception.ExceptionCode;
-import com.main.server.ledger.entity.Ledger;
-import com.main.server.ledger.repository.LedgerRepository;
 import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
-import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
 import com.main.server.ledgerGroup.repository.LedgerGroupRepository;
 import com.main.server.member.Member;
-import com.main.server.member.MemberRepository;
 import com.main.server.member.MemberService;
-import com.main.server.security.JwtTokenizer;
 import com.main.server.todogroup.domain.TodoGroup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +17,21 @@ import java.util.List;
 @Transactional
 @Service
 public class LedgerGroupServiceImpl implements LedgerGroupService {
-    private final MemberService memberService;
+//    private final MemberService memberService;
     private final LedgerGroupRepository ledgerGroupRepository;
-    private JwtTokenizer jwtTokenizer;
 
-    public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository, JwtTokenizer jwtTokenizer) {
-        this.memberService = memberService;
+    public LedgerGroupServiceImpl(LedgerGroupRepository ledgerGroupRepository) {
+//        this.memberService = memberService;
         this.ledgerGroupRepository = ledgerGroupRepository;
-        this.jwtTokenizer = jwtTokenizer;
     }
 
     @Override
-    public LedgerGroup createLedgerGroup(LedgerGroup ledgerGroup) {
+    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto) {
+//        Member member = memberService.findMember(postDto.getMemberId());
+        LedgerGroup savedLedgerGroup = ledgerGroupRepository.save(postDto.toEntity());
 
-
-        return ledgerGroupRepository.save(ledgerGroup);
+        return savedLedgerGroup;
     }
-
 
     @Override
     public LedgerGroup updateLedgerGroup(Long ledgerGroupId, LedgerGroupPatchDto patchDto) {
