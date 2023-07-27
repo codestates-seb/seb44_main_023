@@ -64,10 +64,9 @@ export const createTodo = async (groupId, data) => {
   }
 };
 
-export const createTodoGroup = async (memberId, todoGroupTitle) => {
+export const createTodoGroup = async (todoGroupTitle) => {
   try {
     const res = await API.post("/todogroups", {
-      member_id: 1,
       todo_group_title: todoGroupTitle,
     });
     return res.data;
