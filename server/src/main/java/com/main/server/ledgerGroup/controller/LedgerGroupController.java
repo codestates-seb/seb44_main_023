@@ -4,28 +4,18 @@ import com.main.server.ledgerGroup.dto.LedgerGroupPatchDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupPostDto;
 import com.main.server.ledgerGroup.dto.LedgerGroupResponseDto;
 import com.main.server.ledgerGroup.entity.LedgerGroup;
-import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
-import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupResponseDto;
-import com.main.server.ledgerGroup.invitationDto.InvitationMemberResponseDto;
 import com.main.server.ledgerGroup.service.LedgerGroupService;
-import org.springframework.beans.factory.annotation.Value;
-import com.main.server.member.Member;
-import com.main.server.member.MemberService;
-import com.main.server.security.JwtTokenizer;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://codestates.shop")
+@CrossOrigin
 @RestController
 @Validated
 @RequestMapping("/ledgergroups")
