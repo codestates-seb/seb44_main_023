@@ -40,11 +40,10 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     }
 
     @Override
-    public LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
-        LedgerGroup savedLedgerGroup = ledgerGroupRepository.save(postDto.toEntity(member));
+    public LedgerGroup createLedgerGroup(LedgerGroup ledgerGroup) {
 
-        return savedLedgerGroup;
+
+        return ledgerGroupRepository.save(ledgerGroup);
     }
     @Override
     public LedgerGroup updateLedgerGroup(Long ledgerGroupId, LedgerGroupPatchDto patchDto) {
