@@ -24,18 +24,11 @@ import java.util.List;
 public class LedgerGroupServiceImpl implements LedgerGroupService {
     private final MemberService memberService;
     private final LedgerGroupRepository ledgerGroupRepository;
-
-//    private final Ledger ledger;
-    private final LedgerRepository ledgerRepository;
-    private final MemberRepository memberRepository;
     private JwtTokenizer jwtTokenizer;
 
-    public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository,
-                                  LedgerRepository ledgerRepository, MemberRepository memberRepository,JwtTokenizer jwtTokenizer) {
+    public LedgerGroupServiceImpl(MemberService memberService, LedgerGroupRepository ledgerGroupRepository, JwtTokenizer jwtTokenizer) {
         this.memberService = memberService;
         this.ledgerGroupRepository = ledgerGroupRepository;
-        this.ledgerRepository = ledgerRepository;
-        this.memberRepository = memberRepository;
         this.jwtTokenizer = jwtTokenizer;
     }
 
@@ -45,6 +38,8 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
 
         return ledgerGroupRepository.save(ledgerGroup);
     }
+
+
     @Override
     public LedgerGroup updateLedgerGroup(Long ledgerGroupId, LedgerGroupPatchDto patchDto) {
         LedgerGroup foundLedgerGroup = findVerifiedLedgerGroup(ledgerGroupId);
@@ -69,14 +64,6 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
     @Override
     public void deleteLedgerGroup(Long ledgerGroupId) {
         LedgerGroup foundLedgerGroup = findVerifiedLedgerGroup(ledgerGroupId);
-
-        List<Ledger> allLedgersDelete = ledgerRepository.findByLedgerGroup(foundLedgerGroup);
-        int size = allLedgersDelete.size();
-
-        for (int i = 0; i < size; i++) {
-            Ledger ledger = allLedgersDelete.get(i);
-            ledgerRepository.delete(ledger);
-        }
         ledgerGroupRepository.delete(foundLedgerGroup);
     }
 
@@ -91,28 +78,6 @@ public class LedgerGroupServiceImpl implements LedgerGroupService {
         LedgerGroup foundLedgerGroup = ledgerGroupRepository.findById(ledgerGroupId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.LEDGER_GROUP_NOT_FOUND));
         return foundLedgerGroup;
-    }
-
-    @Transactional
-    public LedgerGroup invite(Long ledgerGroupId, InvitationLedgerGroupPostDto invitationLedgerGroupPostDto, String token) {
-        LedgerGroup findLedgerGroup  = findVerifiedLedgerGroup(ledgerGroupId);
-        Member owner = memberRepository.findById(invitationLedgerGroupPostDto.getMemberId())
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-        if (!findLedgerGroup.isOwner(owner)) {
-            throw new BusinessLogicException(ExceptionCode.IS_NOT_OWNER);
-        }
-        List<String> emails = invitationLedgerGroupPostDto.extractEmails();
-        List<Member> membersByEmail = memberRepository.findByEmailIn(emails);
-        if (emails.size() != membersByEmail.size()) {
-            throw  new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
-        }
-        findLedgerGroup.invites(membersByEmail);
-        return findLedgerGroup;
-    }
-
-    @Transactional
-    public LedgerGroup getInvitedMember(Long ledgerGroupId) {
-        return findVerifiedLedgerGroup(ledgerGroupId);
     }
 }
 
