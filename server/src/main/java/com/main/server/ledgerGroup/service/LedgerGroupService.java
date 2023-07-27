@@ -8,7 +8,7 @@ import com.main.server.ledgerGroup.invitationDto.InvitationLedgerGroupPostDto;
 import java.util.List;
 
 public interface LedgerGroupService {
-    LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto, String token);
+    LedgerGroup createLedgerGroup(LedgerGroupPostDto postDto);
     LedgerGroup updateLedgerGroup(Long ledgerGroupId, LedgerGroupPatchDto patchDto);
     LedgerGroup getLedgerGroup(Long ledgerGroupId);
     List<LedgerGroup> getLedgerGroups();
