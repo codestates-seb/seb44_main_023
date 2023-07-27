@@ -45,8 +45,9 @@ public class LedgerGroupController {
     }
     
     @PostMapping
-    public ResponseEntity createLedgerGroup(@Valid @RequestBody LedgerGroup ledgerGroupPostDto) {
-        LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto);
+    public ResponseEntity createLedgerGroup(@Valid @RequestBody LedgerGroupPostDto ledgerGroupPostDto, @RequestParam Long memberId) {
+        Member member = memberService.findMember(memberId);
+        LedgerGroup ledgerGroup = ledgerGroupService.createLedgerGroup(ledgerGroupPostDto.toEntity(member));
 
         return new ResponseEntity<>(new LedgerGroupResponseDto(ledgerGroup), HttpStatus.CREATED);
     }
