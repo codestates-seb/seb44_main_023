@@ -13,7 +13,7 @@ import Layout from "./Layout/PagesLayout";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import useAccessTokenStore from "./store/store.accessToken";
-import { API } from "./api/api";
+import { API } from "./api/api"; // 테스트
 import useMainGroupStore from "./store/store.mainGroup";
 
 const queryClient = new QueryClient({
