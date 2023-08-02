@@ -32,10 +32,17 @@ public class TodoGroupService {
         this.jwtTokenizer = jwtTokenizer;
     }
 
-    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto) {
-        Member member = memberService.findMember(postDto.getMemberId());
-        TodoGroup saveTodoGroup = todoGroupRepository.save(postDto.toEntity(member));
+    public TodoGroup createTodoGroup(TodoGroupDto.Post postDto, String token) {
+        // 토큰 검증 및 memberId 식별
+        long memberId = jwtTokenizer.getMemberIdFromToken(token);
 
+        // memberId를 사용하여 회원 정보 확인
+        Member member = memberService.findMember(memberId);
+        if (member == null) {
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+        }
+
+        TodoGroup saveTodoGroup = todoGroupRepository.save(postDto.toEntity(member));
         return saveTodoGroup;
     }
 
@@ -48,12 +55,12 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public TodoGroup getTodoGroup(Long todoGroupId) {
+    public TodoGroup getTodoGroup(Long todoGroupId, String token) {
         return findVerifiedTodoGroup(todoGroupId);
     }
 
     @Transactional
-    public List<TodoGroup> getTodoGroups() {
+    public List<TodoGroup> getTodoGroups(String token) {
         List<TodoGroup> todoGroups = this.todoGroupRepository.findAll();
         return todoGroups;
     }

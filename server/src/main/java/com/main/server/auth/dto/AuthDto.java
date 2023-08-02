@@ -21,6 +21,4 @@ public class AuthDto {
 
     private String accessToken; // JWT AccessToken 추가
     private String refreshToken; // JWT RefreshToken 추가
-
-    private Long memberId;
 }

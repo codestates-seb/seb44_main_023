@@ -16,11 +16,11 @@ import com.main.server.member.Member;
 @Service
 public class AuthService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    private PasswordEncoder passwordEncoder;
-    private JwtTokenizer jwtTokenizer;
-    private TokenBlacklist tokenBlacklist;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenizer jwtTokenizer;
+    private final TokenBlacklist tokenBlacklist;
 
     @Autowired
     public AuthService(MemberRepository memberRepository,
@@ -74,7 +74,7 @@ public class AuthService {
             throw new BusinessLogicException(ExceptionCode.INVALID_REFRESH_TOKEN);
         }
 
-        return new AuthResponse(accessToken, refreshToken, member.getMemberId());
+        return new AuthResponse(accessToken, refreshToken);
     }
 
     public void invalidateToken(String accessToken) {

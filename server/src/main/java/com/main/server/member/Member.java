@@ -80,11 +80,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<TodoGroup> todoGroups = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "member")
-    // private List<Ledger> ledgers = new ArrayList<>();
+     @OneToMany(mappedBy = "member")
+     private List<Ledger> ledgers = new ArrayList<>();
 
-    // @OneToMany(mappedBy = "member")
-    // private List<LedgerGroup> ledgerGroups = new ArrayList<>();
-
-
+     @OneToMany(mappedBy = "member")
+     private List<LedgerGroup> ledgerGroups = new ArrayList<>();
 }
