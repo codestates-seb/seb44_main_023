@@ -6,6 +6,7 @@ import {
   readTodo,
   readTodoComment,
 } from "../../../api/todogroups.api";
+import { useGetUserInfo } from "../../../store/store.userInfo";
 import Button from "../../Button/Button";
 import TodoComment from "./TodoComment";
 
@@ -16,11 +17,11 @@ const ModalContentDetail = ({
   todoInfo,
   setTodoInfo,
   setTodoList,
+  groupId,
 }) => {
   const [todoComment, setTodoComment] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
-  const { groupId } = useParams();
+  const userInfo = useGetUserInfo();
 
   const requestTodoInfo = async () => {
     try {
@@ -56,18 +57,20 @@ const ModalContentDetail = ({
     <StyledWrapper>
       <div className="modal-title">
         <div className="modal-title-text">Todo</div>
-        <div className="modal-title-date">{todo_schedule_date}</div>
+        <div className="modal-title-date">
+          {todo_schedule_date !== "null" && todo_schedule_date}
+        </div>
       </div>
       <div className="todo-title">{todo_title}</div>
       <div className="todo-content">{todo_content}</div>
       <TodoComment
         groupId={groupId}
-        member_id={1}
         todoId={todo_id}
         isEdit={true}
         setTodoComment={setTodoComment}
-        nickname="진아"
-        profile_image="https://i.pinimg.com/474x/df/2d/25/df2d253fbd0eb7d50193f1374128e9f0.jpg"
+        member_id={userInfo.memberId}
+        nickname={userInfo.nickname}
+        profile_image={userInfo.profileImage}
       />
       <CommentWrapper>
         {todoComment.map((item, index) => (
@@ -76,6 +79,7 @@ const ModalContentDetail = ({
             groupId={groupId}
             todoId={todo_id}
             {...item}
+            profile_image={"https://api.planfinity.co.kr" + item.profile_image}
           />
         ))}
       </CommentWrapper>
@@ -83,9 +87,9 @@ const ModalContentDetail = ({
         <Button
           label="삭제하기"
           size="medium"
-          fontcolor="var(--color-blue-03)"
+          backgroundColor={"var(--color-white)"}
+          hovercolor={"var(--color-gray-03)"}
           style={{
-            backgroundColor: "var(--color-white)",
             border: "1px solid var(--color-red-01)",
             color: "var(--color-red-01)",
           }}
@@ -94,10 +98,8 @@ const ModalContentDetail = ({
         <Button
           label="수정하기"
           size="medium"
-          fontcolor="var(--color-white)"
-          style={{
-            backgroundColor: "var(--color-blue-03)",
-          }}
+          backgroundColor={"var(--color-blue-03)"}
+          hovercolor={"var(--color-blue-04)"}
           onClick={() => setModalType("edit")}
         />
       </ButtonWrapper>

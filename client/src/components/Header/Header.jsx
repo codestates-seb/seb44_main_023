@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/logoSpare.png";
-import UserAvatar from "../../assets/userAvarta.png";
-import { HiMiniMoon } from "react-icons/hi2";
+import headerLogo from "../../assets/logo/header_logo.png";
 import { MdOutlineLogout } from "react-icons/md";
-import { TiWeatherPartlySunny } from "react-icons/ti";
 import useAccessTokenStore from "../../store/store.accessToken";
-import logout from "../../api/logout.api";
+import { logout } from "../../api/auths.api";
+import { useGetUserInfo } from "../../store/store.userInfo";
+import WeatherWidget from "../WeatherWidget/HeaderWeatherWidget";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -15,6 +14,8 @@ const Header = () => {
   const popupRef = useRef(null);
   const setAccessToken = useAccessTokenStore((state) => state.setAccessToken);
   const accessToken = useAccessTokenStore((state) => state.accessToken);
+
+  const { isLoading, memberId, profileImage } = useGetUserInfo();
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -35,7 +36,7 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    navigate("/profile/:id");
+    navigate(`/profile`);
   };
 
   const handleLogoutClick = (event) => {
@@ -57,8 +58,8 @@ const Header = () => {
 
       if (response.status === 200) {
         setAccessToken(null);
-      } 
-      navigate("/home");
+      }
+      window.location.href = "/home";
       setPopupVisible(false);
     } catch (error) {
       if (error === 400) {
@@ -67,7 +68,6 @@ const Header = () => {
     }
   };
 
-
   const handlePopupClick = () => {
     // 팝업 영역 클릭 시 이벤트 전파를 막지 않음
   };
@@ -75,22 +75,19 @@ const Header = () => {
   return (
     <HeaderContainer>
       <LogoWrapper onClick={handleLogoClick}>
-        <LogoImage src={Logo} alt="Logo" />
+        <LogoImage src={headerLogo} alt="Logo" />
       </LogoWrapper>
       <RightSectionWrapper>
-        <Button>
-          <MoonIcon size={24} />
-        </Button>
         <Button onClick={handleProfileClick}>
-          <UserAvatarImage src={UserAvatar} alt="User Avatar" />
+          <UserAvatarImage src={profileImage} alt="User Avatar" />
         </Button>
         <Button onClick={handleLogoutClick}>
           <LogoutIcon size={26} />
         </Button>
-        <Button>
-          <WeatherIcon size={24} />
-        </Button>
       </RightSectionWrapper>
+      <WeatherComponent>
+        <WeatherWidget />
+      </WeatherComponent>
       {isPopupVisible && (
         <PopupWrapper ref={popupRef} onClick={handlePopupClick}>
           <PopupContent>
@@ -110,7 +107,7 @@ const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: 99;
   display: flex;
   width: 100%;
   height: 6rem;
@@ -122,12 +119,11 @@ const HeaderContainer = styled.header`
 `;
 
 const LogoWrapper = styled.div`
-  margin-right: 2rem;
   cursor: pointer;
 `;
 
 const LogoImage = styled.img`
-  width: 15rem;
+  width: 18rem;
 `;
 
 const RightSectionWrapper = styled.div`
@@ -140,24 +136,18 @@ const Button = styled.button`
   margin-left: 1rem;
 `;
 
-const MoonIcon = styled(HiMiniMoon)`
-  width: 2.4rem;
-  height: 2.4rem;
-`;
+const WeatherComponent = styled.div``;
 
 const UserAvatarImage = styled.img`
   width: 2.8rem;
   height: 2.8rem;
+  border-radius: 100%;
+  object-fit: cover;
 `;
 
 const LogoutIcon = styled(MdOutlineLogout)`
   width: 2.6rem;
   height: 2.6rem;
-`;
-
-const WeatherIcon = styled(TiWeatherPartlySunny)`
-  width: 2.4rem;
-  height: 2.4rem;
 `;
 
 const PopupWrapper = styled.div`
@@ -168,7 +158,7 @@ const PopupWrapper = styled.div`
   z-index: 999;
   position: absolute;
   top: calc(100% + 1rem); /* 버튼과 팝업 꼬리 사이의 간격 조절 */
-  right: -8.5rem;
+  right: -2rem;
   transform: translateX(-50%);
   &::before {
     content: "";
@@ -210,7 +200,7 @@ const CancelButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 
@@ -224,7 +214,7 @@ const ConfirmButton = styled.button`
   border: 1px solid;
   font-size: 1.2rem;
   &:hover {
-    filter: brightness(90%) drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    background-color: var(--color-gray-03);
   }
 `;
 

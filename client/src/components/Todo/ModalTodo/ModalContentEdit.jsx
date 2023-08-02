@@ -56,7 +56,7 @@ const ModalContentEdit = ({
   useEffect(() => {
     setFormData({
       ...formData,
-      todo_schedule_date,
+      ...(todo_schedule_date !== "null" ? { todo_schedule_date } : {}),
       todo_title,
       todo_content,
     });
@@ -81,6 +81,7 @@ const ModalContentEdit = ({
           fontSize={20}
           id="todo_title"
           defaultValue={todo_title}
+          style={{ width: "100%" }}
         />
         <TextArea>
           <textarea
@@ -94,20 +95,19 @@ const ModalContentEdit = ({
             label="취소"
             size="medium"
             fontcolor="var(--color-blue-03)"
+            backgroundColor={"var(--color-white)"}
+            hovercolor={"var(--color-gray-03)"}
             style={{
-              backgroundColor: "var(--color-white)",
               border: "1px solid var(--color-blue-03)",
               color: "var(--color-blue-03)",
             }}
             onClick={handleCloseEditModal}
           />
           <Button
-            label="추가하기"
+            label="적용하기"
             size="medium"
-            fontcolor="var(--color-white)"
-            style={{
-              backgroundColor: "var(--color-blue-03)",
-            }}
+            backgroundColor={"var(--color-blue-03)"}
+            hovercolor={"var(--color-blue-04)"}
             onClick={handleUpdateTodo}
           />
         </ButtonWrapper>

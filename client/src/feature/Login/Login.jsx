@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { loginAPI } from "../../api/members.api";
+import { login } from "../../api/auths.api";
 import useLoginStore from "../../store/store.login";
 import useAccessTokenStore from "../../store/store.accessToken";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
@@ -24,13 +24,12 @@ const Login = () => {
     }
 
     try {
-      const response = await loginAPI(email, password);
+      const response = await login(email, password);
       // console.log("사용자 정보:", response);
-      
-      
+
       // accessToken
       const accessToken = response.headers.authorization;
-      // store.accessToken.js에 저장 
+      // store.accessToken.js에 저장
       setAccessToken(accessToken);
       // console.log("AccessToken:", accessToken);
 
@@ -40,7 +39,6 @@ const Login = () => {
 
       setLogin(true);
       setValidation("");
-
       navigate("/");
     } catch (error) {
       if (error === 404) {
@@ -135,7 +133,13 @@ const Login = () => {
           info={validation.password}
         />
       </InputBox>
-      <Button type="submit" label="Login" size="large" onClick={handleLogin} />
+      <Button
+        type="submit"
+        label="Login"
+        size="large"
+        hovercolor={"var(--color-blue-04)"}
+        onClick={handleLogin}
+      />
       <LoginLink onClick={handleLoginLinkClick}>
         아직 회원이 아니신가요? Sign Up
       </LoginLink>
@@ -165,10 +169,11 @@ const LoginLink = styled.a`
   display: block;
   margin-top: 2rem;
   text-align: center;
+  font-size: 1.4rem;
   color: var(--color-blue-03);
   cursor: pointer;
 
   &:hover {
-    color: var(--color-black);
+    color: var(--color-blue-05);
   }
 `;

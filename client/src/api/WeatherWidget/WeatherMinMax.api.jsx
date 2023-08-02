@@ -30,8 +30,6 @@ const WeatherMinMax = () => {
      const maxArray = mainArray.map(obj => obj.temp_max);
      const temp_max = Math.max(...maxArray);
 
-    //  console.log("maxArray",maxArray)
-
      setWeatherMinMax(
       roundDecimal(temp_min),
       roundDecimal( temp_max)

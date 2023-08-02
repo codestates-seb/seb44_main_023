@@ -5,12 +5,13 @@ import { useEffect, useState } from "react";
 import { createTodo } from "../../../api/todogroups.api";
 
 const ModalContentCreate = ({
+  groupId,
   defaultDate,
   handleModalVisible,
   setTodoList,
 }) => {
   const [formData, setFormData] = useState({
-    todo_schedule_date: defaultDate,
+    ...(defaultDate !== "null" ? { todo_schedule_date: defaultDate } : {}),
   });
 
   const handleCreateTodo = async (event) => {
@@ -21,7 +22,7 @@ const ModalContentCreate = ({
         ...formData,
       };
 
-      const res = await createTodo(data);
+      const res = await createTodo(groupId, data);
       setTodoList((todoList) => [...todoList, res]);
       handleModalVisible();
     } catch (err) {
@@ -39,7 +40,7 @@ const ModalContentCreate = ({
   useEffect(() => {
     setFormData({
       ...formData,
-      todo_schedule_date: defaultDate,
+      ...(defaultDate !== "null" ? { todo_schedule_date: defaultDate } : {}),
     });
   }, [defaultDate]);
 
@@ -61,6 +62,7 @@ const ModalContentCreate = ({
           placeholder="제목을 입력하세요"
           fontSize={20}
           id="todo_title"
+          style={{ width: "100%" }}
         />
         <TextArea>
           <textarea className="content-textarea" id="todo_content" />
@@ -70,8 +72,9 @@ const ModalContentCreate = ({
             label="취소"
             size="medium"
             fontcolor="var(--color-blue-03)"
+            backgroundColor={"var(--color-white)"}
+            hovercolor={"var(--color-gray-03)"}
             style={{
-              backgroundColor: "var(--color-white)",
               border: "1px solid var(--color-blue-03)",
               color: "var(--color-blue-03)",
             }}
@@ -80,10 +83,8 @@ const ModalContentCreate = ({
           <Button
             label="추가하기"
             size="medium"
-            fontcolor="var(--color-white)"
-            style={{
-              backgroundColor: "var(--color-blue-03)",
-            }}
+            backgroundColor={"var(--color-blue-03)"}
+            hovercolor={"var(--color-blue-04)"}
             onClick={handleCreateTodo}
           />
         </ButtonWrapper>
@@ -108,6 +109,7 @@ const StyledWrapper = styled.div`
     padding-bottom: 2.4rem;
 
     .modal-title-date {
+      /* cursor: pointer; */
       input {
         background: none;
       }

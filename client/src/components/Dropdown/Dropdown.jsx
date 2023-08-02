@@ -9,6 +9,7 @@ const Dropdown = ({
   add = false,
   onAddItem = (item) => {},
   defaultKey = { key: "", label: "" },
+  onItemSelect = (itemId) => {},
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -31,6 +32,7 @@ const Dropdown = ({
     inputRef.current.setAttribute("value", JSON.stringify(item));
     inputRef.current.dispatchEvent(new Event("change", { bubbles: true }));
     handleClickOption();
+    onItemSelect(item.key);
   };
 
   const handleClickOption = () => {
@@ -169,7 +171,7 @@ const OptionList = styled.ul`
     transition: 100ms;
     background-color: var(--color-gray-01);
 
-    &: hover {
+    &:hover {
       background: var(--color-blue-01);
     }
 
