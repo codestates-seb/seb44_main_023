@@ -5,7 +5,7 @@ import Input from "../../components/Input/PageInput";
 import { MemberListTag } from "./MemberListTag";
 import { useGroupEditStore } from "../../store/store.groupEdit";
 
-import GroupDeleteConfirm from "./GroupDeleteconfirm";
+import GroupDeleteConfirm from "./GroupDeleteConfirm";
 import GroupEditSave from "./GroupEditSave";
 import { isValidEmail } from "./isValidEmail";
 import "./group.css";
