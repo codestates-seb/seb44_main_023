@@ -16,7 +16,7 @@ const TodoComment = ({
   setTodoComment,
 }) => {
   const [comment, setComment] = useState("");
-
+  console.log(comment_content, profile_image);
   const handleCreate = async () => {
     try {
       const res = await createTodoComment(groupId, todoId, member_id, comment);
@@ -93,9 +93,16 @@ const StyledWrapper = styled.div`
 
 const CommentInput = styled(Input)`
   padding: 0;
+  width: 100%;
+  height: 100%;
 `;
 
 const AddButton = styled(FiSend)`
   font-size: 2.4rem;
   color: var(--color-gray-13);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-blue-03);
+  }
 `;

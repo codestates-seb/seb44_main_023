@@ -4,18 +4,20 @@ import Input from "../../components/Input/PageInput";
 import Avatar from "../../assets/userAvarta.png";
 import {
   deleteProfileImage,
-  readProfileImage,
   updateMemberNickname,
   updateProfileImage,
 } from "../../api/members.api";
 import { imageCompress } from "../../utils/imageCompress";
+import useUserInfoStore from "../../store/store.userInfo";
 
 const ProfileTop = ({ profileInfo }) => {
   const [isEditMode, setEditMode] = useState(false);
   const [nickname, setNickname] = useState(profileInfo.nickname);
   const [nicknameInput, setNicknameInput] = useState(profileInfo.nickname);
-  const [imageUrl, setImageUrl] = useState(Avatar);
+  const [imageUrl, setImageUrl] = useState(profileInfo.profileImage);
   const [validation, setValidation] = useState("");
+
+  const { updateUserInfo } = useUserInfoStore();
 
   const handleEditMode = () => setEditMode(!isEditMode);
 
@@ -28,11 +30,15 @@ const ProfileTop = ({ profileInfo }) => {
   const handleSaveNickName = async (event) => {
     try {
       event.preventDefault();
-      await updateMemberNickname(profileInfo.memberId, nicknameInput);
+      await updateMemberNickname(nicknameInput);
       setEditMode(!isEditMode);
       setValidation("");
       setNickname(nicknameInput);
+      updateUserInfo({
+        nickname: nicknameInput,
+      });
     } catch (err) {
+      console.log(err);
       setValidation(err.response.data);
     }
   };
@@ -50,7 +56,8 @@ const ProfileTop = ({ profileInfo }) => {
       const formData = new FormData();
       formData.append("file", fileBlob);
 
-      await updateProfileImage(profileInfo.memberId, formData);
+      await updateProfileImage(formData);
+      updateUserInfo({ profileImage: res });
       setImageUrl(res);
     } catch (err) {
       console.log(err);
@@ -62,6 +69,7 @@ const ProfileTop = ({ profileInfo }) => {
       event.preventDefault();
       if (Avatar === imageUrl) return;
       await deleteProfileImage(profileInfo.memberId);
+      updateUserInfo({ profileImage: Avatar });
       setImageUrl(Avatar);
     } catch (err) {
       console.log(err);
@@ -72,15 +80,6 @@ const ProfileTop = ({ profileInfo }) => {
     console.log("error");
     e.target.src = Avatar;
   };
-
-  const requestProfileImage = async () => {
-    const url = await readProfileImage(profileInfo.memberId);
-    setImageUrl(url);
-  };
-
-  useEffect(() => {
-    requestProfileImage();
-  }, []);
 
   return (
     <StyledWrapper>
@@ -112,18 +111,24 @@ const ProfileTop = ({ profileInfo }) => {
                 <TextButton
                   onClick={handleCancelEdit}
                   color="var(--color-red-01)"
+                  hovercolor="var(--color-red-02)"
                 >
                   취소
                 </TextButton>
                 <TextButton
                   onClick={handleSaveNickName}
                   color="var(--color-blue-03)"
+                  hovercolor="var(--color-blue-05)"
                 >
                   저장
                 </TextButton>
               </div>
             ) : (
-              <TextButton onClick={handleEditMode} color="var(--color-blue-03)">
+              <TextButton
+                onClick={handleEditMode}
+                color="var(--color-blue-03)"
+                hovercolor="var(--color-blue-05)"
+              >
                 수정
               </TextButton>
             )}
@@ -221,6 +226,10 @@ const TextButton = styled.button`
   font-size: 2rem;
   color: ${({ color }) => color};
   background: none;
+
+  &:hover {
+    color: ${({ hovercolor }) => hovercolor};
+  }
 `;
 
 const InputNickname = styled(Input)``;

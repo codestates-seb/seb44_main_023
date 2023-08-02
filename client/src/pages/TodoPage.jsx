@@ -1,54 +1,62 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { styled } from "styled-components";
 import Loading from "../components/Loading/Loading";
 import TodoGroup from "../feature/Todo/TodoGroup";
-import TodoList from "../feature/Todo/TodoList";
-import Layout from "../Layout/PagesLayout";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { readTodoGroup, readTodoGroupMember } from "../api/todogroups.api";
+import useQueryTodoGroup from "../query/todogroup.query";
+import TodoList from "../feature/Todo/TodoList";
+import Button from "../components/Button/Button";
 
 const TodoPage = () => {
   const { groupId } = useParams();
-  const [groupInfo, setGroupInfo] = useState();
-  const [members, setMembers] = useState();
-  const [isLoading, setIsLoading] = useState(true);
   const [startDate, setStartDate] = useState(
     dayjs().locale("ko").startOf("week").add(1, "day")
   );
 
-  const requestData = async () => {
-    try {
-      const groupInfo = await readTodoGroup(groupId);
-      const members = await readTodoGroupMember(groupId);
-      setGroupInfo(groupInfo);
-      setMembers(members);
-      setIsLoading(false);
-    } catch (err) {}
-  };
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    requestData();
-  }, []);
+  const { isLoading, data } = useQueryTodoGroup({ groupId });
 
-  return (
-    <Layout>
+  if (isLoading)
+    return (
       <StyledWrapper>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <TodoGroup
-              groupInfo={groupInfo}
-              members={members}
-              setStartDate={setStartDate}
-            />
-            <TodoList startDate={startDate} />
-          </>
-        )}
+        <Loading />
       </StyledWrapper>
-    </Layout>
+    );
+  else if (!data?.groupInfo)
+    return (
+      <StyledWrapper
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="todo-empty-text">존재하지 않는 TODO 그룹입니다</div>
+        <Button
+          onClick={() => navigate("/")}
+          label="Main으로 돌아가기"
+          size="medium"
+          style={{
+            backgroundColor: "var(--color-blue-03)",
+            width: "max-content",
+            padding: "0 2rem",
+          }}
+        />
+      </StyledWrapper>
+    );
+
+  const { groupInfo, members } = data;
+  return (
+    <StyledWrapper>
+      <TodoGroup
+        groupInfo={groupInfo}
+        members={members}
+        setStartDate={setStartDate}
+      />
+      <TodoList groupInfo={groupInfo} startDate={startDate} />
+    </StyledWrapper>
   );
 };
 
@@ -60,4 +68,9 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+
+  .todo-empty-text {
+    font-size: 2.4rem;
+    margin-bottom: 4rem;
+  }
 `;

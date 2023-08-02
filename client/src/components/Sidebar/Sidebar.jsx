@@ -1,16 +1,29 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import Popup from "./SidbarPoup";
 import { useNavigate } from "react-router-dom";
+import useQueryLedgerGroupList from "../../query/ledgergroupList.query";
+import useQueryTodoGroupList from "../../query/todogroupList.query";
 
 const Sidebar = () => {
+  const { data: ledgerData = [], isLoading: isLedgerGroupLoading } =
+    useQueryLedgerGroupList();
+  const { data: todoData = [], isLoading: isTodoGrouoplLoading } =
+    useQueryTodoGroupList();
+
+  if (isLedgerGroupLoading || isTodoGrouoplLoading) return null;
+  return <SidebarGroup todoData={todoData} ledgerData={ledgerData} />;
+};
+
+const SidebarGroup = ({ ledgerData, todoData }) => {
+  const [todoGroups, setTodoGroups] = useState(todoData);
+  const [ledgerGroups, setLedgerGroups] = useState(ledgerData);
+
   const [currentPopup, setCurrentPopup] = useState(null);
   const [buttonPosition, setButtonPosition] = useState({});
   const todoButtonRef = useRef(null);
   const accountButtonRef = useRef(null);
-  const [todoButtons, setTodoButtons] = useState([]);
-  const [accountButtons, setAccountButtons] = useState([]);
   const navigate = useNavigate();
 
   const handleAddButtonClick = (title, buttonRef) => {
@@ -27,53 +40,52 @@ const Sidebar = () => {
     setCurrentPopup(null);
   };
 
-  const handleAddButton = (text) => {
+  const handleAddButton = (text, id) => {
     if (currentPopup === "Todo") {
-      setTodoButtons((prevButtons) => [
-        ...prevButtons,
-        {
-          id: Date.now(),
-          text,
-        },
-      ]);
+      const newTodoGroup = {
+        todo_group_id: id,
+        todo_group_title: text,
+      };
+      setTodoGroups((prevGroups) => [...prevGroups, newTodoGroup]);
     } else if (currentPopup === "가계부") {
-      setAccountButtons((prevButtons) => [
-        ...prevButtons,
-        {
-          id: Date.now(),
-          text,
-        },
-      ]);
+      const newLedgerGroup = {
+        ledger_group_id: id,
+        ledger_group_title: text,
+      };
+      setLedgerGroups((prevGroups) => [...prevGroups, newLedgerGroup]);
     }
     setCurrentPopup(null);
   };
 
   const handleButtonClick = (groupId, groupType) => {
     if (groupType === "Todo") {
-      navigate(`/todogroups/${groupId}`);
+      navigate(`/todo/${groupId}`);
     } else if (groupType === "가계부") {
-      navigate(`/ledgergroups/${groupId}`);
+      navigate(`/ledger/${groupId}?type=list`);
     }
   };
 
   return (
     <SidebarContainer>
-      <SidebarSection>
+      <TodoSidebarSection>
         <SidebarTitle>Todo</SidebarTitle>
-        {todoButtons.map((button) => (
-          <AddedButton
-            key={button.id}
-            onClick={() => handleButtonClick(button.id, "Todo")}
+        <AddedButtonContainer>
+          {todoGroups.map((group) => (
+            <AddedButton
+              key={group.todo_group_id}
+              onClick={() => handleButtonClick(group.todo_group_id, "Todo")}
+            >
+              {group.todo_group_title}
+            </AddedButton>
+          ))}
+
+          <AddButton
+            onClick={() => handleAddButtonClick("Todo", todoButtonRef)}
+            ref={todoButtonRef}
           >
-            {button.text}
-          </AddedButton>
-        ))}
-        <AddButton
-          onClick={() => handleAddButtonClick("Todo", todoButtonRef)}
-          ref={todoButtonRef}
-        >
-          <FaPlus />
-        </AddButton>
+            <FaPlus />
+          </AddButton>
+        </AddedButtonContainer>
         {currentPopup === "Todo" && (
           <Popup
             onClose={closePopup}
@@ -82,24 +94,27 @@ const Sidebar = () => {
             onAddButtonClick={handleAddButton}
           />
         )}
-      </SidebarSection>
+      </TodoSidebarSection>
 
-      <SidebarSection>
+      <LedgerSidebarSection>
         <SidebarTitle>가계부</SidebarTitle>
-        {accountButtons.map((button) => (
-          <AddedButton
-            key={button.id}
-            onClick={() => handleButtonClick(button.id, "가계부")}
+        <AddedButtonContainer>
+          {ledgerGroups.map((group) => (
+            <AddedButton
+              key={group.ledger_group_id}
+              onClick={() => handleButtonClick(group.ledger_group_id, "가계부")}
+            >
+              {group.ledger_group_title}
+            </AddedButton>
+          ))}
+
+          <AddButton
+            onClick={() => handleAddButtonClick("가계부", accountButtonRef)}
+            ref={accountButtonRef}
           >
-            {button.text}
-          </AddedButton>
-        ))}
-        <AddButton
-          onClick={() => handleAddButtonClick("가계부", accountButtonRef)}
-          ref={accountButtonRef}
-        >
-          <FaPlus />
-        </AddButton>
+            <FaPlus />
+          </AddButton>
+        </AddedButtonContainer>
         {currentPopup === "가계부" && (
           <Popup
             onClose={closePopup}
@@ -108,7 +123,7 @@ const Sidebar = () => {
             onAddButtonClick={handleAddButton}
           />
         )}
-      </SidebarSection>
+      </LedgerSidebarSection>
     </SidebarContainer>
   );
 };
@@ -119,29 +134,66 @@ const SidebarContainer = styled.div`
   left: 0;
   width: 8rem;
   height: 100vh;
+  max-height: calc(100vh - 60px);
   background-color: transparent;
   display: flex;
   flex-direction: column;
   box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
   border-right: 1px solid rgba(0, 0, 0, 0.2);
+  z-index: 99;
 `;
 
-const SidebarSection = styled.div`
+const TodoSidebarSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
   border-top: 2px solid rgba(0, 0, 0, 0.2);
-  padding: 1rem;
+  padding-top: 1rem;
+  max-height: 50%;
 
   &:first-child {
     border-top: none;
   }
 `;
 
+const LedgerSidebarSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+  padding: 1rem;
+  max-height: 50%;
+
+  &:first-child {
+    border-top: none;
+  }
+`;
+
+const AddedButtonContainer = styled.div`
+  overflow-y: auto;
+  padding-right: 1px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent;
+
+  &::-webkit-scrollbar {
+    width: 1px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+`;
+
 const SidebarTitle = styled.div`
   font-weight: bold;
   font-size: 1.6rem;
+  color: var(--color-gray-07);
 `;
 
 const AddButton = styled.button`
@@ -153,13 +205,13 @@ const AddButton = styled.button`
   justify-content: center;
   align-items: center;
   margin-top: 0.8rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   border: none;
-  cursor: pointer;
-  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.2);
 
+  transition: background-color 0.3s ease;
   &:hover {
     background-color: var(--color-blue-03);
+    border: 2px solid var(--color-blue-02);
   }
 `;
 
@@ -172,12 +224,17 @@ const AddedButton = styled.button`
   justify-content: center;
   align-items: center;
   margin-top: 0.8rem;
-  font-size: 1.2rem;
-  border: none;
+  font-size: 1.1rem;
+  color: var(--color-gray-07);
+  font-weight: bolder;
   cursor: pointer;
+  border: 2px solid #a8d6fc;
+
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: var(--color-blue-03);
+    border: 2px solid var(--color-blue-02);
   }
 `;
 

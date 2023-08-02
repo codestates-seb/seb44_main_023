@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import Input from "../Input/PageInput";
-import axios from "axios";
+import { createTodoGroup } from "../../api/todogroups.api";
+import { createLedgerGroup } from "../../api/ledgergroups.api";
+import useUserInfoStore from "../../store/store.userInfo";
 
 const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
   const [inputValue, setInputValue] = useState("");
@@ -17,23 +19,26 @@ const Popup = ({ onClose, title, buttonPosition, onAddButtonClick }) => {
     }
   };
 
+  const { userInfo } = useUserInfoStore();
+
   const handleAddButtonClick = async () => {
     if (inputValue.trim() !== "") {
       try {
         if (title === "Todo") {
-            const response = await axios.post("/api/todogroups", {
-              member_id: 1,
-              todo_group_title: inputValue,
-          });
-          const todoGroup = response.data;
-          onAddButtonClick(todoGroup.todo_group_title);
+          const todoGroup = await createTodoGroup(
+            userInfo.memberId,
+            inputValue
+          );
+          onAddButtonClick(todoGroup.todo_group_title, todoGroup.todo_group_id);
         } else if (title === "가계부") {
-            const response = await axios.post("/api/ledgergroups", {
-              member_id: 1,
-              ledger_group_title: inputValue,
-            });
-          const ledgerGroup = response.data;
-          onAddButtonClick(ledgerGroup.ledger_group_title);
+          const ledgerGroup = await createLedgerGroup(
+            userInfo.memberId,
+            inputValue
+          );
+          onAddButtonClick(
+            ledgerGroup.ledger_group_title,
+            ledgerGroup.ledger_group_id
+          );
         }
         setInputValue("");
         onClose();

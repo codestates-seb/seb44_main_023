@@ -14,23 +14,29 @@ const Signup = () => {
   const { validation, setValidation } = useSignupStore();
   const navigate = useNavigate();
 
-  const handleSignup = async (e) => {
-
+  const handleSignup = async () => {
     if (
       !isValidEmail(email) ||
       !isValidPassword(password) ||
       !isValidNickname(nickname)
     ) {
-      // 유효성 검사를 통과하지 못한 경우 함수 실행 중단
       alert("유효한 이메일, 비밀번호, 닉네임인지 확인해주세요.");
-      return;
     }
 
-    // API
-    const response = await signupAPI(email, password, nickname);
-    // console.log("회원가입 성공:", response);
+    try {
+      await signupAPI(email, password, nickname);
+      navigate("/login");
+    } catch (error) {
+      if (error === 409) {
+        alert("이미 사용중인 이메일입니다.");
+      } else if (error === 401) {
+        alert("이미 사용중인 닉네임입니다.");
+      } else {
+        alert("관리자에게 문의하세요");
+        navigate("*");
+      }
+    }
     // 자동으로 로그인 되어 메인으로 넘어가게끔 서버쪽 응답 헤더에 accessToken, refreshToken 보내달라고 요청하기
-    navigate("/");
   };
 
   const handleEmailValidation = (e) => {
@@ -102,7 +108,6 @@ const Signup = () => {
     navigate("/login");
   };
 
-
   const handleInputKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSignup();
@@ -158,6 +163,7 @@ const Signup = () => {
         size="large"
         onClick={handleSignup}
         fontWeight={"600"}
+        hovercolor={"var(--color-blue-04)"}
       />
       <LoginLink onClick={handleLoginLinkClick}>
         이미 계정이 있으신가요? Login
@@ -178,10 +184,11 @@ const LoginLink = styled.a`
   display: block;
   margin-top: 2rem;
   text-align: center;
+  font-size: 1.4rem;
   color: var(--color-blue-03);
   cursor: pointer;
 
   &:hover {
-    color: var(--color-black);
+    color: var(--color-blue-05);
   }
 `;

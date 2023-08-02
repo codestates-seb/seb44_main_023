@@ -86,7 +86,6 @@ const ModalWrapper = styled.div`
 
 const ModalBody = styled.div`
   position: relative;
-  overflow-y: auto;
   outline: none;
   border-radius: 1rem;
   z-index: 1000;

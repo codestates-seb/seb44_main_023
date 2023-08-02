@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { styled } from "styled-components";
 import { AiOutlineCheck } from "react-icons/ai";
-import { useParams } from "react-router-dom";
 import { updateTodoStatus } from "../../api/todogroups.api";
 import ModalTodo from ".//ModalTodo/ModalTodo";
 
-const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
-  const { groupId } = useParams();
-
+const TodoItem = ({ todoInfo, todoList, setTodoList, groupId }) => {
   const { todo_id, todo_title, todo_status } = todoInfo;
 
   const [checked, setChecked] = useState(todo_status === "COMPLETE");
@@ -48,6 +45,7 @@ const TodoItem = ({ todoInfo, todoList, setTodoList }) => {
       <ModalTodo
         type="detail"
         todoId={todo_id}
+        groupId={groupId}
         isModalVisible={isDetailModalVisible}
         setIsModalVisible={setIsDetailModalVisible}
         setTodoList={setTodoList}
@@ -78,7 +76,7 @@ const StyledWrapper = styled.div`
   align-items: center;
   font-size: 2.4rem;
   cursor: pointer;
-  height: 100%;
+  height: min-content;
 
   &.checked {
     background-color: var(--color-gray-03);

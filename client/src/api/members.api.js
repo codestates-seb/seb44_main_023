@@ -1,18 +1,18 @@
-import axios from "axios";
+import { API } from "./api";
+import Avatar from "../assets/userAvarta.png";
 
-export const readMemberInfo = async (memberId) => {
+export const readMemberInfo = async (accessToken) => {
   try {
-    const response = await axios.get(`/api/members/${memberId}`);
+    const response = await API.get(`/members`, {});
     return response.data;
   } catch (err) {
     throw err;
   }
 };
 
-export const updateMemberNickname = async (memberId, nickname) => {
+export const updateMemberNickname = async (nickname) => {
   try {
-    await axios.patch(`/api/members/${memberId}/nickname`, {
-      member_id: memberId,
+    await API.patch(`/members/nickname`, {
       nickname,
     });
   } catch (err) {
@@ -20,25 +20,21 @@ export const updateMemberNickname = async (memberId, nickname) => {
   }
 };
 
-export const updateProfileImage = async (memberId, formData) => {
+export const updateProfileImage = async (formData) => {
   try {
-    await axios.patch(
-      `/api/members/${memberId}/profile-image?memberId=${memberId}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    await API.patch(`/members/profile-image`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   } catch (err) {
     throw err;
   }
 };
 
-export const updatePassword = async (memberId, password, newPassword) => {
+export const updatePassword = async (password, newPassword) => {
   try {
-    await axios.patch(`/api/members/${memberId}/password`, {
+    await API.patch(`/members/password`, {
       password,
       newPassword: newPassword,
     });
@@ -47,10 +43,9 @@ export const updatePassword = async (memberId, password, newPassword) => {
   }
 };
 
-export const deleteMember = async (memberId, password) => {
+export const deleteMember = async (password) => {
   try {
-    await axios.delete(`/api/members/${memberId}?password=${password}`, {
-      member_id: memberId,
+    await API.delete(`/members?password=${password}`, {
       password,
     });
   } catch (err) {
@@ -58,47 +53,35 @@ export const deleteMember = async (memberId, password) => {
   }
 };
 
-export const readProfileImage = async (memberId) => {
+export const readProfileImage = async () => {
   try {
-    const res = await axios.get(`/api/members/${memberId}/profile-image`, {
+    const res = await API.get(`/members/profile-image`, {
       responseType: "blob",
     });
     const url = URL.createObjectURL(res.data);
     return url;
   } catch (err) {
-    throw err;
+    return Avatar;
   }
 };
 
 export const deleteProfileImage = async (memberId) => {
   try {
-    await axios.delete(`/api/members/${memberId}/profile-image`);
+    await API.delete(`/members/${memberId}/profile-image`);
   } catch (err) {
     throw err;
   }
 };
 
-export const loginAPI = async (email, password) => {
-  try {
-    const response = await axios.post(`/api/auths`, { email, password });
-    return response;
-  } catch (error) {
-    throw error.response.status
-  }
-};
-
 export const signupAPI = async (email, password, nickname) => {
   try {
-    const response = await axios.post(`/api/members`, {
+    const response = await API.post(`/members`, {
       email,
       password,
       nickname,
     });
-    return response.data;
+    return response;
   } catch (error) {
-    // status 다르게 받아서 중복 이메일, 닉네임 alert
-    console.log("오류로 인한 회원가입 실패", error);
-    navigate("*");
-    throw new Error(error.response.data.error);
+    throw error.response.status;
   }
 };
