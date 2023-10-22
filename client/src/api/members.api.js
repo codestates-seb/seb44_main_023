@@ -3,7 +3,7 @@ import Avatar from "../assets/userAvarta.png";
 
 export const readMemberInfo = async (accessToken) => {
   try {
-    const response = await API.get(`/members`, {});
+    const response = await API.get(`/member`, {});
     return response.data;
   } catch (err) {
     throw err;
@@ -12,7 +12,7 @@ export const readMemberInfo = async (accessToken) => {
 
 export const updateMemberNickname = async (nickname) => {
   try {
-    await API.patch(`/members/nickname`, {
+    await API.patch(`/member/nickname`, {
       nickname,
     });
   } catch (err) {
@@ -22,7 +22,7 @@ export const updateMemberNickname = async (nickname) => {
 
 export const updateProfileImage = async (formData) => {
   try {
-    await API.patch(`/members/profile-image`, formData, {
+    await API.patch(`/member/profile-image`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -34,7 +34,7 @@ export const updateProfileImage = async (formData) => {
 
 export const updatePassword = async (password, newPassword) => {
   try {
-    await API.patch(`/members/password`, {
+    await API.patch(`/member/password`, {
       password,
       newPassword: newPassword,
     });
@@ -45,7 +45,7 @@ export const updatePassword = async (password, newPassword) => {
 
 export const deleteMember = async (password) => {
   try {
-    await API.delete(`/members?password=${password}`, {
+    await API.delete(`/member?password=${password}`, {
       password,
     });
   } catch (err) {
@@ -55,7 +55,7 @@ export const deleteMember = async (password) => {
 
 export const readProfileImage = async () => {
   try {
-    const res = await API.get(`/members/profile-image`, {
+    const res = await API.get(`/member/profile-image`, {
       responseType: "blob",
     });
     const url = URL.createObjectURL(res.data);
@@ -67,7 +67,7 @@ export const readProfileImage = async () => {
 
 export const deleteProfileImage = async (memberId) => {
   try {
-    await API.delete(`/members/${memberId}/profile-image`);
+    await API.delete(`/member/${memberId}/profile-image`);
   } catch (err) {
     throw err;
   }
