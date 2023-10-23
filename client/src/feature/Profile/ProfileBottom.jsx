@@ -5,7 +5,7 @@ import Toggle from "../../components/Toggle/Toggle";
 import kakaoIcon from "../../assets/icons/kakao_icon.svg";
 import { useStoreHide } from "../../store/store.hide";
 import Button from "../../components/Button/Button";
-import { deleteMember, updatePassword } from "../../api/members.api";
+import { deleteMember, updatePassword } from "../../api/member.api";
 import Popconfirm from "../../components/Popconfirm/Popconfirm";
 import { useNavigate } from "react-router-dom";
 import ProfileGroupSetting from "./ProfileGroupSetting";

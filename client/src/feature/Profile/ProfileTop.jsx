@@ -6,7 +6,7 @@ import {
   deleteProfileImage,
   updateMemberNickname,
   updateProfileImage,
-} from "../../api/members.api";
+} from "../../api/member.api";
 import { imageCompress } from "../../utils/imageCompress";
 import useUserInfoStore from "../../store/store.userInfo";
 

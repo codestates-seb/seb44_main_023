@@ -1,5 +1,5 @@
 import create from "zustand";
-import { readMemberInfo, readProfileImage } from "../api/members.api";
+import { readMemberInfo, readProfileImage } from "../api/member.api";
 import Avatar from "../assets/userAvarta.png";
 
 const useUserInfoStore = create((set) => ({

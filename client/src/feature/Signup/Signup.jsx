@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { signupAPI } from "../../api/members.api";
+import { signupAPI } from "../../api/member.api";
 import useSignupStore from "../../store/store.signup";
 import { useNavigate } from "react-router-dom";
 
