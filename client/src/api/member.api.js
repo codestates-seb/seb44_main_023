@@ -4,6 +4,7 @@ import Avatar from "../assets/userAvarta.png";
 export const readMemberInfo = async (accessToken) => {
   try {
     const response = await API.get(`/member`, {});
+    console.log(response.data);
     return response.data;
   } catch (err) {
     throw err;
