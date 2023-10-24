@@ -15,6 +15,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import useAccessTokenStore from "./store/store.accessToken";
 import { API } from "./api/api";
 import useMainGroupStore from "./store/store.mainGroup";
+import secureStorage from "react-secure-storage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,14 +32,15 @@ const queryClient = new QueryClient({
 function App() {
   const { userInfo, setUserInfo } = useUserInfoStore();
   const { isLoading, memberId } = userInfo;
-  const { expirationTime, accessToken } = useAccessTokenStore();
+  const {  accessToken, setAccessToken } = useAccessTokenStore();
   const { setMainGroup } = useMainGroupStore();
+  const savedAccessToken = secureStorage.getItem("accessToken")
 
   API.interceptors.request.use((config) => {
     config.headers = {
       ...config.headers,
       ...(accessToken ? { Authorization: accessToken } : {}),
-      "X-Refresh-Token": localStorage.getItem("refreshToken"),
+      "X-Refresh-Token": secureStorage.getItem("refreshToken"),
     };
     return config;
   });
@@ -48,6 +50,11 @@ function App() {
     setMainGroup();
   }, [accessToken]);
 
+  useEffect(() => {
+    /* accessToken store 토큰 업데이트*/
+    setAccessToken(savedAccessToken);
+  },[])
+
   if (isLoading) return null;
   return (
     <>
@@ -55,10 +62,10 @@ function App() {
         {import.meta.env.MODE === "development" && (
           <ReactQueryDevtools initialIsOpen={false} />
         )}
-        {!!userInfo.memberId ? (
+        {!!userInfo.member_id ? (
           <Layout>
             <Routes>
-              <Route path="/" element={<MainPage />} />
+              <Route path="/home" element={<MainPage />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/todo/:groupId" element={<TodoPage />} />
               <Route path="/ledger/:groupId" element={<LedgerPage />} />
@@ -67,7 +74,7 @@ function App() {
           </Layout>
         ) : (
           <Routes>
-            <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="*" element={<ErrorPage />} />
