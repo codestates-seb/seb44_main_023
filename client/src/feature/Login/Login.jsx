@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { login } from "../../api/auths.api";
 import useLoginStore from "../../store/store.login";
 import useAccessTokenStore from "../../store/store.accessToken";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import secureStorage from "react-secure-storage";
 
 import styled from "styled-components";
 import Input from "../../components/Input/PageInput";
@@ -25,17 +26,16 @@ const Login = () => {
 
     try {
       const response = await login(email, password);
-      // console.log("사용자 정보:", response);
 
       // accessToken
       const accessToken = response.headers.authorization;
       // store.accessToken.js에 저장
       setAccessToken(accessToken);
-      // console.log("AccessToken:", accessToken);
+      secureStorage.setItem("accessToken", accessToken);
 
       // refreshToken
       const refreshToken = response.headers["x-refresh-token"];
-      localStorage.setItem("refreshToken", refreshToken);
+      secureStorage.setItem("refreshToken", refreshToken);
 
       setLogin(true);
       setValidation("");
@@ -43,10 +43,8 @@ const Login = () => {
     } catch (error) {
       if (error === 404) {
         alert("존재하지 않는 이메일입니다.");
-        // navigate("/login");
       } else if (error === 401) {
         alert("비밀번호를 다시 확인해주세요.");
-        // navigate("/login");
       } else {
         alert("관리자에게 문의하세요");
         navigate("*");
@@ -55,7 +53,7 @@ const Login = () => {
   };
 
   const handleEmailValidation = (e) => {
-    const email = e.target.value;
+    setEmail(e.target.value);
     let emailValidationMSG = "";
 
     // 이메일 유효성 검사
@@ -67,7 +65,6 @@ const Login = () => {
 
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, email: emailValidationMSG });
-    setEmail(email);
   };
 
   const isValidEmail = (email) => {
@@ -77,7 +74,7 @@ const Login = () => {
   };
 
   const handlePasswordValidation = (e) => {
-    const password = e.target.value;
+    setPassword(e.target.value);
     let passwordValidation = "";
 
     // 비밀번호 유효성 검사
@@ -87,7 +84,6 @@ const Login = () => {
 
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, password: passwordValidation });
-    setPassword(password);
   };
 
   const handleLoginLinkClick = () => {
@@ -99,9 +95,6 @@ const Login = () => {
       handleLogin();
     }
   };
-
-  // 등록된 계정이 아닐경우 status가 404면 존재하지 않는 회원입니다..?
-  // 그럼 만약 비밀번호만 틀린경우 status가 다르게 뜨는지?
 
   return (
     <>
