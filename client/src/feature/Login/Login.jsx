@@ -53,7 +53,7 @@ const Login = () => {
   };
 
   const handleEmailValidation = (e) => {
-    const email = e.target.value;
+    setEmail(e.target.value);
     let emailValidationMSG = "";
 
     // 이메일 유효성 검사
@@ -65,7 +65,6 @@ const Login = () => {
 
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, email: emailValidationMSG });
-    setEmail(email);
   };
 
   const isValidEmail = (email) => {
@@ -75,7 +74,7 @@ const Login = () => {
   };
 
   const handlePasswordValidation = (e) => {
-    const password = e.target.value;
+    setPassword(e.target.value);
     let passwordValidation = "";
 
     // 비밀번호 유효성 검사
@@ -85,7 +84,6 @@ const Login = () => {
 
     // 유효성 검사 메세지 저장
     setValidation({ ...validation, password: passwordValidation });
-    setPassword(password);
   };
 
   const handleLoginLinkClick = () => {
