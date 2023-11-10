@@ -32,7 +32,7 @@ const Header = () => {
   }, []);
 
   const handleLogoClick = () => {
-    navigate("/");
+    navigate("/home");
   };
 
   const handleProfileClick = () => {

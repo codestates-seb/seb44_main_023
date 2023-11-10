@@ -39,7 +39,7 @@ const Login = () => {
 
       setLogin(true);
       setValidation("");
-      navigate("/");
+      navigate("/home");
     } catch (error) {
       if (error === 404) {
         alert("존재하지 않는 이메일입니다.");

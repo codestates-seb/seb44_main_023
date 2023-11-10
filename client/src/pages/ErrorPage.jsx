@@ -54,8 +54,8 @@ const ErrorPage = () => {
   const { userInfo } = useUserInfoStore();
 
   const handleButtonClick = () => {
-    if (userInfo.memberId) navigate("/");
-    else navigate("/home");
+    if (userInfo.member_id) navigate("/home");
+    else navigate("/");
   };
 
   return (
