@@ -27,9 +27,9 @@ export const readTodoList = async (groupId, startDate, endDate) => {
   }
 };
 
-export const updateTodoStatus = async (groupId, todoId, status) => {
+export const updateTodoStatus = async (todoGroupId, todoId, status) => {
   try {
-    await API.patch(`/todogroups/${groupId}/todos/${todoId}/status`, {
+    await API.patch(`/todogroups/${todoGroupId}/todos/${todoId}/status`, {
       status,
     });
   } catch (err) {

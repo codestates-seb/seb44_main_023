@@ -63,10 +63,9 @@ export const readLedgerList = async (groupId, startDate, endDate) => {
   }
 };
 
-export const createLedgerGroup = async (memberId, ledgerGroupTitle) => {
+export const createLedgerGroup = async (ledgerGroupTitle) => {
   try {
     const res = await API.post("/ledgergroups", {
-      member_id: memberId,
       ledger_group_title: ledgerGroupTitle,
     });
     return res.data;
